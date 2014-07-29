@@ -69,21 +69,49 @@ body>.container {
 		</div><!--/.container -->
 	</nav><!--/.navbar -->
 	<main id="main" class="container">
+
 		<article id="basic_mode" role="application">
 
 		</article><!-- /#basic_mode -->
+
+
+
+		<!-- Listing of included components in Bootstrap modal dialog -->
+		<div class="modal fade" id="components" tabindex="-1" role="dialog" aria-labelledby="componentsHeading" aria-hidden="true">
+			<div class="modal-dialog">
+				<article class="modal-content" role="document">
+					<header class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close dialog</span></button>
+						<h1 id="componentsHeading" class="modal-title">Components &amp; libraries</h1>
+					</header>
+					<div class="modal-body">
+						<ul class="list-group">
+							<li class="list-group-item">
+								<h4 class="list-group-item-heading"><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></h4>
+								<p class="list-group-item-text">By Mark Otto, Jacob Thornton, et al. Copyright Twitter, Inc. <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT license.</a></p>
+							</li>
+							<li class="list-group-item">
+								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a></h4>
+								<p class="list-group-item-text">By The jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license.</a></p>
+							</li>
+						</ul>
+					</div>
+				</article>
+			</div>
+		</div><!-- /#components -->
+
 	</main>
 
 	<footer id="footer">
-		<p class="text-muted">Copyright &copy; 2014
+		<p class="text-muted">Copyright &copy;&nbsp;2014
 			<a rel="author" href="https://github.com/shelleyvadams">Shelley V. Adams</a>.
-			HealthDataLume and included components are free software.
+			HealthDataLume and <a data-toggle="modal" href="#components" data-target="#components">included components</a> are free software.
 			<span class="pull-right"><a href="https://github.com/shelleyvadams/HealthDataLume">Source at GitHub</a></span>
 		</p>
 	</footer>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="lib/jquery-1.11.0.min.js"></script>
+	<script src="lib/jquery-1.11.1.min.js"></script>
 	<!-- Bootstrap compiled plugins -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 </body>
