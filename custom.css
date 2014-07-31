@@ -24,20 +24,10 @@ body>.container {
 	margin:0.6em auto;
 }
 
-/* So .popover>.arrow will position correctly. */
-#footer>* {
-	position:relative;
-}
-
 /* High visibility text and subtle glow effect */
 .navbar-inverse .navbar-brand {
 	color:#fff;
 	text-shadow:0 0 0.15em #000,0 0 0.5em #eee, 0 0 1em #eee;
-}
-
-a.icon-link {
-	display:inline-block;
-	vertical-align:middle;
 }
 
 /* Make this bigger */

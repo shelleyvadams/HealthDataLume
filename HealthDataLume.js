@@ -90,11 +90,6 @@ var HelpBalloons = (function() {
 			content: "Start over; clear file selection and any output.",
 			trigger: "manual"
 		},
-		"#project_link": {
-			placement: "top",
-			content: "Browse source code, view change history, or fork the project.",
-			trigger: "manual"
-		}
 	};
 
 	/**

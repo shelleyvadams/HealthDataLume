@@ -35,10 +35,23 @@
 				<span class="navbar-brand">HealthDataLume</span>
 			</header><!--/.navbar-header -->
 			<section class="collapse navbar-collapse">
-				<ul class="visible-xs nav navbar-nav">
-					<li><a rel="license" href="LICENSE" type="text/plain"><span class="glyphicon glyphicon-certificate"></span> License</a></li>
-					<li><a data-toggle="modal" href="#components" data-target="#components"><span class="glyphicon glyphicon-tasks"></span> Components</a></li>
-					<li><a class="github" href="https://github.com/shelleyvadams/HealthDataLume" title="HealthDataLume GitHub project"><span>GitHub project</span></a></li>
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> About <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li role="presentation"><a role="menuitem" tabindex="-1" rel="license" href="LICENSE" type="text/plain">HealthDataLume source</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#components" data-target="#components">Third-party components</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle github" data-toggle="dropdown" title="List links to the project on GitHub"><span class="sr-only">GitHub </span><span>Project</span> <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume" title="Project files">Browse source code</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume/issues" title="Bugs, questions, and feature requests">Report an issue</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume/commits/master" title="Chronological list of changes">View history</a></li>
+							<li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume/releases" title="No releases yet">Download a release</a></li>
+						</ul>
+					</li>
 				</ul>
 				<button type="button" class="navbar-right hidden-xs btn btn-link navbar-btn" id="help_button"><span class="glyphicon glyphicon-question-sign"></span><span class="sr-only"> Toggle help</span></button>
 			</section><!--/.collapse.nav-collapse -->
@@ -95,13 +108,7 @@
 	</main>
 
 	<footer id="footer">
-		<p class="pull-left text-muted">Copyright &copy;&nbsp;2014
-			<a id="author_link" rel="author" href="https://github.com/shelleyvadams">Shelley V. Adams</a>.
-			<span class="hidden-xs">
-			HealthDataLume source is released under <a id="license_link" rel="license" href="LICENSE" type="text/plain">MIT License</a>; all <a id="components_link" data-toggle="modal" href="#components" data-target="#components">included components</a> are free software.
-			</span>
-		</p>
-		<div class="hidden-xs pull-right"><a id="project_link" class="icon-link" href="https://github.com/shelleyvadams/HealthDataLume" title="HealthDataLume GitHub project"><img src="lib/simple-icons/github-32-black.png" alt="GitHub logomark" width="32" height="32"/></a></div>
+		<p class="pull-left text-muted">Copyright &copy;&nbsp;2014 <a id="author_link" rel="author" href="https://github.com/shelleyvadams">Shelley V. Adams</a>.</p>
 	</footer>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
