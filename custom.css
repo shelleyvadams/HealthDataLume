@@ -1,0 +1,84 @@
+body {
+	position:relative;
+	height:100%;
+	min-height:100%;
+}
+
+body>.container {
+	padding-top:70px; /* Move down content for fixed navbar 50px tall. */
+	padding-bottom:4em; /* Ditto for fixed footer 2.8em tall. */
+}
+
+#footer {
+	position:fixed;
+	right:2em;
+	bottom:0;
+	left:2em;
+	height:2.8em;
+	margin:auto;
+	padding:0 1em;
+	border-top:thin solid #ccc;
+}
+
+#footer>p {
+	margin:0.6em auto;
+}
+
+/* So .popover>.arrow will position correctly. */
+#footer>* {
+	position:relative;
+}
+
+/* High visibility text and subtle glow effect */
+.navbar-inverse .navbar-brand {
+	color:#fff;
+	text-shadow:0 0 0.15em #000,0 0 0.5em #eee, 0 0 1em #eee;
+}
+
+a.icon-link {
+	display:inline-block;
+	vertical-align:middle;
+}
+
+/* Make this bigger */
+#help_button>.glyphicon {
+	font-size:16px;
+	vertical-align:middle;
+}
+
+/* Seriously?! If I meant "disabled" I would _say_ "disabled"!  */
+input.form-control[readonly] {
+	background-color:#fff;
+	cursor:text;
+}
+
+/* Faux glyphicon (in navbar for x-small devices) */
+.navbar a.github:before {
+	clear:left;
+	float:left;
+	background-image:url(lib/simple-icons/github-24.png);
+	background-repeat:no-repeat;
+	background-position:left center;
+	height:auto;
+	width:auto;
+	min-height:20px;
+	min-width:24px;
+	position:relative;
+	left:-4px;
+	content:' ';
+}
+
+.navbar a.github:link,
+.navbar a.github:visited {
+	opacity:0.46875;
+}
+
+.navbar a.github:active,
+.navbar a.github:focus,
+.navbar a.github:hover {
+	opacity:1;
+}
+
+.navbar a.github>span {
+	color:#fff;
+}
