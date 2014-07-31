@@ -17,11 +17,23 @@ var HealthDataLume = (function(doc) {
 	// Initialize stuff.
 	$(doc).ready(function() {
 		HelpBalloons.applyAllBalloons();
-
-		$("#open_file").on("click", function(e) {
-			$("#xml_file").trigger("click");
-		});
 		$("#help_button").on("click", HelpBalloons.toggle);
+
+		var fileInput = $("#xml_file");
+		var fileDisplay = $("#file_path");
+		$("#open_file").on("click", function(e) {
+			fileInput.trigger("click");
+		});
+		fileInput.change(function(e) {
+			fileDisplay.val("");
+			var userFile = fileInput.get(0).files.item(0);
+			if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
+				fileDisplay.val(userFile.name);
+			} else {
+				throw new Error("Sorry, HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that " + userFile.name + " is an XML file, please report the issue." : ""));
+			}
+			console.log(userFile);
+		});
 	});
 
 })(document);
