@@ -39,8 +39,12 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> About <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
+							<li role="presentation" class="dropdown-header">Licenses</li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" rel="license" href="LICENSE" type="text/plain">HealthDataLume source</a></li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#components" data-target="#components">Third-party components</a></li>
+							<li role="presentation" class="divider"></li>
+							<li role="presentation" class="dropdown-header">More information</li>
+							<li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#CDA_info" data-target="#CDA_info"><abbr title="Clinical Document Architecture">CDA</abbr> data formats</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -104,6 +108,20 @@
 				</article>
 			</div>
 		</div><!-- /#components -->
+
+		<!-- Introductory references on CDA and C-CDA -->
+		<div class="modal fade" id="CDA_info" tabindex="-1" role="dialog" aria-labelledby="CDA_infoHeading" aria-hidden="true">
+			<div class="modal-dialog">
+				<article class="modal-content" role="document">
+					<header class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
+						<h1 id="CDA_infoHeading" class="modal-title"><abbr title="Clinical Document Architecture">CDA</abbr> health data formats</h1>
+					</header>
+					<div class="modal-body">
+					</div>
+				</article>
+			</div>
+		</div><!-- /#CDA_info -->
 
 	</main>
 
