@@ -24,6 +24,11 @@ body>.container {
 	margin:0.6em auto;
 }
 
+#xml_status {
+	margin:1em;
+	clear:both;
+}
+
 /* High visibility text and subtle glow effect */
 .navbar-inverse .navbar-brand {
 	color:#fff;
@@ -42,7 +47,7 @@ input.form-control[readonly] {
 	cursor:text;
 }
 
-/* Faux glyphicon (in navbar for x-small devices) */
+/* Faux glyphicon (in navbar) */
 .navbar a.github:before {
 	clear:left;
 	float:left;

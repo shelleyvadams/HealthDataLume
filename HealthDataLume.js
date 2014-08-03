@@ -13,41 +13,54 @@
  * @param {Document} doc
 **/
 var HealthDataLume = (function(doc) {
-	var fileInput, fileDisplay, appEle;
 
-	var getFile = function() {
-		try {
-			fileDisplay.val("");
-			$(".alert").alert('close');
-			var userFile = fileInput.get(0).files.item(0);
-			if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
-				fileDisplay.val(userFile.name);
-			} else {
-				throw new Error("Sorry, HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that " + userFile.name + " is an XML file, please report the issue." : ""));
-			}
-			console.log(userFile);
-		} catch (err) {
-			appEle.append(
-				"<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
-				err.message +
-				"\n</div>\n"
-			);
+	/**
+	 * @function getFile
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {HTMLInputElement} input - File input element
+	 * @param {HTMLInputElement} display - Read-only text input element to display the name of the selected file
+	**/
+	var getFile = function(input, display) {
+		display.val("");
+		var userFile = input.get(0).files.item(0);
+		if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
+			display.val(userFile.name);
+		} else {
+			throw new Error("<strong>Oops!</strong> HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that <tt>" + userFile.name + "</tt> is an XML file, please <a class='alert-link' href='https://github.com/shelleyvadams/HealthDataLume/issues'>report the issue</a>." : ""));
 		}
+		return userFile;
 	};
 
 	// Initialize stuff.
 	$(doc).ready(function() {
-		appEle = $("#health_data_lume");
+		var xmlStatus = $("#xml_status");
+		var fileInput = $("#xml_file");
+		var fileDisplay = $("#file_path");
+
 		HelpBalloons.applyAllBalloons();
 		$("#help_button").on("click", HelpBalloons.toggle);
 
-		fileInput = $("#xml_file");
-		fileDisplay = $("#file_path");
+		$("#reset_button").on("click", function(e){
+			xmlStatus.empty();
+		});
+
 		$("#open_file").on("click", function(e) {
 			fileInput.trigger("click");
 		});
+
 		fileInput.change(function(e) {
-			getFile();
+			xmlStatus.empty();
+			try {
+				var xmlFile = getFile(fileInput, fileDisplay);
+			} catch (err) {
+				xmlStatus.append(
+					"<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
+					err.message +
+					"\n</div>\n"
+				);
+			}
+
 		});
 	});
 
