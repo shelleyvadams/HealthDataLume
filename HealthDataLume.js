@@ -13,18 +13,104 @@
  * @param {Document} doc
 **/
 var HealthDataLume = (function(doc) {
+	/**
+	 * @constant
+	 * @type {String}
+	 * @memberof HealthDataLume
+	 * @private
+	 * @description Path to default XSL.
+	**/
 	var XSL_FILE = "health_data_lume.xsl";
-	var parsedXSL;
 
-	var getXSL = function() {
-		//nothing yet
+	/**
+	 * @function errorIssueLink
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {String} [customText]
+	 * @returns {String} HTML for an anchor element
+	 * @description Build a link to the project's issue page at GitHub.
+	**/
+	var errorIssueLink = function(customText) {
+		var linkText = customText || "report an issue";
+		return "<a class='alert-link' href='https://github.com/shelleyvadams/HealthDataLume/issues'>" + linkText + "</a>";
 	}
+
+	/**
+	 * @function errorAlert
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {Error} err
+	 * @returns {String} HTML for a div element
+	 * @description Build a Bootstrap dismissible alert (danger) containing an error message.
+	**/
+	var errorAlert = function(err) {
+		return "<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
+		err.message +
+		"\n</div>\n";
+	}
+
+	/**
+	 * @function getXSL
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {Document} loadToXmlDoc
+	 * @see [Synchronous and asynchronous requests]{@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Synchronous_and_Asynchronous_Requests} at Mozilla Developer Network
+	 * @description Load the default XSL stylesheet
+	**/
+	var getXSL = function(loadToXmlDoc) {
+	
+		/**
+		 * @function loadXSL
+		 * @memberof getXSL
+		 * @private
+		 * @this xhReq
+		 * @param {Document} xmlDoc - Reference to an object to hold the Document object in XMLHttpRequest.responseXML
+		**/
+		var loadXSL = function(xmlDoc) {
+			xmlDoc = this.responseXML;
+			console.log("Yippie! Loaded an XML document with documentElement: " + xmlDoc.documentElement.tagName);
+		}
+
+		/**
+		 * @function xhrSuccess
+		 * @memberof getXSL
+		 * @private
+		 * @this xhReq
+		 * @description Apply the callback function (loadXSL)
+		**/
+		var xhrSuccess = function() {
+			this.callback.apply(this, this.arguments);
+		}
+	
+		/**
+		 * @function xhrError
+		 * @memberof getXSL
+		 * @private
+		 * @this xhReq
+		 * @throws {Error} The HTTP request should return a status of "200 OK" anything else is an error.
+		**/
+		var xhrError = function() {
+			throw new Error( "<strong>Uh oh!</strong> Unable to load XSL formatting instructions. Try refreshing the page. If the problem persists, " + errorIssueLink() + " noting that the server said: <q>" + this.statusText + "</q>.");
+		};
+	
+		var xhReq = new XMLHttpRequest();
+		xhReq.callback = loadXSL;
+		xhReq.arguments = arguments;
+		xhReq.onload = xhrSuccess;
+		xhReq.onerror = xhrError;
+		xhReq.open("get", XSL_FILE, true);
+		xhReq.send(null);
+	}
+
 	/**
 	 * @function getFile
 	 * @memberof HealthDataLume
 	 * @private
 	 * @param {HTMLInputElement} input - File input element
 	 * @param {HTMLInputElement} display - Read-only text input element to display the name of the selected file
+	 * @returns {File}
+	 * @throws {Error} The selected file must have an XML media type within "text/*" or "application/*"
+	 * @description Get the XML file selected by the user.
 	**/
 	var getFile = function(input, display) {
 		display.val("");
@@ -32,10 +118,34 @@ var HealthDataLume = (function(doc) {
 		if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
 			display.val(userFile.name);
 		} else {
-			throw new Error("<strong>Oops!</strong> HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that <tt>" + userFile.name + "</tt> is an XML file, please <a class='alert-link' href='https://github.com/shelleyvadams/HealthDataLume/issues'>report the issue</a>." : ""));
+			throw new Error("<strong>Oops!</strong> HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that <tt>" + userFile.name + "</tt> is an XML file, please " + errorIssueLink() + "." : ""));
 		}
 		return userFile;
 	};
+
+	/**
+	 * @function getXMLReader
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {String} rawContent - Storage for unparsed file content
+	 * @returns {FileReader}
+	 * @description Setup a FileReader for fetching the user's XML file.
+	**/
+	var getXMLReader = function(rawContent) {
+		var readIt = new FileReader();
+		readIt.onerror = (function() {
+			return function(e) {
+				throw new Error("<strong>Shoot!</strong> Couldn't load your file.");
+			};
+		})();
+		readIt.onload = ( function(raw) {
+			return function(e) {
+				raw = e.target.result;
+			};
+		})(rawContent);
+		return readIt;
+	};
+
 
 	// Initialize stuff.
 	$(doc).ready(function() {
@@ -43,7 +153,13 @@ var HealthDataLume = (function(doc) {
 		var fileInput = $("#xml_file");
 		var fileDisplay = $("#file_path");
 
-		getXSL();
+		var xslDoc, xmlDoc;
+
+		try {
+			getXSL(xslDoc);
+		} catch (err) {
+			$("#health_data_lume").prepend( errorAlert(err) );
+		}
 
 		HelpBalloons.applyAllBalloons();
 		$("#help_button").on("click", HelpBalloons.toggle);
@@ -60,14 +176,12 @@ var HealthDataLume = (function(doc) {
 			xmlStatus.empty();
 			try {
 				var xmlFile = getFile(fileInput, fileDisplay);
+				var rawXML = "";
+				var xmlReader = getXMLReader(rawXML);
+				xmlReader.readAsText(xmlFile);
 			} catch (err) {
-				xmlStatus.append(
-					"<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
-					err.message +
-					"\n</div>\n"
-				);
+				xmlStatus.append( errorAlert(err) );
 			}
-
 		});
 	});
 
