@@ -13,19 +13,12 @@
  * @param {Document} doc
 **/
 var HealthDataLume = (function(doc) {
+	var fileInput, fileDisplay, appEle;
 
-	// Initialize stuff.
-	$(doc).ready(function() {
-		HelpBalloons.applyAllBalloons();
-		$("#help_button").on("click", HelpBalloons.toggle);
-
-		var fileInput = $("#xml_file");
-		var fileDisplay = $("#file_path");
-		$("#open_file").on("click", function(e) {
-			fileInput.trigger("click");
-		});
-		fileInput.change(function(e) {
+	var getFile = function() {
+		try {
 			fileDisplay.val("");
+			$(".alert").alert('close');
 			var userFile = fileInput.get(0).files.item(0);
 			if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
 				fileDisplay.val(userFile.name);
@@ -33,6 +26,28 @@ var HealthDataLume = (function(doc) {
 				throw new Error("Sorry, HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that " + userFile.name + " is an XML file, please report the issue." : ""));
 			}
 			console.log(userFile);
+		} catch (err) {
+			appEle.append(
+				"<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
+				err.message +
+				"\n</div>\n"
+			);
+		}
+	};
+
+	// Initialize stuff.
+	$(doc).ready(function() {
+		appEle = $("#health_data_lume");
+		HelpBalloons.applyAllBalloons();
+		$("#help_button").on("click", HelpBalloons.toggle);
+
+		fileInput = $("#xml_file");
+		fileDisplay = $("#file_path");
+		$("#open_file").on("click", function(e) {
+			fileInput.trigger("click");
+		});
+		fileInput.change(function(e) {
+			getFile();
 		});
 	});
 
