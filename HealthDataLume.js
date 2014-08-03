@@ -13,7 +13,12 @@
  * @param {Document} doc
 **/
 var HealthDataLume = (function(doc) {
+	var XSL_FILE = "health_data_lume.xsl";
+	var parsedXSL;
 
+	var getXSL = function() {
+		//nothing yet
+	}
 	/**
 	 * @function getFile
 	 * @memberof HealthDataLume
@@ -37,6 +42,8 @@ var HealthDataLume = (function(doc) {
 		var xmlStatus = $("#xml_status");
 		var fileInput = $("#xml_file");
 		var fileDisplay = $("#file_path");
+
+		getXSL();
 
 		HelpBalloons.applyAllBalloons();
 		$("#help_button").on("click", HelpBalloons.toggle);
