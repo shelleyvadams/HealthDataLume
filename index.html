@@ -45,6 +45,7 @@
 							<li role="presentation" class="divider"></li>
 							<li role="presentation" class="dropdown-header">More information</li>
 							<li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#CDA_info" data-target="#CDA_info"><abbr title="Clinical Document Architecture">CDA</abbr> data formats</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#useful" data-target="#useful">Useful tools &amp; documentation</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -89,27 +90,47 @@
 				<article class="modal-content" role="document">
 					<header class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
-						<h1 id="componentsHeading" class="modal-title">Components &amp; libraries</h1>
+						<h1 id="componentsHeading" class="modal-title">Third-party components</h1>
 					</header>
 					<div class="modal-body">
 						<ul class="list-group">
 							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a></h4>
-								<p class="list-group-item-text">By Mark Otto, Jacob Thornton, et al. Copyright Twitter, Inc. <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT license.</a></p>
+								<h4 class="list-group-item-heading"><a href="http://getbootstrap.com/" target="_blank">Bootstrap</a> <small>by Mark Otto, Jacob Thornton, et al. Copyright Twitter, Inc. <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank">MIT license</a></small></h4>
+								<p class="list-group-item-text">Provides layout, styles, and widgets.</p>
 							</li>
 							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a></h4>
-								<p class="list-group-item-text">By The jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license.</a></p>
+								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a> <small>by the jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license</a></small></h4>
+								<p class="list-group-item-text">Required by Bootstrap and used in HealthDataLume source.</p>
 							</li>
 							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><a href="http://simpleicons.org/" target="_blank">Simple Icons</a></h4>
-								<p class="list-group-item-text">By Dan Leech. Free Art License.</p>
+								<h4 class="list-group-item-heading"><a href="http://simpleicons.org/" target="_blank">Simple Icons</a> <small>by Dan Leech. Free Art License</small></h4>
+								<p class="list-group-item-text">GitHub social media icon.</p>
 							</li>
 						</ul>
 					</div>
 				</article>
 			</div>
 		</div><!-- /#components -->
+
+		<!-- Useful stuff -->
+		<div class="modal fade" id="useful" tabindex="-1" role="dialog" aria-labelledby="usefulHeading" aria-hidden="true">
+			<div class="modal-dialog">
+				<article class="modal-content" role="document">
+					<header class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
+						<h1 id="usefulHeading" class="modal-title">Useful tools &amp; documentation</h1>
+					</header>
+					<div class="modal-body">
+						<p>The following are helpful for working with the HealthDataLume source, but they are neither required by nor included in the project.</p>
+						<li class="list-group-item">
+							<h4 class="list-group-item-heading"><a href="http://usejsdoc.org/" target="_blank">JSDoc</a> <small>by Michael Mathews, et al. Apache license, v2.0</small></h4>
+							<p class="list-group-item-text">HealthDataLume's JavaScript uses JSDoc comments. Generated documentation is not included, but <tt>etc/jsdoc/conf.json</tt> provides the JSDoc configuration used during development.</p>
+						</li>
+					</div>
+				</article>
+			</div>
+		</div><!-- /#CDA_info -->
+
 
 		<!-- Introductory references on CDA and C-CDA -->
 		<div class="modal fade" id="CDA_info" tabindex="-1" role="dialog" aria-labelledby="CDA_infoHeading" aria-hidden="true">
