@@ -272,6 +272,13 @@ var HelpBalloons = (function() {
 			content: "Open a locally stored <abbr title='Clinical Document Architecture, Release 2'>CDA R2</abbr> or <abbr title='Consolidated Clinical Document Architecture'>C-CDA</abbr> file.",
 			trigger: "manual"
 		},
+		"#file_path": {
+			container: "body",
+			html: true,
+			placement: "top",
+			content: "Name of current file, if any.",
+			trigger: "manual"
+		},
 		"#samples_button": {
 			container: "body",
 			html: true,
@@ -283,9 +290,15 @@ var HelpBalloons = (function() {
 		"#reset_button": {
 			container: "body",
 			placement: "left",
-			content: "Start over; clear file selection and any output.",
+			content: "Start over. Clear file selection and any output.",
 			trigger: "manual"
 		},
+		"#output": {
+			container: "section",
+			placement: "bottom",
+			content: "HealthDataLume's output from the selected file.",
+			trigger: "manual"
+		}
 	};
 
 	/**
