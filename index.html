@@ -11,6 +11,8 @@
 	<!-- Bootstrap -->
 	<link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
 
+	<link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+
 	<!-- Custom styles for this template -->
 	<link href="custom.css" rel="stylesheet" type="text/css"/>
 
@@ -37,7 +39,7 @@
 			<section class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-info-sign"></span> About <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info-circle"></i> <span>About</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li role="presentation" class="dropdown-header">Licenses</li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" rel="license" href="LICENSE" type="text/plain">HealthDataLume source</a></li>
@@ -49,7 +51,7 @@
 						</ul>
 					</li>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle github" data-toggle="dropdown" title="List links to the project on GitHub"><span class="sr-only">GitHub </span><span>Project</span> <span class="caret"></span></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="List links to the project on GitHub"><i class="fa fa-github"></i><span class="sr-only"> GitHub</span> <span>Project</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume" title="Project files">Browse source code</a></li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/shelleyvadams/HealthDataLume/issues" title="Bugs, questions, and feature requests">Report an issue</a></li>
@@ -58,7 +60,7 @@
 						</ul>
 					</li>
 				</ul>
-				<button type="button" class="navbar-right hidden-xs btn btn-link navbar-btn" id="help_button"><span class="glyphicon glyphicon-question-sign"></span><span class="sr-only"> Toggle help</span></button>
+				<button type="button" class="navbar-right hidden-xs btn btn-link navbar-btn" id="help_button"><i class="fa fa-question-circle"></i><span class="sr-only"> Toggle help</span></button>
 			</section><!--/.collapse.nav-collapse -->
 		</div><!--/.container -->
 	</nav><!--/.navbar -->
@@ -69,12 +71,12 @@
 				<input type="file" id="xml_file" class="hidden"/>
 				<div class="input-group">
 					<div class="input-group-btn">
-						<button type="button" id="open_file" class="btn btn-primary"><span class="glyphicon glyphicon-file"></span><span class="hidden-xs"> Open file</span></button>
-						<button type="button" id="samples_button" class="btn btn-info disabled"><span class="glyphicon glyphicon-globe"></span><span class="hidden-xs"> Browse samples</span></button>
+						<button type="button" id="open_file" class="btn btn-primary"><i class="fa fa-file"></i><span class="hidden-xs"> Open file</span></button>
+						<button type="button" id="samples_button" class="btn btn-primary disabled"><i class="fa fa-flask"></i><span class="hidden-xs"> Example records</span></button>
 					</div>
 					<input type="text" id="file_path" readonly="readonly" class="form-control"/>
 					<span class="input-group-btn">
-						<button type="reset" id="reset_button" class="btn btn-default"><span class="glyphicon glyphicon-remove"></span><span class="sr-only"> Clear</span></button>
+						<button type="reset" id="reset_button" class="btn btn-default"><i class="fa fa-times"></i><span class="sr-only"> Clear</span></button>
 					</span>
 				</div>
 				<div id="xml_status">
@@ -93,7 +95,7 @@
 			<div class="modal-dialog">
 				<article class="modal-content" role="document">
 					<header class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
+						<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i><span class="sr-only">Close dialog</span></button>
 						<h1 id="componentsHeading" class="modal-title">Third-party components</h1>
 					</header>
 					<div class="modal-body">
@@ -103,12 +105,12 @@
 								<p class="list-group-item-text">Provides layout, styles, and widgets.</p>
 							</li>
 							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a> <small>by the jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license</a></small></h4>
-								<p class="list-group-item-text">Required by Bootstrap and used in HealthDataLume source.</p>
+								<h4 class="list-group-item-heading"><a href="fontawesome.io" target="_blank">Font Awesome</a> <small>By Dave Gandy. <a href="http://fontawesome.io/license/" target="_blank"><abbr>SIL</abbr>&nbsp;<abbr>OFL</abbr>&nbsp;1.1 and MIT license</a></small></h4>
+								<p class="list-group-item-text">Icon font containing +400 pictographs.</p>
 							</li>
 							<li class="list-group-item">
-								<h4 class="list-group-item-heading"><a href="http://simpleicons.org/" target="_blank">Simple Icons</a> <small>by Dan Leech. Free Art License</small></h4>
-								<p class="list-group-item-text">GitHub social media icon.</p>
+								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a> <small>by the jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license</a></small></h4>
+								<p class="list-group-item-text">Required by Bootstrap and used in HealthDataLume source.</p>
 							</li>
 						</ul>
 					</div>
@@ -121,7 +123,7 @@
 			<div class="modal-dialog">
 				<article class="modal-content" role="document">
 					<header class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
+						<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i><span class="sr-only">Close dialog</span></button>
 						<h1 id="usefulHeading" class="modal-title">Useful tools &amp; documentation</h1>
 					</header>
 					<div class="modal-body">
@@ -141,7 +143,7 @@
 			<div class="modal-dialog">
 				<article class="modal-content" role="document">
 					<header class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span><span class="sr-only">Close dialog</span></button>
+						<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i><span class="sr-only">Close dialog</span></button>
 						<h1 id="CDA_infoHeading" class="modal-title"><abbr title="Clinical Document Architecture">CDA</abbr> health data formats</h1>
 					</header>
 					<div class="modal-body">

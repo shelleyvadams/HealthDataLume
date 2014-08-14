@@ -40,8 +40,12 @@ body>.container {
 }
 
 /* Make this bigger */
-#help_button>.glyphicon {
-	font-size:16px;
+.navbar .fa {
+	font-size:120%;
+}
+
+.navbar a>* {
+	display:inline-block;
 	vertical-align:middle;
 }
 
@@ -49,37 +53,6 @@ body>.container {
 input.form-control[readonly] {
 	background-color:#fff;
 	cursor:text;
-}
-
-/* Faux glyphicon (in navbar) */
-.navbar a.github:before {
-	clear:left;
-	float:left;
-	background-image:url(lib/simple-icons/github-24.png);
-	background-repeat:no-repeat;
-	background-position:left center;
-	height:auto;
-	width:auto;
-	min-height:20px;
-	min-width:24px;
-	position:relative;
-	left:-4px;
-	content:' ';
-}
-
-.navbar a.github:link,
-.navbar a.github:visited {
-	opacity:0.46875;
-}
-
-.navbar a.github:active,
-.navbar a.github:focus,
-.navbar a.github:hover {
-	opacity:1;
-}
-
-.navbar a.github>span {
-	color:#fff;
 }
 
 /* Output container */
