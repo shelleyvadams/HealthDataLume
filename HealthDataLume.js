@@ -21,6 +21,16 @@ var HealthDataLume = (function(doc) {
 	 * @description Path to default XSL.
 	**/
 	var XSL_FILE = "health_data_lume.xsl";
+	var xsltProcessor = new XSLTProcessor();
+
+	/**
+	 * @member parser
+	 * @type {DOMParser}
+	 * @memberof HealthDataLume
+	 * @private
+	 * @description Used to parse XML from a String
+	**/
+	var parser = new DOMParser();
 
 	/**
 	 * @function errorIssueLink
@@ -45,7 +55,7 @@ var HealthDataLume = (function(doc) {
 	**/
 	var errorAlert = function(err) {
 		return "<div class='alert alert-danger alert-dismissible' role='alert'>\n<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>&times;</span><span class='sr-only'>Close</span></button>\n" +
-		err.message +
+		err +
 		"\n</div>\n";
 	}
 
@@ -58,7 +68,7 @@ var HealthDataLume = (function(doc) {
 	 * @description Load the default XSL stylesheet
 	**/
 	var getXSL = function(loadToXmlDoc) {
-	
+
 		/**
 		 * @function loadXSL
 		 * @memberof getXSL
@@ -69,6 +79,11 @@ var HealthDataLume = (function(doc) {
 		var loadXSL = function(xmlDoc) {
 			xmlDoc = this.responseXML;
 			console.log("Yippie! Loaded an XML document with documentElement: " + xmlDoc.documentElement.tagName);
+			try {
+				xsltProcessor.importStylesheet(xmlDoc);
+			} catch (xslErr) {
+				throw "<strong>Yikes!</strong> Something is wrong with the XSL stylesheet.\n" + xslErr;
+			}
 		}
 
 		/**
@@ -81,7 +96,7 @@ var HealthDataLume = (function(doc) {
 		var xhrSuccess = function() {
 			this.callback.apply(this, this.arguments);
 		}
-	
+
 		/**
 		 * @function xhrError
 		 * @memberof getXSL
@@ -92,7 +107,7 @@ var HealthDataLume = (function(doc) {
 		var xhrError = function() {
 			throw new Error( "<strong>Uh oh!</strong> Unable to load XSL formatting instructions. Try refreshing the page. If the problem persists, " + errorIssueLink() + " noting that the server said: <q>" + this.statusText + "</q>.");
 		};
-	
+
 		var xhReq = new XMLHttpRequest();
 		xhReq.callback = loadXSL;
 		xhReq.arguments = arguments;
@@ -127,22 +142,54 @@ var HealthDataLume = (function(doc) {
 	 * @function getXMLReader
 	 * @memberof HealthDataLume
 	 * @private
-	 * @param {String} rawContent - Storage for unparsed file content
+	 * @param {Document} targetDoc - Storage for parsed file content
+	 * @param {jQuery} errContainer - Parent element for any error alerts
 	 * @returns {FileReader}
-	 * @description Setup a FileReader for fetching the user's XML file.
+	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
+	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
 	**/
-	var getXMLReader = function(rawContent) {
+	var getXMLReader = function(targetDoc, errContainer) {
 		var readIt = new FileReader();
 		readIt.onerror = (function() {
 			return function(e) {
 				throw new Error("<strong>Shoot!</strong> Couldn't load your file.");
 			};
 		})();
-		readIt.onload = ( function(raw) {
+		readIt.onload = ( function(doc, container) {
 			return function(e) {
-				raw = e.target.result;
+				try {
+					doc = parser.parseFromString(e.target.result, "application/xml");
+					if (doc.documentElement.tagName == "parsererror") {
+						throw new ParserError(doc);
+					} else {
+						console.log(doc);
+						var result;
+						try {
+							result = xsltProcessor.transformToDocument(doc);
+						} catch (transformErr) {
+							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
+						}
+						try {
+							var oSerializer = new XMLSerializer();
+							var resultStr = oSerializer.serializeToString(result)
+							$("#output").find("iframe").attr(
+								"src",
+								window.URL.createObjectURL(
+									new Blob(
+										[resultStr],
+										{type : "text/html"}
+									)
+								)
+							);
+						} catch(wtfErr) {
+							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
+						}
+					}
+				} catch (err) {
+					container.append( errorAlert(err) );
+				}
 			};
-		})(rawContent);
+		})(targetDoc, errContainer);
 		return readIt;
 	};
 
@@ -153,7 +200,7 @@ var HealthDataLume = (function(doc) {
 		var fileInput = $("#xml_file");
 		var fileDisplay = $("#file_path");
 
-		var xslDoc, xmlDoc;
+		var xslDoc = xmlDoc = null;
 
 		try {
 			getXSL(xslDoc);
@@ -166,6 +213,7 @@ var HealthDataLume = (function(doc) {
 
 		$("#reset_button").on("click", function(e){
 			xmlStatus.empty();
+			$("#output").find("iframe").attr("src", "").empty();
 		});
 
 		$("#open_file").on("click", function(e) {
@@ -176,8 +224,7 @@ var HealthDataLume = (function(doc) {
 			xmlStatus.empty();
 			try {
 				var xmlFile = getFile(fileInput, fileDisplay);
-				var rawXML = "";
-				var xmlReader = getXMLReader(rawXML);
+				var xmlReader = getXMLReader(xmlDoc, xmlStatus);
 				xmlReader.readAsText(xmlFile);
 			} catch (err) {
 				xmlStatus.append( errorAlert(err) );
@@ -276,6 +323,26 @@ var HelpBalloons = (function() {
 		e.preventDefault();
 		$("." + HELP_CLASS).popover("toggle");
 	}
-	
+
 	};
 })();
+
+
+/** When given an invalid XML document, The {@link DOMParser} [implementation in Mozilla Gecko]{@link https://developer.mozilla.org/en-US/docs/Web/API/DOMParser#Error_handling} does not throw an {@link Error}, but returns an {@link XMLDocument} with `parsererror` as its {@link Document.documentElement}.
+ * @constructor
+ * @augments Error
+ * @param {XMLDocument} doc - Returned by {@link DOMParser}
+ * @see https://bugzilla.mozilla.org/show_bug.cgi?id=45566
+**/
+function ParserError(doc) {
+	var serializer = new XMLSerializer();
+	this.message = "<strong>Dang!</strong> Looks like that wasn't valid XML." + (doc.documentElement.textContent.length > 0 ? "\n<details class='errorDetails clearfix'>\n<summary class='pull-right'><button type='button' data-toggle='collapse' class='btn btn-default' data-target='#parsererror'>Developer details</button></summary>\n<pre id='parsererror' class='collapse'>" + serializer.serializeToString(doc) + "</pre>\n</details>\n" : "");
+}
+
+/**
+ * @memberof ParserError
+ * @static
+**/
+ParserError.name = "ParserError";
+ParserError.prototype = Object.create(Error.prototype);
+ParserError.prototype.constructor = ParserError;
