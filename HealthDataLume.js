@@ -172,7 +172,7 @@ var HealthDataLume = (function(doc) {
 						try {
 							var oSerializer = new XMLSerializer();
 							var resultStr = oSerializer.serializeToString(result)
-							$("#output").find("iframe").attr(
+							$("#output").removeClass("hidden").find("iframe").attr(
 								"src",
 								window.URL.createObjectURL(
 									new Blob(
@@ -213,7 +213,7 @@ var HealthDataLume = (function(doc) {
 
 		$("#reset_button").on("click", function(e){
 			xmlStatus.empty();
-			$("#output").find("iframe").attr("src", "").empty();
+			$("#output").addClass("hidden").find("iframe").attr("src", "").empty();
 		});
 
 		$("#open_file").on("click", function(e) {
