@@ -89,10 +89,6 @@ input.form-control[readonly] {
 		font-size:50px;
 	}
 
-	#output {
-		border:none;
-	}
-
 	#footer {
 		right:0;
 		left:0;
