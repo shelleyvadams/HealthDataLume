@@ -9,7 +9,7 @@
 
 			<h1>
 				<xsl:choose>
-					<xsl:when test="hl7:title">
+					<xsl:when test="hl7:title and ( string-length(hl7:title) &gt; 0 )">
 						<xsl:apply-templates select="hl7:title"/>
 						<xsl:text> </xsl:text>
 						<small><xsl:value-of select="hl7:code/@displayName"/></small>
