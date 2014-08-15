@@ -10,9 +10,11 @@ body {
 #main {
 	position:absolute;
 	top:70px; /* Move down content for fixed navbar 50px tall. */
-	right:1.5em;
+	right:0;
 	bottom:3em; /* Move up content for fixed footer 2em tall. */
-	left:1.5em;
+	left:0;
+	padding:0 1.5em;
+	overflow:auto;
 }
 
 /* Flexboxen for application interface */
@@ -20,7 +22,10 @@ body {
 #health_data_lume {
 	height:100%;
 	display:flex;
-	flex-direction: column;
+	flex-direction:column;
+	justify-content:flex-start;
+	align-content:flex-start;
+	align-items:stretch;
 }
 
 #record_form {
@@ -33,6 +38,7 @@ body {
 	order:2;
 	flex-grow:1;
 	flex-shrink:0;
+	height:100%;
 }
 
 #footer {
