@@ -24,6 +24,7 @@
 	<![endif]-->
 </head>
 <body>
+<header>
 	<nav class="sr-only"><a href="#main">Skip to content</a></nav>
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -64,10 +65,14 @@
 			</section><!--/.collapse.nav-collapse -->
 		</div><!--/.container -->
 	</nav><!--/.navbar -->
+	<section class="visible-print-block">
+		<h1>HealthDataLume</h1>
+	</section>
+</header>
 	<main id="main">
 
 		<article id="health_data_lume" role="application">
-			<form id="record_form">
+			<form id="record_form" class="hidden-print">
 				<input type="file" id="xml_file" class="hidden"/>
 				<div class="input-group">
 					<div class="input-group-btn">

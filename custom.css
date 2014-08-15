@@ -48,7 +48,7 @@ body {
 
 #footer>p {
 	line-height:1.4em;
-	margin:0.2em auto 0.4em;
+	margin:0.2em auto auto;
 }
 
 #xml_status {
@@ -86,4 +86,25 @@ input.form-control[readonly] {
 	margin:auto;
 	border-style:none;
 	display:block;
+}
+
+/* Print formatting */
+
+@media print {
+
+	body>header>h1 {
+		margin-top:0;
+		font-size:50px;
+	}
+
+	#output {
+		border:none;
+	}
+
+	#footer {
+		right:0;
+		left:0;
+		padding-right:0;
+		padding-left:0;
+	}
 }
