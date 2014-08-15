@@ -155,32 +155,22 @@ var HealthDataLume = (function(doc) {
 				throw new Error("<strong>Shoot!</strong> Couldn't load your file.");
 			};
 		})();
-		readIt.onload = ( function(doc, container) {
+		readIt.onload = ( function(xmlDoc, container) {
 			return function(e) {
 				try {
-					doc = parser.parseFromString(e.target.result, "application/xml");
-					if (doc.documentElement.tagName == "parsererror") {
-						throw new ParserError(doc);
+					xmlDoc = parser.parseFromString(e.target.result, "application/xml");
+					if (xmlDoc.documentElement.tagName == "parsererror") {
+						throw new ParserError(xmlDoc);
 					} else {
-						console.log(doc);
+						console.log(xmlDoc);
 						var result;
 						try {
-							result = xsltProcessor.transformToDocument(doc);
+							result = xsltProcessor.transformToFragment(xmlDoc, doc);
 						} catch (transformErr) {
 							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
 						}
 						try {
-							var oSerializer = new XMLSerializer();
-							var resultStr = oSerializer.serializeToString(result)
-							$("#output").removeClass("hidden").find("iframe").attr(
-								"src",
-								window.URL.createObjectURL(
-									new Blob(
-										[resultStr],
-										{type : "text/html"}
-									)
-								)
-							);
+							$("#output").removeClass("hidden").append(result);
 						} catch(wtfErr) {
 							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
 						}
@@ -213,7 +203,7 @@ var HealthDataLume = (function(doc) {
 
 		$("#reset_button").on("click", function(e){
 			xmlStatus.empty();
-			$("#output").addClass("hidden").find("iframe").attr("src", "").empty();
+			$("#output").addClass("hidden").empty();
 		});
 
 		$("#open_file").on("click", function(e) {
@@ -344,12 +334,12 @@ var HelpBalloons = (function() {
 /** When given an invalid XML document, The {@link DOMParser} [implementation in Mozilla Gecko]{@link https://developer.mozilla.org/en-US/docs/Web/API/DOMParser#Error_handling} does not throw an {@link Error}, but returns an {@link XMLDocument} with `parsererror` as its {@link Document.documentElement}.
  * @constructor
  * @augments Error
- * @param {XMLDocument} doc - Returned by {@link DOMParser}
+ * @param {XMLDocument} xmlDoc - Returned by {@link DOMParser}
  * @see https://bugzilla.mozilla.org/show_bug.cgi?id=45566
 **/
-function ParserError(doc) {
+function ParserError(xmlDoc) {
 	var serializer = new XMLSerializer();
-	this.message = "<strong>Dang!</strong> Looks like that wasn't valid XML." + (doc.documentElement.textContent.length > 0 ? "\n<details class='errorDetails clearfix'>\n<summary class='pull-right'><button type='button' data-toggle='collapse' class='btn btn-default' data-target='#parsererror'>Developer details</button></summary>\n<pre id='parsererror' class='collapse'>" + serializer.serializeToString(doc) + "</pre>\n</details>\n" : "");
+	this.message = "<strong>Dang!</strong> Looks like that wasn't valid XML." + (xmlDoc.documentElement.textContent.length > 0 ? "\n<details class='errorDetails clearfix'>\n<summary class='pull-right'><button type='button' data-toggle='collapse' class='btn btn-default' data-target='#parsererror'>Developer details</button></summary>\n<pre id='parsererror' class='collapse'>" + serializer.serializeToString(xmlDoc) + "</pre>\n</details>\n" : "");
 }
 
 /**

@@ -78,15 +78,7 @@ input.form-control[readonly] {
 	cursor:text;
 }
 
-/* Output frame */
 
-#output iframe {
-	width:100%;
-	height:100%;
-	margin:auto;
-	border-style:none;
-	display:block;
-}
 
 /* Print formatting */
 
