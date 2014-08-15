@@ -170,7 +170,7 @@ var HealthDataLume = (function(doc) {
 							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
 						}
 						try {
-							$("#output").removeClass("hidden").append(result);
+							$("#output").removeClass("hidden").html(result);
 						} catch(wtfErr) {
 							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
 						}
