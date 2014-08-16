@@ -751,6 +751,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="hl7:associatedEntity"/>
+							<xsl:apply-templates select="@typeCode"/>
 							<xsl:apply-templates select="hl7:functionCode"/>
 							<xsl:apply-templates select="hl7:time"/>
 						</xsl:otherwise>
@@ -1551,6 +1552,202 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</aside>
+	</xsl:template>
+
+	<!-- ParticipationType [2.16.840.1.113883.5.90] -->
+	<xsl:template match="hl7:participant/@typeCode">
+		<xsl:choose>
+			<!-- Participation: -->
+			<xsl:when test="current() = 'PART'">
+				<xsl:text>Participation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CST'">
+				<xsl:text>Custodian</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RESP'">
+				<xsl:text>Responsible Party</xsl:text>
+			</xsl:when>
+			<!-- Participation:Indirect Target: -->
+			<xsl:when test="current() = 'IND'">
+				<xsl:text>Indirect Target</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'BEN'">
+				<xsl:text>Beneficiary</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CAGNT'">
+				<xsl:text>Causative Agent</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'COV'">
+				<xsl:text>Coverage Target</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'GUAR'">
+				<xsl:text>Guarantor Party</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'HLD'">
+				<xsl:text>Holder</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RCT'">
+				<xsl:text>Record Target</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RCV'">
+				<xsl:text>Receiver</xsl:text>
+			</xsl:when>
+			<!-- Participation:Information Recipient: -->
+			<xsl:when test="current() = 'IRCP'">
+				<xsl:text>Information Recipient</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'NOT'">
+				<xsl:text>Ugent Notification Contact</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PRCP'">
+				<xsl:text>Primary Information Recipient</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'REFB'">
+				<xsl:text>Referred by</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'REFT'">
+				<xsl:text>Referred to</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'TRC'">
+				<xsl:text>Tracker</xsl:text>
+			</xsl:when>
+			<!-- Participation:Location: -->
+			<xsl:when test="current() = 'LOC'">
+				<xsl:text>Location</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DST'">
+				<xsl:text>Destination</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ELOC'">
+				<xsl:text>Entry Location</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ORG'">
+				<xsl:text>Origin</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RML'">
+				<xsl:text>Remote</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'VIA'">
+				<xsl:text>Via</xsl:text>
+			</xsl:when>
+			<!-- Participation:Performer: -->
+			<xsl:when test="current() = 'PRF'">
+				<xsl:text>Performer</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DIST'">
+				<xsl:text>Distributor</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PPRF'">
+				<xsl:text>Primary Performer</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SPRF'">
+				<xsl:text>Secondary Performer</xsl:text>
+			</xsl:when>
+			<!-- Participation:Direct Target: -->
+			<xsl:when test="current() = 'DIR'">
+				<xsl:text>Direct Target</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ALY'">
+				<xsl:text>Analyte</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'BBY'">
+				<xsl:text>Baby</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CAT'">
+				<xsl:text>Catalyst</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CSM'">
+				<xsl:text>Consumable</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DON'">
+				<xsl:text>Donor</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EXPAGNT'">
+				<xsl:text>Exposure Agent</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PRD'">
+				<xsl:text>Product</xsl:text>
+			</xsl:when>
+			<!-- Participation:Direct Target:Device -->
+			<xsl:when test="current() = 'DEV'">
+				<xsl:text>Device</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'NRD'">
+				<xsl:text>Non-reuseable Device</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RDV'">
+				<xsl:text>Reusable Device</xsl:text>
+			</xsl:when>
+			<!-- Participation:Direct Target:Exposure Participation -->
+			<xsl:when test="current() = 'EXPART'">
+				<xsl:text>Exposure Participation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EXPTRGT'">
+				<xsl:text>Exposure Target</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EXSRC'">
+				<xsl:text>Exposure Source</xsl:text>
+			</xsl:when>
+			<!-- Participation:Direct Target:Subject -->
+			<xsl:when test="current() = 'SBJ'">
+				<xsl:text>Subject</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SPC'">
+				<xsl:text>Specimen</xsl:text>
+			</xsl:when>
+			<!-- Participation:Verifier: -->
+			<xsl:when test="current() = 'VRF'">
+				<xsl:text>Verifier</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'AUTHEN'">
+				<xsl:text>Authenticator</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'LA'">
+				<xsl:text>Legal Authenticator</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ADM'">
+				<xsl:text>Admitter</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ATND'">
+				<xsl:text>Attender</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CALLBCK'">
+				<xsl:text>Callback Contact</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CON'">
+				<xsl:text>Consultant</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DIS'">
+				<xsl:text>Discharger</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ESC'">
+				<xsl:text>Escort</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'REF'">
+				<xsl:text>Referrer</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'AUT'">
+				<xsl:text>Author (Originator)</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'INF'">
+				<xsl:text>Informant</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'WIT'">
+				<xsl:text>Witness</xsl:text>
+			</xsl:when>
+			<!-- Participation:Verifier:Transcriber: -->
+			<xsl:when test="current() = 'TRANS'">
+				<xsl:text>Transcriber</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ENT'">
+				<xsl:text>Data Entry Person</xsl:text>
+			</xsl:when>
+			<!-- Unknown -->
+			<xsl:otherwise>
+				<xsl:text>Participation Type: </xsl:text>
+				<xsl:value-of select="current()"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- NullFlavor [2.16.840.1.113883.5.1008] -->
