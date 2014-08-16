@@ -132,7 +132,7 @@
 						<xsl:text> </xsl:text>
 					</xsl:for-each>
 				</address>
-				<xsl:apply-templates select="useablePeriod"/>
+				<xsl:apply-templates select="hl7:useablePeriod"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -913,10 +913,7 @@
 					<xsl:apply-templates select="@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:if test="./@use">
-						<strong><xsl:apply-templates select="./@use"/></strong>
-						<xsl:text> </xsl:text>
-					</xsl:if>
+					<xsl:apply-templates select="./@use"/>
 					<a>
 						<xsl:attribute name="href">
 							<xsl:value-of select="./@value"/>
@@ -1011,7 +1008,7 @@
 								<xsl:when test="./@codeSystemName">
 									<xsl:comment><xsl:value-of select="./@codeSystem"/></xsl:comment>
 									<xsl:value-of select="./@codeSystemName"/>
-									<xsl:apply-templates select="./@codeVersion"/>
+									<xsl:apply-templates select="./codeSystemVersion"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="./@codeSystem"/>
@@ -1458,12 +1455,11 @@
 				<xsl:text> Public</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="local-name()"/>
-				<xsl:text>: </xsl:text>
-				<code><xsl:value-of select="current()"/></code>
+				<xsl:value-of select="current()"/>
 			</xsl:otherwise>
 		</xsl:choose>
 		</span>
+		<xsl:text> </xsl:text>
 	</xsl:template>
 
 	<!-- AdministrativeGender [2.16.840.1.113883.5.1] -->
