@@ -97,31 +97,6 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="hl7:assignedAuthor">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:code"/>
-				<xsl:choose>
-					<xsl:when test="hl7:assignedPerson">
-						<xsl:apply-templates select="hl7:assignedPerson"/>
-						<xsl:apply-templates select="hl7:representedOrganization"/>
-						<xsl:apply-templates select="hl7:id"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="hl7:assignedAuthoringDevice"/>
-						<xsl:apply-templates select="hl7:representedOrganization"/>
-						<xsl:apply-templates select="hl7:id"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:apply-templates select="hl7:addr"/>
-				<xsl:apply-templates select="hl7:telecom"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<xsl:template match="hl7:assignedAuthoringDevice|hl7:playingDevice">
 		<section>
 			<xsl:call-template name="set-classes"/>
@@ -138,7 +113,7 @@
 		</section>
 	</xsl:template>
 
-	<xsl:template match="hl7:assignedEntity">
+	<xsl:template match="hl7:assignedEntity|hl7:associatedEntity">
 		<section>
 			<xsl:call-template name="set-classes"/>
 			<xsl:choose>
@@ -146,12 +121,12 @@
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:assignedPerson|hl7:associatedPerson"/>
 					<xsl:apply-templates select="hl7:code"/>
-					<xsl:apply-templates select="hl7:assignedPerson"/>
 					<xsl:apply-templates select="hl7:id"/>
-					<xsl:apply-templates select="hl7:representedOrganization"/>
-					<xsl:apply-templates select="hl7:addr"/>
+					<xsl:apply-templates select="hl7:representedOrganization|hl7:scopingOrganization"/>
 					<xsl:apply-templates select="hl7:telecom"/>
+					<xsl:apply-templates select="hl7:addr"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</section>
@@ -169,25 +144,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-	</xsl:template>
-
-	<xsl:template match="hl7:associatedEntity">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:code"/>
-					<xsl:apply-templates select="hl7:id"/>
-					<xsl:apply-templates select="hl7:associatedPerson"/>
-					<xsl:apply-templates select="hl7:scopingOrganization"/>
-					<xsl:apply-templates select="hl7:addr"/>
-					<xsl:apply-templates select="hl7:telecom"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
 	</xsl:template>
 
 	<xsl:template match="hl7:authenticator|hl7:legalAuthenticator">
@@ -283,31 +239,46 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:author">
-		<section>
+		<div>
 			<xsl:call-template name="set-classes">
 				<xsl:with-param name="moreClasses">
 					<xsl:call-template name="build-class-string">
 						<xsl:with-param name="toBuildFrom" select="hl7:assignedAuthor"/>
 					</xsl:call-template>
-					<xsl:text> panel panel-default</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
+					<div class="alert alert-warning">
+						<strong><xsl:text>No author:</xsl:text></strong>
+						<xsl:text> </xsl:text>
+						<xsl:apply-templates select="./@nullFlavor"/>
+					</div>
 				</xsl:when>
 				<xsl:otherwise>
-					<header class="panel-heading">
-						<xsl:text>Author</xsl:text>
-					</header>
-					<div class="panel-body">
-						<xsl:apply-templates select="hl7:assignedAuthor"/>
-						<xsl:apply-templates select="hl7:functionCode"/>
-						<xsl:apply-templates select="hl7:time" mode="TS"/>
-					</div>
+					<xsl:choose>
+						<xsl:when test="hl7:assignedAuthor/@nullFlavor">
+							<p>
+								<strong><xsl:text>No author assigned</xsl:text></strong>
+								<xsl:text> (</xsl:text>
+								<xsl:apply-templates select="hl7:assignedAuthor/@nullFlavor"/>
+								<xsl:text>)</xsl:text>
+							</p>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:code"/>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:assignedPerson|hl7:assignedAuthor/hl7:assignedAuthoringDevice"/>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:id"/>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:representedOrganization"/>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:addr"/>
+							<xsl:apply-templates select="hl7:assignedAuthor/hl7:telecom"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:apply-templates select="hl7:functionCode"/>
+					<xsl:apply-templates select="hl7:time" mode="TS"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</section>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="hl7:authorization">
