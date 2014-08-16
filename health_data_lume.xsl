@@ -439,19 +439,19 @@
 					</a>
 				</h2>
 			</header>
-				<xsl:choose>
-					<xsl:when test="./@nullFlavor">
-						<xsl:apply-templates select="./@nullFlavor"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<div class="panel-collapse collapse" id="dataEntererDetails">
-							<div class="panel-body">
-								<xsl:apply-templates select="hl7:assignedEntity"/>
-								<xsl:apply-templates select="hl7:time" mode="TS"/>
-							</div>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<div class="panel-collapse collapse" id="dataEntererDetails">
+						<div class="panel-body">
+							<xsl:apply-templates select="hl7:assignedEntity"/>
+							<xsl:apply-templates select="hl7:time" mode="TS"/>
 						</div>
-					</xsl:otherwise>
-				</xsl:choose>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
 		</section>
 	</xsl:template>
 
