@@ -6,7 +6,7 @@
 		<xsl:apply-templates select="hl7:languageCode/@code"/>
 		<header>
 			<div class="row">
-				<div class="col-md-8 col-lg-9">
+				<div class="col-md-8">
 					<h1>
 				<xsl:choose>
 					<xsl:when test="hl7:title and ( string-length(hl7:title) &gt; 0 )">
@@ -20,7 +20,7 @@
 				</xsl:choose>
 			</h1>
 				</div>
-				<div class="col-md-4 col-lg-3">
+				<div class="col-md-4">
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
 				</div>
 			</div>
@@ -937,7 +937,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<header>
-					<xsl:apply-templates select="hl7:code" mode="CD"/>
+					<xsl:apply-templates select="hl7:code"/>
 					<xsl:call-template name="document-info"/>
 				</header>
 				<xsl:apply-templates select="hl7:text"/>
@@ -1114,7 +1114,7 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="starts-with($url,'#')">
-									<xsl:apply-templates select="//*[@ID=substring($url,2)]" mode="asReference"/>
+									<xsl:apply-templates select="//*[@ID=substring($url,2)]" mode="fromReference"/>
 								</xsl:when>
 								<xsl:when test="./@mediaType = 'image/png' or ./@mediaType = 'image/jpeg' or ./@mediaType = 'image/gif' or ./@mediaType = 'image/tiff'">
 									<img>
@@ -1185,20 +1185,6 @@
 					</xsl:choose>
 					<xsl:if test="hl7:reference/hl7:useablePeriod">
 						<p><xsl:apply-templates select="hl7:reference/hl7:useablePeriod"/></p>
-					</xsl:if>
-					<xsl:if test="( count(./@*) &gt; 0 ) or ( string-length($url) &gt; 0 )">
-					<footer class="ED">
-						<dl>
-							<xsl:if test="string-length($url) &gt; 0">
-								<dt><xsl:text>URL</xsl:text></dt>
-								<dd><xsl:value-of select="$url"/></dd>
-							</xsl:if>
-							<xsl:for-each select="./@representation|./@mediaType|./@language|./@compression|./@integrityCheck|./@integrityCheckAlgorithm">
-								<dt><xsl:value-of select="local-name( current() )"/></dt>
-								<dd><xsl:value-of select="current()"/></dd>
-							</xsl:for-each>
-							</dl>
-					</footer>
 					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
