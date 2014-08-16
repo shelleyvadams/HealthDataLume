@@ -78,6 +78,7 @@
 				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:apply-templates select="./@use"/>
 				<address>
 					<xsl:for-each select="hl7:delimiter|hl7:country|hl7:state|hl7:county|hl7:city|hl7:postalCode|hl7:streetAddressLine|hl7:houseNumber|hl7:houseNumberNumeric|hl7:direction|hl7:streetName|hl7:streetNameBase|hl7:streetNameType|hl7:additionalLocator|hl7:unitID|hl7:unitType|hl7:careOf|hl7:censusTract|hl7:deliveryAddressLine|hl7:deliveryInstallationType|hl7:deliveryInstallationArea|hl7:deliveryInstallationQualifier|hl7:deliveryMode|hl7:deliveryModeIdentifier|hl7:buildingNumberSuffix|hl7:postBox|hl7:precinct">
 						<xsl:apply-templates select="current()"/>
@@ -327,6 +328,10 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</section>
+	</xsl:template>
+
+	<xsl:template match="hl7:birthTime">
+		<xsl:call-template name="TS"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:code">
@@ -903,6 +908,11 @@
 
 	<xsl:template match="hl7:time" mode="TS">
 		<xsl:call-template name="TS"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:useablePeriod">
+		<xsl:text>Useable: </xsl:text>
+		<xsl:call-template name="IVL_TS"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:versionNumber">
