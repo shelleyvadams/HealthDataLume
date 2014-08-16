@@ -62,14 +62,37 @@
 						<xsl:apply-templates select="hl7:dataEnterer"/>
 						<xsl:apply-templates select="hl7:legalAuthenticator"/>
 						<xsl:apply-templates select="hl7:authenticator"/>
+						<xsl:apply-templates select="hl7:participant"/>
+						<xsl:for-each select="hl7:informant">
+							<section class="panel panel-default">
+								<header class="panel-heading">
+									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
+										<xsl:attribute name="data-target">
+											<xsl:text>#headerEntities .</xsl:text>
+											<xsl:value-of select="local-name()"/>
+											<xsl:value-of select="position()"/>
+										</xsl:attribute>
+										<xsl:text>Informant </xsl:text>
+										<xsl:value-of select="position()"/>
+									</h2>
+								</header>
+								<div>
+									<xsl:attribute name="class">
+										<xsl:text>panel-collapse collapse </xsl:text>
+										<xsl:value-of select="local-name()"/>
+										<xsl:value-of select="position()"/>
+									</xsl:attribute>
+									<div class="panel-body">
+										<xsl:apply-templates select="current()"/>
+									</div>
+								</div>
+							</section>
+						</xsl:for-each>
 					</section>
 				</div>
 			</div>
 		</header>
 
-
-		<xsl:apply-templates select="hl7:informant"/>
-		<xsl:apply-templates select="hl7:participant"/>
 
 		<xsl:apply-templates select="hl7:informationRecipient"/>
 		<xsl:apply-templates select="hl7:inFulfillmentOf"/>
@@ -542,7 +565,7 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:informant">
-		<section>
+		<div>
 			<xsl:call-template name="set-classes"/>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
@@ -552,7 +575,7 @@
 					<xsl:apply-templates select="hl7:assignedEntity|hl7:relatedEntity"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</section>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:informationRecipient">
@@ -671,17 +694,41 @@
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:participant">
 		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:associatedEntity"/>
-					<xsl:apply-templates select="hl7:functionCode"/>
-					<xsl:apply-templates select="hl7:time"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="moreClasses">
+					<xsl:text>panel panel-default</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<header class="panel-heading">
+				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
+					<xsl:attribute name="data-target">
+						<xsl:text>#headerEntities .</xsl:text>
+						<xsl:value-of select="local-name()"/>
+						<xsl:value-of select="position()"/>
+					</xsl:attribute>
+					<xsl:text>Participant </xsl:text>
+					<xsl:value-of select="position()"/>
+				</h2>
+			</header>
+			<div>
+				<xsl:attribute name="class">
+					<xsl:text>panel-collapse collapse </xsl:text>
+					<xsl:value-of select="local-name()"/>
+					<xsl:value-of select="position()"/>
+				</xsl:attribute>
+				<div class="panel-body">
+					<xsl:choose>
+						<xsl:when test="./@nullFlavor">
+							<xsl:apply-templates select="./@nullFlavor"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="hl7:associatedEntity"/>
+							<xsl:apply-templates select="hl7:functionCode"/>
+							<xsl:apply-templates select="hl7:time"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
 		</section>
 	</xsl:template>
 
