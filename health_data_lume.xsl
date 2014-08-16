@@ -88,13 +88,13 @@
 								</div>
 							</section>
 						</xsl:for-each>
+						<xsl:apply-templates select="hl7:informationRecipient"/>
 					</section>
 				</div>
 			</div>
 		</header>
 
 
-		<xsl:apply-templates select="hl7:informationRecipient"/>
 		<xsl:apply-templates select="hl7:inFulfillmentOf"/>
 
 		<xsl:apply-templates select="hl7:documentationOf"/>
@@ -585,16 +585,44 @@
 					<xsl:call-template name="build-class-string">
 						<xsl:with-param name="toBuildFrom" select="hl7:intendedRecipient"/>
 					</xsl:call-template>
+					<xsl:text> panel panel-default</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:intendedRecipient"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<header class="panel-heading">
+				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
+					<xsl:attribute name="data-target">
+						<xsl:text>#headerEntities .</xsl:text>
+						<xsl:value-of select="local-name()"/>
+						<xsl:value-of select="position()"/>
+					</xsl:attribute>
+					<xsl:text>Information Recipient </xsl:text>
+					<xsl:value-of select="position()"/>
+				</h2>
+			</header>
+			<div>
+				<xsl:attribute name="class">
+					<xsl:text>panel-collapse collapse </xsl:text>
+					<xsl:value-of select="local-name()"/>
+					<xsl:value-of select="position()"/>
+				</xsl:attribute>
+				<div class="panel-body">
+					<xsl:choose>
+						<xsl:when test="./@nullFlavor">
+							<xsl:apply-templates select="./@nullFlavor"/>
+						</xsl:when>
+						<xsl:when test="hl7:intendedRecipient/@nullFlavor">
+							<xsl:apply-templates select="hl7:intendedRecipient/@nullFlavor"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="hl7:intendedRecipient/hl7:informationRecipient"/>
+							<xsl:apply-templates select="hl7:intendedRecipient/hl7:receivedOrganization"/>
+							<xsl:apply-templates select="hl7:intendedRecipient/hl7:id"/>
+							<xsl:apply-templates select="hl7:intendedRecipient/hl7:telecom"/>
+							<xsl:apply-templates select="hl7:intendedRecipient/hl7:addr"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
 		</section>
 	</xsl:template>
 
@@ -616,21 +644,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:intendedRecipient">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:informationRecipient"/>
-				<xsl:apply-templates select="hl7:receivedOrganization"/>
-				<xsl:apply-templates select="hl7:id"/>
-				<xsl:apply-templates select="hl7:telecom"/>
-				<xsl:apply-templates select="hl7:addr"/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:languageCode|hl7:realmCode|hl7:signatureCode|hl7:statusCode">
