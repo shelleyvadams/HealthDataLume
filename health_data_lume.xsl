@@ -206,27 +206,26 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<header class="panel-heading">
-						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#headerEntities">
-								<xsl:attribute name="href">
-									<xsl:text>#</xsl:text>
-									<xsl:value-of select="local-name()"/>
+						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
+							<xsl:attribute name="data-target">
+								<xsl:text>#headerEntities .</xsl:text>
+								<xsl:value-of select="local-name()"/>
+								<xsl:value-of select="position()"/>
+							</xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="local-name() = 'legalAuthenticator'">
+									<xsl:text>Legal Authenticator</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text>Authenticator </xsl:text>
 									<xsl:value-of select="position()"/>
-								</xsl:attribute>
-								<xsl:choose>
-									<xsl:when test="local-name() = 'legalAuthenticator'">
-										<xsl:text>Legal Authenticator</xsl:text>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:text>Authenticator </xsl:text>
-										<xsl:value-of select="position()"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</a>
+								</xsl:otherwise>
+							</xsl:choose>
 						</h2>
 					</header>
-					<div class="panel-collapse collapse">
-						<xsl:attribute name="id">
+					<div>
+						<xsl:attribute name="class">
+							<xsl:text>panel-collapse collapse </xsl:text>
 							<xsl:value-of select="local-name()"/>
 							<xsl:value-of select="position()"/>
 						</xsl:attribute>
@@ -404,20 +403,18 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<header class="panel-heading">
-						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#headerEntities" href="#custodianDetails">
-								<xsl:text>Custodian </xsl:text>
-								<xsl:if test="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name">
-									<small><xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name"/></small>
-								</xsl:if>
-							</a>
+						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#custodianDetails">
+							<xsl:text>Custodian</xsl:text>
 						</h2>
 					</header>
 					<div class="panel-collapse collapse" id="custodianDetails">
 						<div class="panel-body">
+							<xsl:if test="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name">
+								<h3><xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name"/></h3>
+							</xsl:if>
 							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:id"/>
-							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:addr"/>
 							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:telecom"/>
+							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:addr"/>
 						</div>
 					</div>
 				</xsl:otherwise>
@@ -433,10 +430,8 @@
 				</xsl:with-param>
 			</xsl:call-template>
 			<header class="panel-heading">
-				<h2 class="panel-title">
-					<a data-toggle="collapse" data-parent="#headerEntities" href="#dataEntererDetails">
-						<xsl:text>Data Enterer</xsl:text>
-					</a>
+				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#dataEntererDetails">
+					<xsl:text>Data Enterer</xsl:text>
 				</h2>
 			</header>
 			<xsl:choose>
