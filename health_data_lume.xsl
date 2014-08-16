@@ -8,17 +8,17 @@
 			<div class="row">
 				<div class="col-md-8">
 					<h1>
-				<xsl:choose>
-					<xsl:when test="hl7:title and ( string-length(hl7:title) &gt; 0 )">
-						<xsl:apply-templates select="hl7:title"/>
-						<xsl:text> </xsl:text>
-						<small><xsl:value-of select="hl7:code/@displayName"/></small>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="hl7:code/@displayName"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</h1>
+						<xsl:choose>
+							<xsl:when test="hl7:title and ( string-length(hl7:title) &gt; 0 )">
+								<xsl:apply-templates select="hl7:title"/>
+								<xsl:text> </xsl:text>
+								<small><xsl:value-of select="hl7:code/@displayName"/></small>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="hl7:code/@displayName"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</h1>
 				</div>
 				<div class="col-md-4">
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
