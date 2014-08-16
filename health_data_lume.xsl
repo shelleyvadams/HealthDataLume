@@ -32,7 +32,7 @@
 					<xsl:apply-templates select="hl7:effectiveTime"/>
 				</div>
 				<div class="col-md-6 col-lg-4">
-					<section class="panel-group" id="sourceEntities">
+					<section class="panel-group" id="headerEntities">
 						<xsl:apply-templates select="hl7:custodian"/>
 						<xsl:apply-templates select="hl7:author"/>
 						<xsl:apply-templates select="hl7:dataEnterer"/>
@@ -160,7 +160,7 @@
 				<xsl:otherwise>
 					<header class="panel-heading">
 						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#sourceEntities">
+							<a data-toggle="collapse" data-parent="#headerEntities">
 								<xsl:attribute name="href">
 									<xsl:text>#</xsl:text>
 									<xsl:value-of select="local-name()"/>
@@ -211,7 +211,7 @@
 				<xsl:otherwise>
 					<header class="panel-heading">
 						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#sourceEntities">
+							<a data-toggle="collapse" data-parent="#headerEntities">
 								<xsl:attribute name="href">
 									<xsl:text>#</xsl:text>
 									<xsl:value-of select="local-name()"/>
@@ -402,7 +402,7 @@
 				<xsl:otherwise>
 					<header class="panel-heading">
 						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#sourceEntities" href="#custodianDetails">
+							<a data-toggle="collapse" data-parent="#headerEntities" href="#custodianDetails">
 								<xsl:text>Custodian </xsl:text>
 								<xsl:if test="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name">
 									<small><xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name"/></small>
@@ -431,7 +431,7 @@
 			</xsl:call-template>
 			<header class="panel-heading">
 				<h2 class="panel-title">
-					<a data-toggle="collapse" data-parent="#sourceEntities" href="#dataEntererDetails">
+					<a data-toggle="collapse" data-parent="#headerEntities" href="#dataEntererDetails">
 						<xsl:text>Data Enterer</xsl:text>
 					</a>
 				</h2>
