@@ -30,7 +30,6 @@
 					<xsl:apply-templates select="hl7:recordTarget"/>
 
 					<xsl:apply-templates select="hl7:effectiveTime"/>
-					<xsl:call-template name="document-info"/>
 				</div>
 				<div class="col-md-6 col-lg-4">
 					<section class="panel-group" id="sourceEntities">
@@ -59,6 +58,9 @@
 
 		<xsl:apply-templates select="hl7:component"/>
 
+		<footer>
+			<xsl:call-template name="document-info"/>
+		</footer>
 	</xsl:template>
 
 	<!--  *******************************************  -->
@@ -861,6 +863,16 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="hl7:setId">
+		<span>
+			<xsl:call-template name="set-classes"/>
+			<strong>
+				<xsl:text>Set: </xsl:text>
+			</strong>
+			<xsl:call-template name="II"/>
+		</span>
+	</xsl:template>
+
 	<xsl:template match="hl7:telecom">
 		<div>
 			<xsl:call-template name="set-classes"/>
@@ -891,6 +903,14 @@
 
 	<xsl:template match="hl7:time" mode="TS">
 		<xsl:call-template name="TS"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:versionNumber">
+		<span>
+			<xsl:call-template name="set-classes"/>
+			<xsl:text>version </xsl:text>
+			<xsl:call-template name="INT"/>
+		</span>
 	</xsl:template>
 
 	<!--  *******************************************  -->
@@ -1211,6 +1231,22 @@
 					<xsl:text> from </xsl:text>
 					<xsl:value-of select="./@assigningAuthorityName"/>
 				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- Integer Number -->
+	<xsl:template name="INT">
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<span class="integer quantity">
+					<xsl:value-of select="./@value"/>
+				</span>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
