@@ -399,10 +399,6 @@
 					<xsl:call-template name="build-class-string">
 						<xsl:with-param name="toBuildFrom" select="hl7:assignedCustodian"/>
 					</xsl:call-template>
-					<xsl:text> </xsl:text>
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:assignedCustodian/hl7:representedCustodianOrganization"/>
-					</xsl:call-template>
 					<xsl:text> panel panel-default</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
