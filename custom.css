@@ -68,11 +68,6 @@ body {
 	text-shadow:0 0 0.15em #000,0 0 0.5em #eee, 0 0 1em #eee;
 }
 
-/* Make this bigger */
-.navbar .fa {
-	font-size:120%;
-}
-
 .navbar a>* {
 	display:inline-block;
 	vertical-align:middle;
@@ -84,7 +79,18 @@ input.form-control[readonly] {
 	cursor:text;
 }
 
+/* Cursor for collapsing panel-headings */
+.panel-heading *[data-toggle=collapse] {
+	cursor:pointer;
+}
 
+/* Font Awesome */
+
+.fa {
+	vertical-align:middle;
+	text-align:center;
+	min-width:1em;
+}
 
 /* Print formatting */
 
