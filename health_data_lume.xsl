@@ -152,8 +152,22 @@
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:softwareName"/>
-					<xsl:apply-templates select="hl7:manufacturerModelName"/>
+					<header>
+						<h3>
+							<i class="fa fa-desktop"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
+							<xsl:choose>
+								<xsl:when test="hl7:softwareName">
+									<xsl:apply-templates select="hl7:softwareName"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="hl7:manufacturerModelName"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</h3>
+					</header>
+					<xsl:if test="hl7:softwareName and not(hl7:softwareName = hl7:manufacturerModelName)">
+						<p><xsl:apply-templates select="hl7:manufacturerModelName"/></p>
+					</xsl:if>
 					<xsl:apply-templates select="hl7:code"/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -180,8 +194,9 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedPerson|hl7:associatedPerson|hl7:guardianPerson|hl7:intendedRecipient/hl7:informationRecipient|hl7:relatedPerson">
-		<div>
+		<h3>
 			<xsl:call-template name="set-classes"/>
+			<i class="fa fa-user"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
@@ -190,7 +205,7 @@
 					<xsl:apply-templates select="hl7:name" mode="PN"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</div>
+		</h3>
 	</xsl:template>
 
 	<xsl:template match="hl7:authenticator|hl7:legalAuthenticator">
@@ -672,6 +687,22 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</section>
+	</xsl:template>
+
+	<xsl:template match="hl7:manufacturerModelName|hl7:softwareName">
+		<span>
+			<xsl:call-template name="set-classes"/>
+			<!-- SC: Character String with Code -->
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates/>
+					<xsl:call-template name="CD"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<xsl:template match="hl7:nonXMLBody|hl7:structuredBody">
