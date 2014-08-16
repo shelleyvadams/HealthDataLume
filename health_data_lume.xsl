@@ -34,7 +34,31 @@
 				<div class="col-md-6 col-lg-4">
 					<section class="panel-group" id="headerEntities">
 						<xsl:apply-templates select="hl7:custodian"/>
-						<xsl:apply-templates select="hl7:author"/>
+						<xsl:for-each select="hl7:author">
+							<section class="panel panel-default">
+								<header class="panel-heading">
+									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
+										<xsl:attribute name="data-target">
+											<xsl:text>#headerEntities .</xsl:text>
+											<xsl:value-of select="local-name()"/>
+											<xsl:value-of select="position()"/>
+										</xsl:attribute>
+										<xsl:text>Author </xsl:text>
+										<xsl:value-of select="position()"/>
+									</h2>
+								</header>
+								<div>
+									<xsl:attribute name="class">
+										<xsl:text>panel-collapse collapse </xsl:text>
+										<xsl:value-of select="local-name()"/>
+										<xsl:value-of select="position()"/>
+									</xsl:attribute>
+									<div class="panel-body">
+										<xsl:apply-templates select="current()"/>
+									</div>
+								</div>
+							</section>
+						</xsl:for-each>
 						<xsl:apply-templates select="hl7:dataEnterer"/>
 						<xsl:apply-templates select="hl7:legalAuthenticator"/>
 						<xsl:apply-templates select="hl7:authenticator"/>
@@ -187,50 +211,6 @@
 							<xsl:apply-templates select="hl7:assignedEntity"/>
 							<xsl:apply-templates select="hl7:signatureCode"/>
 							<xsl:apply-templates select="hl7:time" mode="TS"/>
-						</div>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:ClinicalDocument/hl7:author">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:assignedAuthor"/>
-					</xsl:call-template>
-					<xsl:text> panel panel-default </xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<header class="panel-heading">
-						<h2 class="panel-title">
-							<a data-toggle="collapse" data-parent="#headerEntities">
-								<xsl:attribute name="href">
-									<xsl:text>#</xsl:text>
-									<xsl:value-of select="local-name()"/>
-									<xsl:value-of select="position()"/>
-								</xsl:attribute>
-								<xsl:text>Author </xsl:text>
-								<xsl:value-of select="position()"/>
-							</a>
-						</h2>
-					</header>
-					<div class="panel-collapse collapse">
-						<xsl:attribute name="id">
-							<xsl:value-of select="local-name()"/>
-							<xsl:value-of select="position()"/>
-						</xsl:attribute>
-						<div class="panel-body">
-								<xsl:apply-templates select="hl7:assignedAuthor"/>
-								<xsl:apply-templates select="hl7:functionCode"/>
-								<xsl:apply-templates select="hl7:time" mode="TS"/>
 						</div>
 					</div>
 				</xsl:otherwise>
