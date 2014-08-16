@@ -413,9 +413,6 @@
 				<xsl:when test="hl7:assignedCustodian/@nullFlavor">
 					<xsl:apply-templates select="hl7:assignedCustodian/@nullFlavor"/>
 				</xsl:when>
-				<xsl:when test="hl7:assignedCustodian/hl7:representedCustodianOrganization/@nullFlavor">
-					<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/@nullFlavor"/>
-				</xsl:when>
 				<xsl:otherwise>
 					<header class="panel-heading">
 						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#custodianDetails">
@@ -424,12 +421,7 @@
 					</header>
 					<div class="panel-collapse collapse" id="custodianDetails">
 						<div class="panel-body">
-							<xsl:if test="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name">
-								<h3><xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:name"/></h3>
-							</xsl:if>
-							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:id"/>
-							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:telecom"/>
-							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization/hl7:addr"/>
+							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization"/>
 						</div>
 					</div>
 				</xsl:otherwise>
@@ -542,27 +534,28 @@
 		<xsl:call-template name="ExternalDocument"/>
 	</xsl:template>
 
-	<xsl:template match="hl7:guardianOrganization|hl7:manufacturerOrganization|hl7:providerOrganization|hl7:receivedOrganization|hl7:representedOrganization|hl7:scopingOrganization|hl7:serviceProviderOrganization|hl7:wholeOrganization">
-		<details>
+	<xsl:template match="hl7:guardianOrganization|hl7:manufacturerOrganization|hl7:providerOrganization|hl7:receivedOrganization|hl7:representedCustodianOrganization|hl7:representedOrganization|hl7:scopingOrganization|hl7:serviceProviderOrganization|hl7:wholeOrganization">
+		<div>
 			<xsl:call-template name="set-classes"/>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<summary>
+					<h3>
+						<i class="fa fa-institution"></i>
+						<span class="sr-only"><xsl:text> Organization</xsl:text></span>
+						<xsl:text> </xsl:text>
 						<xsl:apply-templates select="hl7:name" mode="ON"/>
-					</summary>
-					<div>
-						<xsl:apply-templates select="hl7:asOrganizationPartOf"/>
-						<xsl:apply-templates select="hl7:id"/>
-						<xsl:apply-templates select="hl7:telecom"/>
-						<xsl:apply-templates select="hl7:addr"/>
-						<xsl:apply-templates select="hl7:standardIndustryClassCode"/>
-					</div>
+					</h3>
+					<xsl:apply-templates select="hl7:asOrganizationPartOf"/>
+					<xsl:apply-templates select="hl7:id"/>
+					<xsl:apply-templates select="hl7:telecom"/>
+					<xsl:apply-templates select="hl7:addr"/>
+					<xsl:apply-templates select="hl7:standardIndustryClassCode"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</details>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="hl7:id">
