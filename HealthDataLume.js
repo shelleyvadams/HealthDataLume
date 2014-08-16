@@ -21,6 +21,13 @@ var HealthDataLume = (function(doc) {
 	 * @description Path to default XSL.
 	**/
 	var XSL_FILE = "health_data_lume.xsl";
+
+	/**
+	 * @member xsltProcessor
+	 * @type {XSLTProcessor}
+	 * @memberof HealthDataLume
+	 * @private
+	**/
 	var xsltProcessor = new XSLTProcessor();
 
 	/**
@@ -78,7 +85,6 @@ var HealthDataLume = (function(doc) {
 		**/
 		var loadXSL = function(xmlDoc) {
 			xmlDoc = this.responseXML;
-			console.log("Yippie! Loaded an XML document with documentElement: " + xmlDoc.documentElement.tagName);
 			try {
 				xsltProcessor.importStylesheet(xmlDoc);
 			} catch (xslErr) {
@@ -127,7 +133,8 @@ var HealthDataLume = (function(doc) {
 	 * @throws {Error} The selected file must have an XML media type within "text/*" or "application/*"
 	 * @description Get the XML file selected by the user.
 	**/
-	var getFile = function(input, display) {
+	var getFile = function(input, status) {
+		var display = $("#file_path");
 		display.val("");
 		var userFile = input.get(0).files.item(0);
 		if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
@@ -135,7 +142,10 @@ var HealthDataLume = (function(doc) {
 		} else {
 			throw new Error("<strong>Oops!</strong> HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that <tt>" + userFile.name + "</tt> is an XML file, please " + errorIssueLink() + "." : ""));
 		}
-		return userFile;
+
+		var xmlReader = getXMLReader(xmlDoc, status, userFile.name);
+		xmlReader.readAsText(userFile);
+
 	};
 
 	/**
@@ -148,38 +158,51 @@ var HealthDataLume = (function(doc) {
 	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
 	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
 	**/
-	var getXMLReader = function(targetDoc, errContainer) {
+	var getXMLReader = function(targetDoc, errContainer, filename) {
 		var readIt = new FileReader();
 		readIt.onerror = (function() {
 			return function(e) {
 				throw new Error("<strong>Shoot!</strong> Couldn't load your file.");
 			};
 		})();
-		readIt.onload = ( function(xmlDoc, container) {
+		readIt.onload = ( function(xmlDoc, container, fName) {
 			return function(e) {
 				try {
 					xmlDoc = parser.parseFromString(e.target.result, "application/xml");
 					if (xmlDoc.documentElement.tagName == "parsererror") {
 						throw new ParserError(xmlDoc);
 					} else {
-						console.log(xmlDoc);
-						var result;
+						var outputSection = $("#output"),
+							result,
+							finishTime;
 						try {
 							result = xsltProcessor.transformToFragment(xmlDoc, doc);
 						} catch (transformErr) {
 							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
 						}
 						try {
-							$("#output").removeClass("hidden").html(result);
+							outputSection.removeClass("hidden").html(result);
 						} catch(wtfErr) {
 							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
 						}
+						finishTime = new Date();
+						outputSection.children("footer").last().append(
+							"<p class=\"text-muted\">Rendered by <cite>HealthDataLume</cite> from <tt>" +
+							fName +
+							"</tt> at <time datetime=\"" +
+							finishTime.toISOString() +
+							"\">" +
+							finishTime.toLocaleTimeString() +
+							" on " +
+							finishTime.toLocaleDateString() +
+							"</time>.</p>"
+						);
 					}
 				} catch (err) {
 					container.append( errorAlert(err) );
 				}
 			};
-		})(targetDoc, errContainer);
+		})(targetDoc, errContainer, filename);
 		return readIt;
 	};
 
@@ -188,7 +211,6 @@ var HealthDataLume = (function(doc) {
 	$(doc).ready(function() {
 		var xmlStatus = $("#xml_status");
 		var fileInput = $("#xml_file");
-		var fileDisplay = $("#file_path");
 
 		var xslDoc = xmlDoc = null;
 
@@ -213,9 +235,7 @@ var HealthDataLume = (function(doc) {
 		fileInput.change(function(e) {
 			xmlStatus.empty();
 			try {
-				var xmlFile = getFile(fileInput, fileDisplay);
-				var xmlReader = getXMLReader(xmlDoc, xmlStatus);
-				xmlReader.readAsText(xmlFile);
+				getFile(fileInput, xmlStatus);
 			} catch (err) {
 				xmlStatus.append( errorAlert(err) );
 			}
