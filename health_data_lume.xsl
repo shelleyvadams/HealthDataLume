@@ -132,9 +132,43 @@
 			<xsl:otherwise>
 				<xsl:apply-templates select="./@use"/>
 				<address>
-					<xsl:for-each select="hl7:delimiter|hl7:country|hl7:state|hl7:county|hl7:city|hl7:postalCode|hl7:streetAddressLine|hl7:houseNumber|hl7:houseNumberNumeric|hl7:direction|hl7:streetName|hl7:streetNameBase|hl7:streetNameType|hl7:additionalLocator|hl7:unitID|hl7:unitType|hl7:careOf|hl7:censusTract|hl7:deliveryAddressLine|hl7:deliveryInstallationType|hl7:deliveryInstallationArea|hl7:deliveryInstallationQualifier|hl7:deliveryMode|hl7:deliveryModeIdentifier|hl7:buildingNumberSuffix|hl7:postBox|hl7:precinct">
-						<xsl:apply-templates select="current()"/>
-						<xsl:text> </xsl:text>
+					<xsl:for-each select="text()|*">
+						<xsl:if test="position() != 1">
+							<xsl:text> </xsl:text>
+						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="local-name() = ''">
+								<xsl:value-of select="current()"/>
+							</xsl:when>
+							<xsl:when test="local-name() = 'delimiter'">
+								<br/>
+							</xsl:when>
+							<xsl:when test="local-name() = 'useablePeriod'">
+								<!-- Handled later. -->
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- ADXP: Address Part -->
+								<span>
+									<xsl:call-template name="set-classes">
+										<xsl:with-param name="moreClasses">
+											<xsl:for-each select="./@partType">
+												<xsl:text> </xsl:text>
+												<xsl:value-of select="current()"/>
+											</xsl:for-each>
+										</xsl:with-param>
+									</xsl:call-template>
+									<xsl:choose>
+										<xsl:when test="./@nullFlavor">
+											<xsl:apply-templates select="./@nullFlavor"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="./@language"/>
+											<xsl:value-of select="current()"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</span>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:for-each>
 				</address>
 				<xsl:apply-templates select="hl7:useablePeriod"/>
@@ -224,8 +258,17 @@
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
+				<xsl:when test="count(hl7:name) &gt; 1">
+					<xsl:apply-templates select="hl7:name[1]"/>
+					<xsl:for-each select="hl7:name[position()&gt;1]">
+						<xsl:text> </xsl:text>
+						<small>
+							<xsl:apply-templates select="current()"/>
+						</small>
+					</xsl:for-each>
+				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:name" mode="PN"/>
+					<xsl:apply-templates select="hl7:name"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</h3>
@@ -600,7 +643,20 @@
 						<i class="fa fa-institution"></i>
 						<span class="sr-only"><xsl:text> Organization</xsl:text></span>
 						<xsl:text> </xsl:text>
-						<xsl:apply-templates select="hl7:name" mode="ON"/>
+						<xsl:choose>
+							<xsl:when test="count(hl7:name) &gt; 1">
+								<xsl:apply-templates select="hl7:name[1]"/>
+								<xsl:for-each select="hl7:name[position()&gt;1]">
+									<xsl:text> </xsl:text>
+									<small>
+										<xsl:apply-templates select="current()"/>
+									</small>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="hl7:name"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</h3>
 					<xsl:apply-templates select="hl7:asOrganizationPartOf"/>
 					<xsl:apply-templates select="hl7:id"/>
@@ -745,7 +801,22 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="hl7:name">
-						<h1><xsl:apply-templates select="hl7:name" mode="EN"/></h1>
+						<h4>
+							<xsl:choose>
+								<xsl:when test="count(hl7:name) &gt; 1">
+									<xsl:apply-templates select="hl7:name[1]"/>
+									<xsl:for-each select="hl7:name[position()&gt;1]">
+										<xsl:text> </xsl:text>
+										<small>
+											<xsl:apply-templates select="current()"/>
+										</small>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="hl7:name"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</h4>
 					</xsl:if>
 					<xsl:apply-templates select="hl7:addr"/>
 				</xsl:otherwise>
@@ -764,6 +835,63 @@
 				<xsl:otherwise>
 					<xsl:apply-templates/>
 					<xsl:call-template name="CD"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="hl7:name">
+		<span>
+			<xsl:call-template name="set-classes"/>
+			<xsl:if test="@use">
+				<xsl:attribute name="title">
+					<xsl:apply-templates select="@use"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="text()|*">
+						<xsl:if test="position() != 1">
+							<xsl:text> </xsl:text>
+						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="local-name() = ''">
+								<xsl:value-of select="current()"/>
+							</xsl:when>
+							<xsl:when test="local-name() = 'delimiter'">
+								<br/>
+							</xsl:when>
+							<xsl:when test="local-name() = 'validTime'">
+								<!-- Handled later. -->
+							</xsl:when>
+							<xsl:otherwise>
+								<!-- ENXP: Entity Name Part -->
+								<span>
+									<xsl:call-template name="set-classes">
+										<xsl:with-param name="moreClasses">
+											<xsl:for-each select="./@partType|./@qualifier">
+												<xsl:text> </xsl:text>
+												<xsl:value-of select="current()"/>
+											</xsl:for-each>
+										</xsl:with-param>
+									</xsl:call-template>
+									<xsl:choose>
+										<xsl:when test="./@nullFlavor">
+											<xsl:apply-templates select="./@nullFlavor"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="./@language"/>
+											<xsl:value-of select="current()"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</span>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+					<xsl:apply-templates select="hl7:validTime"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</span>
@@ -881,7 +1009,22 @@
 								<xsl:apply-templates select="hl7:patientRole/hl7:patient/@nullFlavor"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<h2><xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name" mode="PN"/></h2>
+								<h2>
+									<xsl:choose>
+										<xsl:when test="count(hl7:patientRole/hl7:patient/hl7:name) &gt; 1">
+											<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name[1]"/>
+											<xsl:for-each select="hl7:patientRole/hl7:patient/hl7:name[position()&gt;1]">
+												<xsl:text> </xsl:text>
+												<small>
+													<xsl:apply-templates select="current()"/>
+												</small>
+											</xsl:for-each>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</h2>
 								<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/>
 								<xsl:if test="hl7:patientRole/hl7:patient/hl7:birthTime">
 									<p>
@@ -1147,6 +1290,15 @@
 			<xsl:call-template name="INT"/>
 		</span>
 	</xsl:template>
+
+	<!--  *******************************************  -->
+	<!--  *******************************************  -->
+
+	<!-- BEGIN: NarrativeBlock Data Types -->
+
+	<xsl:template match="hl7:br"><br/></xsl:template>
+
+	<!-- END:   NarrativeBlock Data Types -->
 
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
@@ -1791,6 +1943,78 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</aside>
+	</xsl:template>
+
+	<!-- EntityNameUse [2.16.840.1.113883.5.45] and EntityNameUseR2 [2.16.840.1.113883.5.1120] -->
+	<xsl:template match="hl7:name/@use">
+		<xsl:choose>
+			<xsl:when test="current() = 'A'"> <!-- Both -->
+				<xsl:text>Business, Artist, or Stage name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ABC'"> <!-- Both -->
+				<xsl:text>Alphabetic representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ANON'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Anonymous</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ASGN'"> <!-- EntityNameUse -->
+				<xsl:text>Assigned name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'Assumed'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Assumed name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'C'"> <!-- EntityNameUse -->
+				<xsl:text>License name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DN'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Do not use</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'I'"> <!-- Both -->
+				<xsl:text>Indigenous or Tribal name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'IDE'"> <!-- Both -->
+				<xsl:text>Ideographic representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'L'"> <!-- EntityNameUse -->
+				<xsl:text>Legal name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'M'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Maiden name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'N'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Customary name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'OLD'"> <!-- EntityNameUseR2 -->
+				<xsl:text>No longer in use</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'OR'"> <!-- EntityNameUse -->
+				<xsl:text>Official registry name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'P'"> <!-- Both -->
+				<xsl:text>Pseudonym, Alias, or Other name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PHON'"> <!-- Both -->
+				<xsl:text>Phonetic representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'R'"> <!-- Both -->
+				<xsl:text>Religious name</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SNDX'"> <!-- EntityNameUse -->
+				<xsl:text>SoundEx algorithm representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SRCH'"> <!-- Both -->
+				<xsl:text>Search representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SYL'"> <!-- Both -->
+				<xsl:text>Syllabic representation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'T'"> <!-- EntityNameUseR2 -->
+				<xsl:text>Temporary name</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="current()"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ParticipationType [2.16.840.1.113883.5.90] -->
