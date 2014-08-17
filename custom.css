@@ -84,14 +84,6 @@ input.form-control[readonly] {
 	cursor:pointer;
 }
 
-/* Font Awesome */
-
-.fa {
-	vertical-align:middle;
-	text-align:center;
-	min-width:1em;
-}
-
 /* Print formatting */
 
 @media print {

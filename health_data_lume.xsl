@@ -211,7 +211,7 @@
 				<xsl:otherwise>
 					<header>
 						<h3>
-							<i class="fa fa-desktop"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
+							<i class="fa fa-desktop fa-fw"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
 							<xsl:choose>
 								<xsl:when test="hl7:softwareName">
 									<xsl:apply-templates select="hl7:softwareName"/>
@@ -253,7 +253,7 @@
 	<xsl:template match="hl7:assignedPerson|hl7:associatedPerson|hl7:guardianPerson|hl7:intendedRecipient/hl7:informationRecipient|hl7:relatedPerson">
 		<h3>
 			<xsl:call-template name="set-classes"/>
-			<i class="fa fa-user"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
+			<i class="fa fa-user fa-fw"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
@@ -640,7 +640,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h3>
-						<i class="fa fa-institution"></i>
+						<i class="fa fa-institution fa-fw"></i>
 						<span class="sr-only"><xsl:text> Organization</xsl:text></span>
 						<xsl:text> </xsl:text>
 						<xsl:choose>
@@ -1039,7 +1039,7 @@
 					<xsl:if test="hl7:patientRole/hl7:patient/hl7:languageCommunication">
 						<section>
 							<h4>
-								<i class="fa fa-language"></i>
+								<i class="fa fa-language fa-fw"></i>
 								<xsl:text> Language</xsl:text>
 								<xsl:if test="count(hl7:patientRole/hl7:patient/hl7:languageCommunication) &gt; 1">
 									<xsl:text>s</xsl:text>
@@ -1063,7 +1063,7 @@
 													<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
 														<xsl:text> </xsl:text>
 														<span class="text-info">
-															<i class="fa fa-star fa-lg"></i>
+															<i class="fa fa-star fa-lg fa-fw"></i>
 															<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
 														</span>
 													</xsl:if>
@@ -1412,6 +1412,7 @@
 						</cite>
 					</xsl:if>
 					<xsl:if test="hl7:translation">
+						<xsl:text> </xsl:text>
 						<a data-toggle="collapse">
 							<xsl:attribute name="href">
 								<xsl:text>#translationsFor</xsl:text>
@@ -1791,31 +1792,31 @@
 		<span class="use_type">
 		<xsl:choose>
 			<xsl:when test="contains(current(), 'BAD')">
-				<i class="fa fa-ban"></i>
+				<i class="fa fa-ban fa-fw"></i>
 				<xsl:text> Bad (do not use)</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'CONF')">
-				<i class="fa fa-lock"></i>
+				<i class="fa fa-lock fa-fw"></i>
 				<xsl:text> Confidential</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'TMP')">
-				<i class="fa fa-clock-o"></i>
+				<i class="fa fa-clock-o fa-fw"></i>
 				<xsl:text> Temporary</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'WP')">
-				<i class="fa fa-briefcase"></i>
+				<i class="fa fa-briefcase fa-fw"></i>
 				<span class="sr-only"><xsl:text> Work</xsl:text></span>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'H')">
-				<i class="fa fa-home"></i>
+				<i class="fa fa-home fa-fw"></i>
 				<span class="sr-only"><xsl:text> Home</xsl:text></span>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'PHYS')">
-				<i class="fa fa-map-marker"></i>
+				<i class="fa fa-map-marker fa-fw"></i>
 				<span class="sr-only"><xsl:text> Physical address</xsl:text></span>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'PST')">
-				<i class="fa fa-envelope-o"></i>
+				<i class="fa fa-envelope-o fa-fw"></i>
 				<span class="sr-only"><xsl:text> Postal address</xsl:text></span>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'AS')">
@@ -1825,7 +1826,7 @@
 				<xsl:text>Emergency contact</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'MC')">
-				<i class="fa fa-mobile"></i>
+				<i class="fa fa-mobile fa-fw"></i>
 				<span class="sr-only"><xsl:text> Mobile</xsl:text></span>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'PG')">
@@ -1833,20 +1834,20 @@
 			</xsl:when>
 			<xsl:when test="contains(current(), 'HP')">
 				<span class="fa-stack">
-					<i class="fa fa-circle-thin"></i>
-					<i class="fa fa-home"></i>
+					<i class="fa fa-circle-thin fa-stack-2x"></i>
+					<i class="fa fa-home fa-stack-1x"></i>
 				</span>
 				<xsl:text> Primary home</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'HV')">
-				<i class="fa fa-suitcase"></i>
+				<i class="fa fa-suitcase fa-fw"></i>
 				<xsl:text> Vacation home</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'DIR')">
 				<xsl:text>Direct</xsl:text>
 			</xsl:when>
 			<xsl:when test="contains(current(), 'PUB')">
-				<i class="fa fa-unlock"></i>
+				<i class="fa fa-unlock fa-fw"></i>
 				<xsl:text> Public</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
@@ -1915,27 +1916,27 @@
 			<xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="@code = 'U'">
-					<i class="fa fa-unlock fa-2x"></i>
+					<i class="fa fa-unlock fa-fw fa-2x"></i>
 					<xsl:text> Unrestricted Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'L'">
-					<i class="fa fa-shield fa-2x"></i>
+					<i class="fa fa-shield fa-fw fa-2x"></i>
 					<xsl:text> Low Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'M'">
-					<i class="fa fa-key fa-2x"></i>
+					<i class="fa fa-key fa-fw fa-2x"></i>
 					<xsl:text> Moderate Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'N'">
-					<i class="fa fa-lock fa-2x"></i>
+					<i class="fa fa-lock fa-fw fa-2x"></i>
 					<xsl:text> Normal Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'R'">
-					<i class="fa fa-exclamation-circle fa-2x"></i>
+					<i class="fa fa-exclamation-circle fa-fw fa-2x"></i>
 					<xsl:text> Restricted Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'V'">
-					<i class="fa fa-exclamation-triangle fa-2x"></i>
+					<i class="fa fa-exclamation-triangle fa-fw fa-2x"></i>
 					<xsl:text> Very Restricted Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
