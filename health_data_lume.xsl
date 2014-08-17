@@ -563,7 +563,7 @@
 		</section>
 	</xsl:template>
 
-	<xsl:template match="hl7:effectiveTime|hl7:expectedUseTime|hl7:time">
+	<xsl:template match="hl7:effectiveTime|hl7:expectedUseTime|hl7:time|hl7:useablePeriod">
 		<div>
 			<xsl:call-template name="set-classes"/>
 			<xsl:call-template name="IVL_TS"/>
@@ -1129,6 +1129,23 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:relatedSubject">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:subject"/>
+					<xsl:apply-templates select="hl7:telecom"/>
+					<xsl:apply-templates select="hl7:addr"/>
+					<xsl:apply-templates select="hl7:code"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
 	<xsl:template match="hl7:responsibleParty">
 		<section>
 			<xsl:call-template name="set-classes"/>
@@ -1145,6 +1162,10 @@
 
 	<xsl:template match="hl7:section">
 		<xsl:call-template name="Section"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:section" mode="inReference">
+		<xsl:apply-templates select="current()" mode="fromReference"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:section" mode="fromReference">
@@ -1249,6 +1270,37 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="hl7:subject">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:awarenessCode"/>
+					<xsl:apply-templates select="hl7:relatedSubject"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
+	<xsl:template match="hl7:relatedSubject/hl7:subject">
+		<header>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:name"/>
+					<xsl:apply-templates select="hl7:administrativeGenderCode"/>
+					<xsl:apply-templates select="hl7:birthTime"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</header>
+	</xsl:template>
+
 	<xsl:template match="hl7:telecom">
 		<div>
 			<xsl:call-template name="set-classes"/>
@@ -1276,11 +1328,6 @@
 
 	<xsl:template match="hl7:time" mode="TS">
 		<xsl:call-template name="TS"/>
-	</xsl:template>
-
-	<xsl:template match="hl7:useablePeriod">
-		<xsl:text>Useable: </xsl:text>
-		<xsl:call-template name="IVL_TS"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:versionNumber">
@@ -1325,13 +1372,6 @@
 
 	<xsl:template match="hl7:sub|hl7:sup">
 		<xsl:call-template name="ditto-element"/>
-	</xsl:template>
-
-	<xsl:template match="hl7:section/hl7:text">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:call-template name="NarrativeText"/>
-		</div>
 	</xsl:template>
 
 	<!--  *******************************************  -->
@@ -1562,11 +1602,22 @@
 	<xsl:template name="NarrativeText">
 		<!-- StrucDoc.Text -->
 		<xsl:param name="fromReference" select="false()"/>
-		<xsl:if test="not($fromReference)">
-			<xsl:apply-templates select="./@ID"/>
-		</xsl:if>
-		<xsl:apply-templates select="./@language"/>
-		<xsl:apply-templates/>
+		<xsl:param name="textElement" select="current()"/>
+		<div>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="setFrom" select="$textElement"/>
+			</xsl:call-template>
+			<xsl:apply-templates select="$textElement/@language"/>
+			<xsl:choose>
+			<xsl:when test="not($fromReference)">
+				<xsl:apply-templates select="$textElement/@ID"/>
+				<xsl:apply-templates select="$textElement/*|$textElement/text()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="$textElement/*|$textElement/text()" mode="inReference"/>
+			</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
 
 	<!-- END:   NarrativeBlock Templates -->
@@ -1626,11 +1677,14 @@
 					<xsl:apply-templates select="hl7:informant"/>
 					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<div class="text">
-					<xsl:apply-templates select="hl7:text"/>
-				</div>
-				<xsl:apply-templates select="hl7:entry"/><!-- [0..*] -->
-				<xsl:apply-templates select="hl7:component"/><!-- Component5 [0..*] -->
+				<xsl:if test="hl7:text">
+					<!-- StrucDoc.Text [0..1] -->
+					<xsl:call-template name="NarrativeText">
+						<xsl:with-param name="fromReference" select="$fromReference"/>
+						<xsl:with-param name="textElement" select="hl7:text"/>
+					</xsl:call-template>
+				</xsl:if>
+				<xsl:apply-templates select="hl7:entry|hl7:component"/><!-- Entry [0..*] | Component5 [0..*] -->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -2606,9 +2660,12 @@
 	</xsl:template>
 
 	<xsl:template name="set-classes">
+		<xsl:param name="setFrom" select="current()"/>
 		<xsl:param name="moreClasses"/>
 		<xsl:attribute name="class">
-			<xsl:call-template name="build-class-string"/>
+			<xsl:call-template name="build-class-string">
+				<xsl:with-param name="toBuildFrom" select="$setFrom"/>
+			</xsl:call-template>
 			<xsl:if test="$moreClasses and ( string-length($moreClasses) &gt; 0 )">
 				<xsl:text> </xsl:text>
 				<xsl:value-of select="$moreClasses"/>
@@ -2617,7 +2674,7 @@
 	</xsl:template>
 
 	<xsl:template name="build-class-string">
-		<xsl:param name="toBuildFrom" select="current()"/>
+		<xsl:param name="toBuildFrom"/>
 		<xsl:text>cda-</xsl:text>
 		<xsl:value-of select="local-name($toBuildFrom)"/>
 		<xsl:for-each select="$toBuildFrom/@classCode|$toBuildFrom/@moodCode|$toBuildFrom/@typeCode">
