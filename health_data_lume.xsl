@@ -19,6 +19,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</h1>
+					<xsl:apply-templates select="hl7:effectiveTime"/>
 				</div>
 				<div class="col-md-4">
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
@@ -28,8 +29,6 @@
 			<div class="row">
 				<div class="col-md-6 col-lg-8">
 					<xsl:apply-templates select="hl7:recordTarget"/>
-
-					<xsl:apply-templates select="hl7:effectiveTime"/>
 				</div>
 				<div class="col-md-6 col-lg-4">
 					<section class="panel-group" id="headerEntities">
@@ -99,11 +98,11 @@
 
 		<xsl:apply-templates select="hl7:documentationOf"/>
 		<xsl:apply-templates select="hl7:relatedDocument"/>
-		<xsl:apply-templates select="hl7:componentOf"/>
+		<xsl:apply-templates select="hl7:componentOf"/> <!-- Component1 [0..1] -->
 
 		<xsl:apply-templates select="hl7:authorization"/>
 
-		<xsl:apply-templates select="hl7:component"/>
+		<xsl:apply-templates select="hl7:component"/> <!-- Component2 [1] -->
 
 		<footer>
 			<xsl:call-template name="document-info"/>
@@ -112,6 +111,12 @@
 
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
+
+	<xsl:template match="@ID">
+		<xsl:attribute name="id">
+			<xsl:value-of select="current()"/>
+		</xsl:attribute>
+	</xsl:template>
 
 	<xsl:template match="@language|hl7:languageCode/@code">
 		<xsl:attribute name="lang">
@@ -142,6 +147,24 @@
 			<xsl:call-template name="set-classes"/>
 			<xsl:call-template name="CD"/>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="hl7:asOrganizationPartOf">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:wholeOrganization"/>
+					<xsl:apply-templates select="hl7:code"/>
+					<xsl:apply-templates select="hl7:id"/>
+					<xsl:apply-templates select="hl7:effectiveTime"/>
+					<xsl:apply-templates select="hl7:statusCode"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedAuthoringDevice|hl7:playingDevice">
@@ -318,6 +341,21 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:birthplace">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<h1><xsl:text>Birthplace:</xsl:text></h1>
+					<xsl:apply-templates select="hl7:place"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
 	<xsl:template match="hl7:birthTime">
 		<xsl:call-template name="TS"/>
 	</xsl:template>
@@ -346,20 +384,22 @@
 		</section>
 	</xsl:template>
 
-	<xsl:template match="hl7:structuredBody/hl7:component">
-	<section>
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:section"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</section>
+	<xsl:template match="hl7:section/hl7:component">
+		<!-- Component5 -->
+		<section>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:section"/><!-- [1] -->
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
 	</xsl:template>
 
 	<xsl:template match="hl7:componentOf">
+		<!-- Component1 -->
 		<section>
 			<xsl:call-template name="set-classes">
 				<xsl:with-param name="moreClasses">
@@ -530,6 +570,24 @@
 		<xsl:call-template name="ExternalDocument"/>
 	</xsl:template>
 
+	<xsl:template match="hl7:guardian">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:guardianPerson|hl7:guardianOrganization"/>
+					<xsl:apply-templates select="hl7:code"/>
+					<xsl:apply-templates select="hl7:id"/>
+					<xsl:apply-templates select="hl7:telecom"/>
+					<xsl:apply-templates select="hl7:addr"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
 	<xsl:template match="hl7:guardianOrganization|hl7:manufacturerOrganization|hl7:providerOrganization|hl7:receivedOrganization|hl7:representedCustodianOrganization|hl7:representedOrganization|hl7:scopingOrganization|hl7:serviceProviderOrganization|hl7:wholeOrganization">
 		<div>
 			<xsl:call-template name="set-classes"/>
@@ -678,6 +736,23 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:healthCareFacility/hl7:location|hl7:place">
+		<section>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="hl7:name">
+						<h1><xsl:apply-templates select="hl7:name" mode="EN"/></h1>
+					</xsl:if>
+					<xsl:apply-templates select="hl7:addr"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
 	<xsl:template match="hl7:manufacturerModelName|hl7:softwareName">
 		<span>
 			<xsl:call-template name="set-classes"/>
@@ -694,7 +769,7 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="hl7:nonXMLBody|hl7:structuredBody">
+	<xsl:template match="hl7:nonXMLBody">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
 				<xsl:apply-templates select="./@nullFlavor"/>
@@ -702,7 +777,7 @@
 			<xsl:otherwise>
 				<xsl:apply-templates select="hl7:languageCode/@code"/>
 				<xsl:apply-templates select="hl7:confidentialityCode"/>
-				<xsl:apply-templates select="hl7:component|hl7:text"/>
+				<xsl:apply-templates select="hl7:text"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -818,7 +893,51 @@
 						</xsl:choose>
 					</header>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:birthplace"/>
-					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:languageCommunication"/>
+					<xsl:if test="hl7:patientRole/hl7:patient/hl7:languageCommunication">
+						<section>
+							<h4>
+								<i class="fa fa-language"></i>
+								<xsl:text> Language</xsl:text>
+								<xsl:if test="count(hl7:patientRole/hl7:patient/hl7:languageCommunication) &gt; 1">
+									<xsl:text>s</xsl:text>
+								</xsl:if>
+							</h4>
+							<ul class="list-group">
+								<xsl:for-each select="hl7:patientRole/hl7:patient/hl7:languageCommunication">
+									<li>
+										<xsl:call-template name="set-classes">
+											<xsl:with-param name="moreClasses">
+												<xsl:text>list-group-item</xsl:text>
+											</xsl:with-param>
+										</xsl:call-template>
+										<xsl:choose>
+											<xsl:when test="./@nullFlavor">
+												<xsl:apply-templates select="./@nullFlavor"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<h5 class="list-group-item-heading">
+													<xsl:value-of select="hl7:languageCode/@code"/>
+													<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
+														<xsl:text> </xsl:text>
+														<span class="text-info">
+															<i class="fa fa-star fa-lg"></i>
+															<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
+														</span>
+													</xsl:if>
+												</h5>
+												<xsl:if test="hl7:modeCode or hl7:proficiencyLevelCode">
+													<div class="list-group-item-text">
+														<xsl:apply-templates select="hl7:modeCode"/>
+														<xsl:apply-templates select="hl7:proficiencyLevelCode"/>
+													</div>
+												</xsl:if>
+											</xsl:otherwise>
+										</xsl:choose>
+									</li>
+								</xsl:for-each>
+							</ul>
+						</section>
+					</xsl:if>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:maritalStatusCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:ethnicGroupCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:raceCode"/>
@@ -881,6 +1000,16 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:section">
+		<xsl:call-template name="Section"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:section" mode="fromReference">
+		<xsl:call-template name="Section">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:call-template>
+	</xsl:template>
+
 	<xsl:template match="hl7:serviceEvent">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
@@ -903,6 +1032,78 @@
 			</strong>
 			<xsl:call-template name="II"/>
 		</span>
+	</xsl:template>
+
+	<xsl:template match="hl7:structuredBody">
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:languageCode/@code"/>
+				<header>
+					<xsl:apply-templates select="hl7:confidentialityCode"/>
+					<nav>
+						<ul class="nav nav-pills">
+							<xsl:for-each select="hl7:component">
+								<li>
+									<xsl:attribute name="class">
+										<xsl:if test="position() = 1">
+											<xsl:text>active</xsl:text>
+										</xsl:if>
+									</xsl:attribute>
+									<a role="tab" data-toggle="pill">
+										<xsl:attribute name="href">
+											<xsl:text>#structuredBody-component</xsl:text>
+											<xsl:value-of select="position()"/>
+										</xsl:attribute>
+										<xsl:choose>
+											<xsl:when test="hl7:section/hl7:title and (string-length(hl7:section/hl7:title) &gt; 0)">
+												<xsl:value-of select="hl7:section/hl7:title"/>
+											</xsl:when>
+											<xsl:when test="hl7:section/hl7:code/@displayName">
+												<xsl:value-of select="hl7:section/hl7:code/@displayName"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:text>Component </xsl:text>
+												<xsl:value-of select="position()"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</a>
+								</li>
+							</xsl:for-each>
+						</ul>
+					</nav>
+				</header>
+				<div class="tab-content">
+					<!-- Component3 [1..*] -->
+					<xsl:for-each select="hl7:component">
+						<section>
+							<xsl:call-template name="set-classes">
+								<xsl:with-param name="moreClasses">
+									<xsl:text>tab-pane fade</xsl:text>
+									<xsl:if test="position() = 1">
+										<xsl:text> in active</xsl:text>
+									</xsl:if>
+								</xsl:with-param>
+							</xsl:call-template>
+							<xsl:attribute name="id">
+								<xsl:text>structuredBody-component</xsl:text>
+								<xsl:value-of select="position()"/>
+							</xsl:attribute>
+							<xsl:choose>
+								<xsl:when test="./@nullFlavor">
+									<xsl:apply-templates select="./@nullFlavor"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="hl7:section"/><!-- [1] -->
+								</xsl:otherwise>
+							</xsl:choose>
+						</section>
+					</xsl:for-each>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:telecom">
@@ -965,6 +1166,48 @@
 					<xsl:call-template name="document-info"/>
 				</header>
 				<xsl:apply-templates select="hl7:text"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- POCD_MT000040.Section -->
+	<xsl:template name="Section">
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:languageCode/@code"/>
+				<header>
+					<xsl:if test="not($fromReference)">
+						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
+					</xsl:if>
+					<h2>
+						<xsl:choose>
+							<xsl:when test="hl7:title">
+								<xsl:apply-templates select="hl7:title"/>
+								<br/>
+								<small><xsl:apply-templates select="hl7:code"/></small>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="hl7:code"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</h2>
+					<xsl:apply-templates select="hl7:confidentialityCode"/>
+					<xsl:apply-templates select="hl7:subject"/>
+					<xsl:apply-templates select="hl7:author"/>
+					<xsl:apply-templates select="hl7:informant"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<div class="text">
+					<xsl:apply-templates select="hl7:text"/>
+				</div>
+				<xsl:apply-templates select="hl7:entry"/><!-- [0..*] -->
+				<xsl:apply-templates select="hl7:component"/><!-- Component5 [0..*] -->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1744,6 +1987,45 @@
 				<xsl:value-of select="current()"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- SetOperator [2.16.840.1.113883.5.1069] -->
+	<xsl:template match="@operator">
+		<span class="SetOperator">
+			<xsl:choose>
+				<xsl:when test="current() = 'A'">
+					<xsl:attribute name="title">
+						<xsl:text>Form the intersection with the value.</xsl:text>
+					</xsl:attribute>
+					<xsl:text>Intersect</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'E'">
+					<xsl:attribute name="title">
+						<xsl:text>Form the set-difference with this value, i.e., exclude this element or set from the resulting set.</xsl:text>
+					</xsl:attribute>
+					<xsl:text>Exclude</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'H'">
+					<xsl:attribute name="title">
+						<xsl:text>Form the convex hull with the value. The convex hull is defined over ordered domains and is the smallest contiguous superset (interval) that of all the operand sets.</xsl:text>
+					</xsl:attribute>
+					<xsl:text>Convex hull</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'P'">
+					<xsl:attribute name="title">
+						<xsl:text>Form the periodic hull with the value. The periodic hull is defined over ordered domains and is the periodic set that contains all contiguous supersets of pairs of intervals generated by the operand periodic intervals.</xsl:text>
+					</xsl:attribute>
+					<xsl:text>Periodic hull</xsl:text>
+				</xsl:when>
+				<!-- default = I -->
+				<xsl:otherwise>
+					<xsl:attribute name="title">
+						<xsl:text>Form the union with this value, i.e., include this element or set in the resulting set.</xsl:text>
+					</xsl:attribute>
+					<xsl:text>Include</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<!-- NullFlavor [2.16.840.1.113883.5.1008] -->
