@@ -1294,11 +1294,282 @@
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
 
-	<!-- BEGIN: NarrativeBlock Data Types -->
+	<!-- BEGIN: NarrativeBlock Templates -->
+
+	<xsl:template match="hl7:td/@colspan|hl7:th/@colspan|hl7:td/@headers|hl7:th/@headers|hl7:td/@rowspan|hl7:th/@rowspan|hl7:th/@scope|hl7:linkHtml/@href|hl7:linkHtml/@rel|hl7:linkHtml/@title|hl7:col/@span|hl7:colgroup/@span">
+		<xsl:call-template name="ditto-attribute"/>
+	</xsl:template>
 
 	<xsl:template match="hl7:br"><br/></xsl:template>
 
-	<!-- END:   NarrativeBlock Data Types -->
+	<xsl:template match="hl7:content">
+		<xsl:call-template name="Content"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:table/hl7:caption|hl7:col|hl7:colgroup|hl7:table|hl7:tbody|hl7:td|hl7:tfoot|hl7:th|hl7:thead|hl7:tr">
+		<xsl:call-template name="ditto-element"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:list/hl7:item">
+		<li>
+			<xsl:apply-templates select="./@ID"/>
+			<xsl:apply-templates select="./@language"/>
+			<xsl:call-template name="narrative-styles"/>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="hl7:list">
+		<xsl:call-template name="List"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:sub|hl7:sup">
+		<xsl:call-template name="ditto-element"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:section/hl7:text">
+		<div>
+			<xsl:call-template name="set-classes"/>
+			<xsl:call-template name="NarrativeText"/>
+		</div>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- Directly Referenced Elements Templates -->
+
+	<xsl:template match="hl7:caption|hl7:list/hl7:item" mode="fromReference">
+		<div>
+			<xsl:apply-templates select="./@language"/>
+			<xsl:call-template name="narrative-styles"/>
+			<xsl:value-of select="current()"/>
+			<xsl:apply-templates mode="inReference"/>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="hl7:col|hl7:colgroup" mode="fromReference">
+		<xsl:comment>
+			<xsl:call-template name="ditto-element"/>
+		</xsl:comment>
+	</xsl:template>
+
+	<xsl:template match="hl7:content" mode="fromReference">
+		<xsl:call-template name="Content">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="hl7:list" mode="fromReference">
+		<xsl:call-template name="List">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="hl7:table" mode="fromReference">
+		<xsl:call-template name="ditto-element">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="hl7:tbody|hl7:tfoot|hl7:thead|hl7:tr" mode="fromReference">
+		<table>
+			 <xsl:call-template name="ditto-element">
+				 <xsl:with-param name="fromReference" select="true()"/>
+			 </xsl:call-template>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="hl7:td|hl7:th" mode="fromReference">
+		<span>
+			<xsl:apply-templates select="./@language"/>
+			<xsl:call-template name="narrative-styles"/>
+			<xsl:apply-templates mode="inReference"/>
+		</span>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- Indirectly Referenced Element Templates -->
+
+	<xsl:template match="hl7:caption|hl7:col|hl7:colgroup|hl7:tbody|hl7:td|hl7:tfoot|hl7:th|hl7:thead|hl7:tr" mode="inReference">
+		<xsl:call-template name="ditto-element">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:call-template>
+	</xsl:template>
+
+	<xsl:template match="hl7:content|hl7:list|hl7:table" mode="inReference">
+		<xsl:apply-templates select="current()" mode="fromReference"/>
+	</xsl:template>
+	
+	<xsl:template match="hl7:list/hl7:item" mode="inReference">
+		<li>
+			<xsl:apply-templates select="./@language"/>
+			<xsl:call-template name="narrative-styles"/>
+			<xsl:apply-templates mode="inReference"/>
+		</li>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- Named NarrativeBlock Templates -->
+
+	<xsl:template name="Content">
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:param name="element" select="current()"/>
+		<xsl:variable name="container">
+			<xsl:choose>
+				<xsl:when test="$element/@revised and ( $element/@revised = 'delete' )">
+					<xsl:text>del</xsl:text>
+				</xsl:when>
+				<xsl:when test="$element/@revised and ( $element/@revised = 'insert' )">
+					<xsl:text>ins</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>span</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:element name="{$container}">
+			<xsl:apply-templates select="$element/@language"/>
+			<xsl:call-template name="narrative-styles">
+				<xsl:with-param name="element" select="$element"/>
+			</xsl:call-template>
+			<xsl:choose>
+				<xsl:when test="$fromReference">
+					<xsl:value-of select="$element"/>
+					<xsl:apply-templates select="$element/*" mode="inReference"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="$element/@ID"/>
+					<xsl:apply-templates/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template name="ditto-attribute">
+		<xsl:param name="attribute" select="current()"/>
+		<xsl:attribute name="local-name($attribute)">
+			<xsl:value-of select="$attribute"/>
+		</xsl:attribute>
+	</xsl:template>
+
+	<xsl:template name="ditto-element">
+		<xsl:param name="element" select="current()"/>
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:element name="{local-name($element)}">
+			<xsl:apply-templates select="$element/@language"/>
+			<xsl:call-template name="narrative-styles">
+				<xsl:with-param name="element" select="$element"/>
+			</xsl:call-template>
+			<xsl:choose>
+				<xsl:when test="$fromReference">
+					<xsl:apply-templates mode="inReference"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="$element/@ID"/>
+					<xsl:apply-templates/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template name="List">
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:param name="element" select="current()"/>
+		<xsl:choose>
+			<xsl:when test="$element/hl7:caption">
+				<figure>
+					<xsl:apply-templates select="$element/@language"/>
+					<figcaption>
+						<xsl:choose>
+							<xsl:when test="$fromReference">
+								<xsl:apply-templates select="$element/hl7:caption" mode="inReference"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="$element/hl7:caption"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</figcaption>
+					<xsl:call-template name="ListContent">
+						<xsl:with-param name="fromReference" select="$fromReference"/>
+						<xsl:with-param name="element" select="$element"/>
+					</xsl:call-template>
+				</figure>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="ListContent">
+					<xsl:with-param name="fromReference" select="$fromReference"/>
+					<xsl:with-param name="element" select="$element"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="ListContent">
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:param name="element" select="current()"/>
+		<xsl:variable name="container">
+			<xsl:choose>
+				<xsl:when test="$element/@listType and ( $element/@listType = 'ordered' )">
+					<xsl:text>ol</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>ul</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:element name="{$container}">
+			<xsl:apply-templates select="$element/@language"/>
+			<xsl:call-template name="narrative-styles">
+				<xsl:with-param name="element" select="$element"/>
+			</xsl:call-template>
+			<xsl:choose>
+				<xsl:when test="not($fromReference)">
+					<xsl:apply-templates select="$element/@ID"/>
+					<xsl:apply-templates select="$element/hl7:item"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="$element/hl7:item" mode="inReference"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:element>
+	</xsl:template>
+
+	<xsl:template name="narrative-styles">
+		<xsl:param name="element" select="current()"/>
+		<xsl:if test="$element/@styleCode">
+			<xsl:attribute name="class">
+				<xsl:value-of select="$element/@styleCode"/>
+			</xsl:attribute>
+		</xsl:if>
+		<xsl:attribute name="style">
+			<xsl:if test="$element/@valign">
+				<xsl:text>vertical-align:</xsl:text>
+				<xsl:value-of select="$element/@valign"/>
+				<xsl:text>;</xsl:text>
+			</xsl:if>
+<!--
+			<xsl:if test="$element/@align">
+				<xsl:text>text-align:</xsl:text>
+				<xsl:value-of select="$element/@align"/>
+				<xsl:text>;</xsl:text>
+			</xsl:if>
+-->
+		</xsl:attribute>
+	</xsl:template>
+
+	<xsl:template name="NarrativeText">
+		<!-- StrucDoc.Text -->
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:if test="not($fromReference)">
+			<xsl:apply-templates select="./@ID"/>
+		</xsl:if>
+		<xsl:apply-templates select="./@language"/>
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<!-- END:   NarrativeBlock Templates -->
 
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
