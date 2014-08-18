@@ -2189,30 +2189,26 @@
 	<!-- AdministrativeGender [2.16.840.1.113883.5.1] -->
 	<xsl:template match="hl7:administrativeGenderCode">
 		<xsl:choose>
+			<xsl:when test="./@code = 'F'">
+				<abbr class="administrativeGender" title="Female">
+					<xsl:text>&#9792;</xsl:text><!-- Female symbol (U+2640 Venus) -->
+				</abbr>
+			</xsl:when>
+			<xsl:when test="./@code = 'M'">
+				<abbr class="administrativeGender" title="Male">
+					<xsl:text>&#9794;</xsl:text><!-- Male symbol (U+2642 Mars) -->
+				</abbr>
+			</xsl:when>
+			<xsl:when test="./@code = 'UN'">
+				<abbr class="administrativeGender" title="Undifferentiated">
+					<xsl:text>&#9900;</xsl:text><!-- Genderless/Sexless/Asexuality symbol (U+26AA Medium white circle) -->
+				</abbr>
+			</xsl:when>
 			<xsl:when test="./@nullFlavor">
 				<span class="administrativeGender"><xsl:apply-templates select="./@nullFlavor"/></span>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="./@code = 'F'">
-						<abbr class="administrativeGender" title="Female">
-							<xsl:text>&#9792;</xsl:text><!-- Female symbol (U+2640 Venus) -->
-						</abbr>
-					</xsl:when>
-					<xsl:when test="./@code = 'M'">
-						<abbr class="administrativeGender" title="Male">
-							<xsl:text>&#9794;</xsl:text><!-- Male symbol (U+2642 Mars) -->
-						</abbr>
-					</xsl:when>
-					<xsl:when test="./@code = 'UN'">
-						<abbr class="administrativeGender" title="Undifferentiated">
-							<xsl:text>&#9900;</xsl:text><!-- Genderless/Sexless/Asexuality symbol (U+26AA Medium white circle) -->
-						</abbr>
-					</xsl:when>
-					<xsl:otherwise>
-						<span class="administrativeGender"><xsl:call-template name="CD"/></span>
-					</xsl:otherwise>
-				</xsl:choose>
+				<span class="administrativeGender"><xsl:call-template name="CD"/></span>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -2223,17 +2219,17 @@
 			<xsl:call-template name="set-classes">
 				<xsl:with-param name="moreClasses">
 					<xsl:choose>
-						<xsl:when test="@code = 'U'">
-							<xsl:text> alert alert-success</xsl:text>
-						</xsl:when>
-						<xsl:when test="@code = 'L'">
-							<xsl:text> alert alert-info</xsl:text>
-						</xsl:when>
 						<xsl:when test="@code = 'M' or @code = 'N'">
 							<xsl:text> alert alert-warning</xsl:text>
 						</xsl:when>
 						<xsl:when test="@code = 'R' or @code = 'V'">
 							<xsl:text> alert alert-danger</xsl:text>
+						</xsl:when>
+						<xsl:when test="@code = 'U'">
+							<xsl:text> alert alert-success</xsl:text>
+						</xsl:when>
+						<xsl:when test="@code = 'L'">
+							<xsl:text> alert alert-info</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:text> well</xsl:text>
@@ -2241,23 +2237,14 @@
 					</xsl:choose>
 				</xsl:with-param>
 			</xsl:call-template>
-			<xsl:text> </xsl:text>
 			<xsl:choose>
-				<xsl:when test="@code = 'U'">
-					<i class="fa fa-unlock fa-fw fa-2x"></i>
-					<xsl:text> Unrestricted Confidentiality</xsl:text>
-				</xsl:when>
-				<xsl:when test="@code = 'L'">
-					<i class="fa fa-shield fa-fw fa-2x"></i>
-					<xsl:text> Low Confidentiality</xsl:text>
+				<xsl:when test="@code = 'N'">
+					<i class="fa fa-lock fa-fw fa-2x"></i>
+					<xsl:text> Normal Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'M'">
 					<i class="fa fa-key fa-fw fa-2x"></i>
 					<xsl:text> Moderate Confidentiality</xsl:text>
-				</xsl:when>
-				<xsl:when test="@code = 'N'">
-					<i class="fa fa-lock fa-fw fa-2x"></i>
-					<xsl:text> Normal Confidentiality</xsl:text>
 				</xsl:when>
 				<xsl:when test="@code = 'R'">
 					<i class="fa fa-exclamation-circle fa-fw fa-2x"></i>
@@ -2266,6 +2253,17 @@
 				<xsl:when test="@code = 'V'">
 					<i class="fa fa-exclamation-triangle fa-fw fa-2x"></i>
 					<xsl:text> Very Restricted Confidentiality</xsl:text>
+				</xsl:when>
+				<xsl:when test="@code = 'L'">
+					<i class="fa fa-shield fa-fw fa-2x"></i>
+					<xsl:text> Low Confidentiality</xsl:text>
+				</xsl:when>
+				<xsl:when test="@code = 'U'">
+					<i class="fa fa-unlock fa-fw fa-2x"></i>
+					<xsl:text> Unrestricted Confidentiality</xsl:text>
+				</xsl:when>
+				<xsl:when test="@nullFlavor">
+					<xsl:apply-templates select="@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:call-template name="CD"/>
@@ -2544,102 +2542,129 @@
 
 	<!-- SetOperator [2.16.840.1.113883.5.1069] -->
 	<xsl:template match="@operator">
-		<span class="SetOperator">
-			<xsl:choose>
-				<xsl:when test="current() = 'A'">
+		<xsl:choose>
+			<xsl:when test="current() = 'A'">
+				<abbr class="SetOperator">
 					<xsl:attribute name="title">
-						<xsl:text>Form the intersection with the value.</xsl:text>
+						<xsl:text>Intersect: Form the intersection with the value.</xsl:text>
 					</xsl:attribute>
-					<xsl:text>Intersect</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'E'">
+					<xsl:text>&#8745;</xsl:text><!-- U+2229 Intersection -->
+				</abbr>
+			</xsl:when>
+			<xsl:when test="current() = 'E'">
+				<abbr class="SetOperator">
 					<xsl:attribute name="title">
-						<xsl:text>Form the set-difference with this value, i.e., exclude this element or set from the resulting set.</xsl:text>
+						<xsl:text>Exclude: Form the set-difference with this value, i.e., exclude this element or set from the resulting set.</xsl:text>
 					</xsl:attribute>
-					<xsl:text>Exclude</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'H'">
+					<xsl:text>&#8726;</xsl:text><!-- U+2216 Set Minus -->
+				</abbr>
+			</xsl:when>
+			<xsl:when test="current() = 'H'">
+				<span class="SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Form the convex hull with the value. The convex hull is defined over ordered domains and is the smallest contiguous superset (interval) that of all the operand sets.</xsl:text>
 					</xsl:attribute>
 					<xsl:text>Convex hull</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'P'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'P'">
+				<span class="SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Form the periodic hull with the value. The periodic hull is defined over ordered domains and is the periodic set that contains all contiguous supersets of pairs of intervals generated by the operand periodic intervals.</xsl:text>
 					</xsl:attribute>
 					<xsl:text>Periodic hull</xsl:text>
-				</xsl:when>
-				<!-- default = I -->
-				<xsl:otherwise>
+				</span>
+			</xsl:when>
+			<!-- default = I -->
+			<xsl:otherwise>
+				<abbr class="SetOperator">
 					<xsl:attribute name="title">
-						<xsl:text>Form the union with this value, i.e., include this element or set in the resulting set.</xsl:text>
+						<xsl:text>Include: Form the union with this value, i.e., include this element or set in the resulting set.</xsl:text>
 					</xsl:attribute>
-					<xsl:text>Include</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+					<xsl:text>&#8746;</xsl:text><!-- U+222A Union -->
+				</abbr>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- NullFlavor [2.16.840.1.113883.5.1008] -->
 	<xsl:template match="@nullFlavor">
-		<span>
-			<xsl:attribute name="class">
-				<xsl:value-of select="local-name()"/>
-			</xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="current() = 'NI'">
+		<xsl:choose>
+			<xsl:when test="current() = 'NI'">
+				<span class="NullFlavor">
 					<xsl:text>No Information</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'INV'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'INV'">
+				<span class="NullFlavor">
 					<xsl:text>Invalid</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'DER'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'DER'">
+				<span class="NullFlavor">
 					<xsl:text>Derived</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'OTH'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'OTH'">
+				<span class="NullFlavor">
 					<xsl:text>Other</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'NINF'">
-					<abbr title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
-				</xsl:when>
-				<xsl:when test="current() = 'PINF'">
-					<abbr title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
-				</xsl:when>
-				<xsl:when test="current() = 'UNC'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'NINF'">
+				<abbr class="NullFlavor" title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
+			</xsl:when>
+			<xsl:when test="current() = 'PINF'">
+				<abbr class="NullFlavor" title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
+			</xsl:when>
+			<xsl:when test="current() = 'UNC'">
+				<span class="NullFlavor">
 					<xsl:text>Un-encoded</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'MSK'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'MSK'">
+				<span class="NullFlavor">
 					<xsl:text>Masked</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'NA'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'NA'">
+				<span class="NullFlavor">
 					<xsl:text>Not Applicable</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'UNK'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'UNK'">
+				<span class="NullFlavor">
 					<xsl:text>Unknown</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'ASKU'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'ASKU'">
+				<span class="NullFlavor">
 					<xsl:text>Asked but Unknown</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'NAV'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'NAV'">
+				<span class="NullFlavor">
 					<xsl:text>Temporarily Unavailable</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'NASK'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'NASK'">
+				<span class="NullFlavor">
 					<xsl:text>Not Asked</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'QS'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'QS'">
+				<span class="NullFlavor">
 					<xsl:text>Sufficient Quantity</xsl:text>
-				</xsl:when>
-				<xsl:when test="current() = 'TRC'">
+				</span>
+			</xsl:when>
+			<xsl:when test="current() = 'TRC'">
+				<span class="NullFlavor">
 					<xsl:text>Trace</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="local-name()"/>
-					<xsl:text>: </xsl:text>
-					<code><xsl:value-of select="current()"/></code>
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+				</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<code class="NullFlavor"><xsl:value-of select="current()"/></code>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- END:   Code Systems -->
