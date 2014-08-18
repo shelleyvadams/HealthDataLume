@@ -38,19 +38,16 @@
 								<header class="panel-heading">
 									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
 										<xsl:attribute name="data-target">
-											<xsl:text>#headerEntities .</xsl:text>
-											<xsl:value-of select="local-name()"/>
-											<xsl:value-of select="position()"/>
+											<xsl:text>#</xsl:text>
+											<xsl:value-of select="generate-id()"/>
 										</xsl:attribute>
 										<xsl:text>Author </xsl:text>
 										<xsl:value-of select="position()"/>
 									</h2>
 								</header>
-								<div>
-									<xsl:attribute name="class">
-										<xsl:text>panel-collapse collapse </xsl:text>
-										<xsl:value-of select="local-name()"/>
-										<xsl:value-of select="position()"/>
+								<div class="panel-collapse collapse">
+									<xsl:attribute name="id">
+										<xsl:value-of select="generate-id()"/>
 									</xsl:attribute>
 									<div class="panel-body">
 										<xsl:apply-templates select="current()"/>
@@ -67,19 +64,16 @@
 								<header class="panel-heading">
 									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
 										<xsl:attribute name="data-target">
-											<xsl:text>#headerEntities .</xsl:text>
-											<xsl:value-of select="local-name()"/>
-											<xsl:value-of select="position()"/>
+											<xsl:text>#</xsl:text>
+											<xsl:value-of select="generate-id()"/>
 										</xsl:attribute>
 										<xsl:text>Informant </xsl:text>
 										<xsl:value-of select="position()"/>
 									</h2>
 								</header>
-								<div>
-									<xsl:attribute name="class">
-										<xsl:text>panel-collapse collapse </xsl:text>
-										<xsl:value-of select="local-name()"/>
-										<xsl:value-of select="position()"/>
+								<div class="panel-collapse collapse">
+									<xsl:attribute name="id">
+										<xsl:value-of select="generate-id()"/>
 									</xsl:attribute>
 									<div class="panel-body">
 										<xsl:apply-templates select="current()"/>
@@ -289,9 +283,8 @@
 					<header class="panel-heading">
 						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
 							<xsl:attribute name="data-target">
-								<xsl:text>#headerEntities .</xsl:text>
-								<xsl:value-of select="local-name()"/>
-								<xsl:value-of select="position()"/>
+								<xsl:text>#</xsl:text>
+								<xsl:value-of select="generate-id()"/>
 							</xsl:attribute>
 							<xsl:choose>
 								<xsl:when test="local-name() = 'legalAuthenticator'">
@@ -304,11 +297,9 @@
 							</xsl:choose>
 						</h2>
 					</header>
-					<div>
-						<xsl:attribute name="class">
-							<xsl:text>panel-collapse collapse </xsl:text>
-							<xsl:value-of select="local-name()"/>
-							<xsl:value-of select="position()"/>
+					<div class="panel-collapse collapse">
+						<xsl:attribute name="id">
+							<xsl:value-of select="generate-id()"/>
 						</xsl:attribute>
 						<div class="panel-body">
 							<xsl:apply-templates select="hl7:assignedEntity"/>
@@ -495,7 +486,7 @@
 				<xsl:otherwise>
 					<header class="panel-heading">
 						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#custodianDetails">
-							<xsl:text>Custodian</xsl:text>
+							<xsl:text>Custodian Organization</xsl:text>
 						</h2>
 					</header>
 					<div class="panel-collapse collapse" id="custodianDetails">
@@ -704,19 +695,16 @@
 			<header class="panel-heading">
 				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
 					<xsl:attribute name="data-target">
-						<xsl:text>#headerEntities .</xsl:text>
-						<xsl:value-of select="local-name()"/>
-						<xsl:value-of select="position()"/>
+						<xsl:text>#</xsl:text>
+						<xsl:value-of select="generate-id()"/>
 					</xsl:attribute>
 					<xsl:text>Information Recipient </xsl:text>
 					<xsl:value-of select="position()"/>
 				</h2>
 			</header>
-			<div>
-				<xsl:attribute name="class">
-					<xsl:text>panel-collapse collapse </xsl:text>
-					<xsl:value-of select="local-name()"/>
-					<xsl:value-of select="position()"/>
+			<div class="panel-collapse collapse">
+				<xsl:attribute name="id">
+					<xsl:value-of select="generate-id()"/>
 				</xsl:attribute>
 				<div class="panel-body">
 					<xsl:choose>
@@ -933,19 +921,16 @@
 			<header class="panel-heading">
 				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
 					<xsl:attribute name="data-target">
-						<xsl:text>#headerEntities .</xsl:text>
-						<xsl:value-of select="local-name()"/>
-						<xsl:value-of select="position()"/>
+						<xsl:text>#</xsl:text>
+						<xsl:value-of select="generate-id()"/>
 					</xsl:attribute>
 					<xsl:text>Participant </xsl:text>
 					<xsl:value-of select="position()"/>
 				</h2>
 			</header>
-			<div>
-				<xsl:attribute name="class">
-					<xsl:text>panel-collapse collapse </xsl:text>
-					<xsl:value-of select="local-name()"/>
-					<xsl:value-of select="position()"/>
+			<div class="panel-collapse collapse">
+				<xsl:attribute name="id">
+					<xsl:value-of select="generate-id()"/>
 				</xsl:attribute>
 				<div class="panel-body">
 					<xsl:choose>
@@ -1207,65 +1192,84 @@
 				<xsl:apply-templates select="hl7:languageCode/@code"/>
 				<header>
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
-					<nav>
-						<ul class="nav nav-pills">
-							<xsl:for-each select="hl7:component">
-								<li>
-									<xsl:attribute name="class">
+					<xsl:if test="count(hl7:component) &gt; 1">
+						<nav>
+							<ul class="nav nav-pills">
+								<xsl:for-each select="hl7:component">
+									<li>
 										<xsl:if test="position() = 1">
-											<xsl:text>active</xsl:text>
+											<xsl:attribute name="class">
+												<xsl:text>active</xsl:text>
+											</xsl:attribute>
 										</xsl:if>
-									</xsl:attribute>
-									<a role="tab" data-toggle="pill">
-										<xsl:attribute name="href">
-											<xsl:text>#structuredBody-component</xsl:text>
-											<xsl:value-of select="position()"/>
-										</xsl:attribute>
-										<xsl:choose>
-											<xsl:when test="hl7:section/hl7:title and (string-length(hl7:section/hl7:title) &gt; 0)">
-												<xsl:value-of select="hl7:section/hl7:title"/>
-											</xsl:when>
-											<xsl:when test="hl7:section/hl7:code/@displayName">
-												<xsl:value-of select="hl7:section/hl7:code/@displayName"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:text>Component </xsl:text>
-												<xsl:value-of select="position()"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</a>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</nav>
+										<a role="tab" data-toggle="pill">
+											<xsl:attribute name="href">
+												<xsl:text>#</xsl:text>
+												<xsl:value-of select="generate-id()"/>
+											</xsl:attribute>
+											<xsl:choose>
+												<xsl:when test="hl7:section/hl7:title and (string-length(hl7:section/hl7:title) &gt; 0)">
+													<xsl:value-of select="hl7:section/hl7:title"/>
+												</xsl:when>
+												<xsl:when test="hl7:section/hl7:code/@displayName">
+													<xsl:value-of select="hl7:section/hl7:code/@displayName"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:text>Component </xsl:text>
+													<xsl:value-of select="position()"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</a>
+									</li>
+								</xsl:for-each>
+							</ul>
+						</nav>
+					</xsl:if>
 				</header>
-				<div class="tab-content">
-					<!-- Component3 [1..*] -->
-					<xsl:for-each select="hl7:component">
-						<section>
+				<xsl:choose>
+					<xsl:when test="count(hl7:component) &gt; 1">
+						<div class="tab-content">
+							<!-- Component3 [1..*] -->
+							<xsl:for-each select="hl7:component">
+								<section>
+									<xsl:call-template name="set-classes">
+										<xsl:with-param name="moreClasses">
+											<xsl:text>tab-pane fade</xsl:text>
+											<xsl:if test="position() = 1">
+												<xsl:text> in active</xsl:text>
+											</xsl:if>
+										</xsl:with-param>
+									</xsl:call-template>
+									<xsl:attribute name="id">
+										<xsl:value-of select="generate-id()"/>
+									</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="./@nullFlavor">
+											<xsl:apply-templates select="./@nullFlavor"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="hl7:section"/><!-- [1] -->
+										</xsl:otherwise>
+									</xsl:choose>
+								</section>
+							</xsl:for-each>
+						</div>
+					</xsl:when>
+					<xsl:when test="hl7:component/@nullFlavor">
+						<xsl:apply-templates select="hl7:component/@nullFlavor"/>
+					</xsl:when>
+					<xsl:when test="hl7:component">
+						<div>
 							<xsl:call-template name="set-classes">
-								<xsl:with-param name="moreClasses">
-									<xsl:text>tab-pane fade</xsl:text>
-									<xsl:if test="position() = 1">
-										<xsl:text> in active</xsl:text>
-									</xsl:if>
-								</xsl:with-param>
+								<xsl:with-param name="setFor" select="hl7:component"/>
 							</xsl:call-template>
-							<xsl:attribute name="id">
-								<xsl:text>structuredBody-component</xsl:text>
-								<xsl:value-of select="position()"/>
-							</xsl:attribute>
-							<xsl:choose>
-								<xsl:when test="./@nullFlavor">
-									<xsl:apply-templates select="./@nullFlavor"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="hl7:section"/><!-- [1] -->
-								</xsl:otherwise>
-							</xsl:choose>
-						</section>
-					</xsl:for-each>
-				</div>
+							<xsl:apply-templates select="hl7:component/hl7:section"/><!-- [1] -->
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:comment><xsl:text>This should not be empty, but it is.</xsl:text></xsl:comment>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1740,16 +1744,15 @@
 						<xsl:text> </xsl:text>
 						<a data-toggle="collapse">
 							<xsl:attribute name="href">
-								<xsl:text>#translationsFor</xsl:text>
-								<xsl:value-of select="./@code"/>
+								<xsl:text>#</xsl:text>
+								<xsl:value-of select="generate-id()"/>
 							</xsl:attribute>
 							<i class="fa fa-caret-square-o-down"></i>
 							<span class="sr-only"> toggle list</span>
 						</a>
 						<ul class="collapse"><!-- SET[CD] -->
 							<xsl:attribute name="id">
-								<xsl:text>translationsFor</xsl:text>
-								<xsl:value-of select="./@code"/>
+								<xsl:value-of select="generate-id()"/>
 							</xsl:attribute>
 							<xsl:for-each select="hl7:translation">
 								<li><xsl:call-template name="CD"/></li>
