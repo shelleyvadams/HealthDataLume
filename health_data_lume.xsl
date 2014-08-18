@@ -87,7 +87,6 @@
 			</div>
 		</header>
 
-
 		<xsl:apply-templates select="hl7:inFulfillmentOf"/>
 
 		<xsl:apply-templates select="hl7:documentationOf"/>
@@ -750,7 +749,14 @@
 	<xsl:template match="hl7:languageCode|hl7:realmCode|hl7:signatureCode|hl7:statusCode">
 		<div>
 			<xsl:call-template name="set-classes"/>
-			<xsl:call-template name="CS"/>
+			<xsl:choose>
+				<xsl:when test="@nullFlavor">
+					<xsl:apply-templates select="@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@code"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 	</xsl:template>
 
@@ -1338,7 +1344,7 @@
 		<span>
 			<xsl:call-template name="set-classes"/>
 			<xsl:text>version </xsl:text>
-			<xsl:call-template name="INT"/>
+			<xsl:value-of select="@value"/><!-- INT -->
 		</span>
 	</xsl:template>
 
@@ -1810,21 +1816,6 @@
 
 	<!--  *******************************************  -->
 
-	<!-- Coded Simple Value -->
-	<xsl:template name="CS">
-		<xsl:param name="element" select="current()"/>
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$element/@code"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--  *******************************************  -->
-
 	<!-- BEGIN: Encapsulated Data -->
 	<xsl:template name="ED">
 			<xsl:choose>
@@ -1975,22 +1966,6 @@
 					<xsl:text> from </xsl:text>
 					<xsl:value-of select="./@assigningAuthorityName"/>
 				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--  *******************************************  -->
-
-	<!-- Integer Number -->
-	<xsl:template name="INT">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<span class="integer quantity">
-					<xsl:value-of select="./@value"/>
-				</span>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
