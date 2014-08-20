@@ -40,6 +40,13 @@ var HealthDataLume = (function(doc) {
 	var parser = new DOMParser();
 
 	/**
+	 * @member sampleBrowser
+	 * @memberof HealthDataLume
+	 * @private
+	**/
+	var sampleBrowser = null;
+
+	/**
 	 * @function errorIssueLink
 	 * @memberof HealthDataLume
 	 * @private
@@ -70,23 +77,22 @@ var HealthDataLume = (function(doc) {
 	 * @function getXSL
 	 * @memberof HealthDataLume
 	 * @private
-	 * @param {Document} loadToXmlDoc
 	 * @see [Synchronous and asynchronous requests]{@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Synchronous_and_Asynchronous_Requests} at Mozilla Developer Network
 	 * @description Load the default XSL stylesheet
 	**/
-	var getXSL = function(loadToXmlDoc) {
+	var getXSL = function() {
 
 		/**
 		 * @function loadXSL
 		 * @memberof getXSL
 		 * @private
 		 * @this xhReq
-		 * @param {Document} xmlDoc - Reference to an object to hold the Document object in XMLHttpRequest.responseXML
+		 * @param {Document} xslDoc - Reference to an object to hold the Document object in XMLHttpRequest.responseXML
 		**/
-		var loadXSL = function(xmlDoc) {
-			xmlDoc = this.responseXML;
+		var loadXSL = function(xslDoc) {
+			xslDoc = this.responseXML;
 			try {
-				xsltProcessor.importStylesheet(xmlDoc);
+				xsltProcessor.importStylesheet(xslDoc);
 			} catch (xslErr) {
 				throw "<strong>Yikes!</strong> Something is wrong with the XSL stylesheet.\n" + xslErr;
 			}
@@ -129,12 +135,11 @@ var HealthDataLume = (function(doc) {
 	 * @private
 	 * @param {HTMLInputElement} input - File input element
 	 * @param {HTMLInputElement} display - Read-only text input element to display the name of the selected file
-	 * @returns {File}
+	 * @param fileContent
 	 * @throws {Error} The selected file must have an XML media type within "text/*" or "application/*"
 	 * @description Get the XML file selected by the user.
 	**/
-	var getFile = function(input, status) {
-		var display = $("#file_path");
+	var getFile = function(input, display, fileContent) {
 		display.val("");
 		var userFile = input.get(0).files.item(0);
 		if ( userFile.type.search(/(?:text|application)\/(?:\w[\w\.\-]+\+)?xml/) >= 0 ) {
@@ -143,7 +148,7 @@ var HealthDataLume = (function(doc) {
 			throw new Error("<strong>Oops!</strong> HealthDataLume only understands XML files." + (userFile.name.length > 0 ? " If you're sure that <tt>" + userFile.name + "</tt> is an XML file, please " + errorIssueLink() + "." : ""));
 		}
 
-		var xmlReader = getXMLReader(xmlDoc, status, userFile.name);
+		var xmlReader = getXMLReader(fileContent);
 		xmlReader.readAsText(userFile);
 
 	};
@@ -152,23 +157,42 @@ var HealthDataLume = (function(doc) {
 	 * @function getXMLReader
 	 * @memberof HealthDataLume
 	 * @private
-	 * @param {Document} targetDoc - Storage for parsed file content
 	 * @param {jQuery} errContainer - Parent element for any error alerts
+	 * @param filename
+	 * @param contentInputElement
 	 * @returns {FileReader}
 	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
 	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
 	**/
-	var getXMLReader = function(targetDoc, errContainer, filename) {
+	var getXMLReader = function(contentInputElement) {
 		var readIt = new FileReader();
 		readIt.onerror = (function() {
 			return function(e) {
 				throw new Error("<strong>Shoot!</strong> Couldn't load your file.");
 			};
 		})();
-		readIt.onload = ( function(xmlDoc, container, fName) {
+		readIt.onload = ( function(contentInEle) {
 			return function(e) {
+				contentInEle.val(e.target.result);
+				contentInEle.change();
+			};
+		})(contentInputElement);
+		return readIt;
+	};
+
+	/**
+	 * @function transformXML
+	 * @memberof HealthDataLume
+	 * @private
+	 * @param {jQuery} errContainer - Parent element for any error alerts
+	 * @param filename
+	 * @param contentInputElement
+	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
+	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
+	**/
+	var transformXML = function(errContainer, filename, contentInputElement, parentDoc) {
 				try {
-					xmlDoc = parser.parseFromString(e.target.result, "application/xml");
+					var xmlDoc = parser.parseFromString(contentInputElement.val(), "application/xml");
 					if (xmlDoc.documentElement.tagName == "parsererror") {
 						throw new ParserError(xmlDoc);
 					} else {
@@ -176,7 +200,7 @@ var HealthDataLume = (function(doc) {
 							result,
 							finishTime;
 						try {
-							result = xsltProcessor.transformToFragment(xmlDoc, doc);
+							result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
 						} catch (transformErr) {
 							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
 						}
@@ -188,7 +212,7 @@ var HealthDataLume = (function(doc) {
 						finishTime = new Date();
 						outputSection.children("footer").last().append(
 							"<p class=\"text-muted\">Rendered by <cite>HealthDataLume</cite> from <tt>" +
-							fName +
+							filename +
 							"</tt> at <time datetime=\"" +
 							finishTime.toISOString() +
 							"\">" +
@@ -199,23 +223,21 @@ var HealthDataLume = (function(doc) {
 						);
 					}
 				} catch (err) {
-					container.append( errorAlert(err) );
+					errContainer.append( errorAlert(err) );
 				}
-			};
-		})(targetDoc, errContainer, filename);
-		return readIt;
-	};
+
+	}
 
 
 	// Initialize stuff.
 	$(doc).ready(function() {
 		var xmlStatus = $("#xml_status");
-		var fileInput = $("#xml_file");
-
-		var xslDoc = xmlDoc = null;
+		var fileInput = $("#xml_file").val("");
+		var fileDisplay = $("#file_path").val("");
+		var recordContent = $("#xml_string").val("");
 
 		try {
-			getXSL(xslDoc);
+			getXSL();
 		} catch (err) {
 			$("#health_data_lume").prepend( errorAlert(err) );
 		}
@@ -231,11 +253,30 @@ var HealthDataLume = (function(doc) {
 		$("#open_file").on("click", function(e) {
 			fileInput.trigger("click");
 		});
+		
+		$("#samples_button").on("click", function(e) {
+			if (sampleBrowser === null) {
+				sampleBrowser = new GitHubBrowser(fileDisplay, recordContent);
+			}
+			if ( !sampleBrowser.isLoaded() ) {
+				sampleBrowser.load();
+			} else {
+				sampleBrowser.modal.modal('show');
+			}
+		});
 
 		fileInput.change(function(e) {
+			try {
+				getFile(fileInput, fileDisplay, recordContent);
+			} catch (err) {
+				xmlStatus.append( errorAlert(err) );
+			}
+		});
+
+		recordContent.change(function(e) {
 			xmlStatus.empty();
 			try {
-				getFile(fileInput, xmlStatus);
+				transformXML(xmlStatus, fileDisplay.val(), recordContent, doc);
 			} catch (err) {
 				xmlStatus.append( errorAlert(err) );
 			}
@@ -243,6 +284,7 @@ var HealthDataLume = (function(doc) {
 	});
 
 })(document);
+
 
 
 /**
@@ -293,7 +335,7 @@ var HelpBalloons = (function() {
 			container: "body",
 			html: true,
 			placement: "right",
-			title: "Coming soon!",
+			title: "Under construction.",
 			content: "Browse <a href='https://github.com/chb/sample_ccdas' target='_blank'>sample <abbr title='Consolidated Clinical Document Architecture'>C-CDA</abbr> files on GitHub</a> and select one to view with HealthDataLume.",
 			trigger: "manual"
 		},
@@ -351,6 +393,7 @@ var HelpBalloons = (function() {
 })();
 
 
+
 /** When given an invalid XML document, The {@link DOMParser} [implementation in Mozilla Gecko]{@link https://developer.mozilla.org/en-US/docs/Web/API/DOMParser#Error_handling} does not throw an {@link Error}, but returns an {@link XMLDocument} with `parsererror` as its {@link Document.documentElement}.
  * @constructor
  * @augments Error
@@ -369,3 +412,419 @@ function ParserError(xmlDoc) {
 ParserError.name = "ParserError";
 ParserError.prototype = Object.create(Error.prototype);
 ParserError.prototype.constructor = ParserError;
+
+
+
+/** Get a sparkling new GitHubBrowser object
+ * @constructor
+ * @param filenameDisplay
+ * @param fileContentElement
+ * @property {Object} target
+ * @property {jQuery} target.display
+ * @property {jQuery} target.content
+ * @property {ModalDialog} modal - The Bootstrap modal dialog containing this browser.
+ * @property {Object} controls - A pile of {@link jQuery}s
+ * @property {jQuery} controls.heading - The repository name (linked) goes here (HTMLHeadingElement).
+ * @property {jQuery} controls.repoInfo - (HTMLDivElement).
+ * @property {jQuery} controls.listingTable - HTMLTableElement.
+ * @property {jQuery} controls.listing - The `<tbody>` element that gets populated with file info (HTMLTableSectionElement).
+ * @property {jQuery} controls.navPath - Displays current location in the directory tree (HTMLOutputElement)
+ * @property {jQuery} backButton - Allow users to make U-turns (HTMLButtonElement).
+ * @property {Gh3.User} user - The repository owner, dressed up in an API object.
+ * @property {Gh3.Repository} repository - The indicated repository, with API object superpowers.
+ * @property {Gh3.Branch} branch - The active branch of this repository.
+ * @property {Array} history - Navigation stack (i.e., `push` and `pop`). API objects as breadcrumbs.
+ * @property {Boolean} loaded - Has this repository branch been loaded in the browser?
+ * @property {RegExp} filenameRegex - Files (not directories) with names matching this pattern will be clickable.
+**/
+function GitHubBrowser(filenameDisplay, fileContentElement) {
+	this.target = {};
+	this.target.display = filenameDisplay;
+	this.target.content = fileContentElement;
+	this.modal = $("#github_samples");
+	this.controls = {};
+	this.controls.heading = this.modal.find("#github_repo");
+	this.controls.repoInfo = this.modal.find(".panel-body");
+	this.controls.listingTable = this.modal.find("table");
+	this.controls.listing = this.controls.listingTable.find("tbody");
+	this.controls.navPath = this.controls.listingTable.find("caption>output");
+	this.backButton = $("#github_backnav");
+	this.user = new Gh3.User("chb");
+	this.repository = new Gh3.Repository("sample_ccdas", this.user);
+	this.branch = null;
+	this.history = new Array();
+	this.loaded = false;
+	this.filenameRegex = /.*\.xml$/i;
+	console.log("I got a GitHubBrowser!");
+}
+
+/** Default value for the {@link HTMLAnchorElement.target} attribute of links to external locations.
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.LINK_TARGET = "_blank";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.MASTER_BRANCH = "master";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.GO_TOP_ICON = "fa-home";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.GO_TOP_TEXT = "Go to top level";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.GO_UP_ICON = "fa-arrow-circle-up";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.GO_UP_TEXT = "Go up one level";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.FILE_ICON = "fa-file-o";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.FILE_WRONG_TYPE_ICON = "fa-file";
+
+/**
+ * @memberof GitHubBrowser
+ * @constant
+**/
+GitHubBrowser.DIRECTORY_ICON = "fa-folder-o";
+
+/** Check whether this repository branch has been loaded in the browser 
+ * @memberof GitHubBrowser
+ * @method
+ * @returns {Boolean}
+**/
+GitHubBrowser.prototype.isLoaded = function() {
+	return this.loaded;
+} // GitHubBrowser.prototype.isLoaded
+
+/** Initial browser load. Fetches information about the repository, its branches, and directory listing for the top level of the specified branch.
+ * @memberof GitHubBrowser
+ * @method
+ * @throws GitHubError
+**/
+GitHubBrowser.prototype.load = function() {
+
+	var fetchBranchContentsCb = function(that) {
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch contents of branch: \"" + (that.repository.default_branch || GitHubBrowser.MASTER_BRANCH) + "\".\n" + err);
+			} else {
+				console.log("Got that branch contents.");
+//				console.log(that.branch);
+				that.loaded = true;
+				that.refreshListing();
+				that.modal.modal('show');
+			} // else
+		};
+	} // fetchBranchContentsCb
+
+	var fetchBranchesCb = function(that) {
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch branches for repository: \"" + that.repository.name + "\".\n" + err);
+			} else { // branches fetched
+				console.log("Got that branches.");
+				// We're only interested in one.
+				that.branch = that.repository.getBranchByName(that.repository.default_branch || GitHubBrowser.MASTER_BRANCH);
+
+				// Make sure it exists.
+				if (!that.branch) {
+					throw new GitHubError("There is no branch named \"" + (that.repository.default_branch || GitHubBrowser.MASTER_BRANCH) + "\" in the repository \"" + that.repository.name + "\"." );
+				} else { // branch exists
+					console.log("The branch exists!");
+
+					// Get top-level contents.
+					that.branch.fetchContents( fetchBranchContentsCb(that) );
+
+				} //else branch exists
+			} // else branches fetched
+
+		}; // function
+	} // fetchBranchesCb
+
+	var fetchRepoCb = function(that) {
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch repository: \"" + that.repository.name + "\".\n" + err);
+			} else { // repository fetched
+				console.log("Got that repo.");
+
+				// Add linked repository name to contents.heading
+				that.controls.heading.html(
+					that.repository.owner.login +
+					" / <a href=\"" +
+					that.repository.html_url +
+					"\"" +
+					( that.repository.description && that.repository.description.length > 0 ?
+						" title=\"" + that.repository.description + "\"" :
+						"") +
+					" target=\"" +
+					GitHubBrowser.LINK_TARGET +
+					"\">" +
+					that.repository.name +
+					"</a>: " +
+					(that.repository.default_branch || GitHubBrowser.MASTER_BRANCH)
+				);
+
+				if ( that.repository.description && that.repository.description.length > 0 ) {
+					that.controls.repoInfo.prepend(
+						"<p>" +
+						that.repository.description +
+						"</p>"
+					);
+				}
+//				console.log(that.repository);
+
+				// Get the branches
+				that.repository.fetchBranches( fetchBranchesCb(that) );
+
+			} // else repository fetched
+		}; // function
+	} // fetchRepoCb
+
+	this.repository.fetch( fetchRepoCb(this) );
+
+	// Get the user
+	this.user.fetch( (function(that){
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch user info.\n" + err);
+			} else { // user info fetched
+				if (that.user.name && that.user.name.length > 0) {
+					that.controls.repoInfo.append(
+						"<p>From <a href=\"" +
+						( that.user.blog && that.user.blog.length > 0 ? that.user.blog : that.user.html_url ) +
+						"\" target=\"" +
+						GitHubBrowser.LINK_TARGET +
+						"\">" +
+						that.user.name +
+						"</a>" +
+						( that.user.location && that.user.location.length > 0 ? " (" + that.user.location + ")" : "") +
+						"</p>"
+					);
+				}
+//				console.log(that.user);
+			}
+		}
+	})(this) );
+
+} // GitHubBrowser.prototype.load
+
+/** Look at the top item without altering {@link GitHubBrowser.history}.
+ * @memberof GitHubBrowser
+ * @method
+ * @returns {Gh3.Dir|Gh3.Branch} The top item on the navigation stack, or -- if the stack is empty -- the branch.
+**/
+GitHubBrowser.prototype.peek = function() {
+	return ( this.history.length > 0 ? this.history[this.history.length - 1] : this.branch );
+}
+
+/** Browse to a directory: fetch its contents (only if this is our first visit) and add it to the navigation stack.
+ * @memberof GitHubBrowser
+ * @method
+ * @param {Gh3.Dir} ghDir
+ * @throws GitHubError
+**/
+GitHubBrowser.prototype.push = function(ghDir) {
+	// Callback for Gh3.Dir.fetchContents
+	var fetchDirContentsCb = function(that, dir) {
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch contents of directory: \"" + dir.name + "\".\n" + err);
+			} else {
+				console.log("Got directory contents.");
+				that.history.push(dir);
+				that.refreshListing();
+			} // else
+		};
+	} // fetchDirContentsCb
+
+	if (!ghDir.getContents()) {
+		ghDir.fetchContents ( fetchDirContentsCb(this, ghDir) );
+	} else {
+		console.log("Been there before.");
+		this.history.push(ghDir);
+		this.refreshListing();
+	}
+} // GitHubBrowser.prototype.push
+
+/** Move back one step in the navigation history
+ * @memberof GitHubBrowser
+ * @method
+**/
+GitHubBrowser.prototype.pop = function() {
+	this.history.pop();
+	this.refreshListing();
+} // GitHubBrowser.prototype.pop
+
+/** Build a the file list for the active directory.
+ * @memberof GitHubBrowser
+ * @method
+**/
+GitHubBrowser.prototype.refreshListing = function() {
+
+	/****
+	***** Build the file listing table content *****
+	****/
+
+	var itemArr = this.peek().getContents();
+
+	this.controls.listing.empty().detach();
+
+	for (var i = 0; i < itemArr.length; i++) {
+		// begin new table row
+		var row = "<tr>";
+
+		// file type
+		row += "<td class=\"gh-item-type\"><i class=\"fa fa-fw fa-lg " +
+			( itemArr[i].type == "dir" ? GitHubBrowser.DIRECTORY_ICON : GitHubBrowser.FILE_ICON ) +
+			"\"></i><span class=\"sr-only\"> " +
+			itemArr[i].type +
+			"</span></td>";
+
+		// file name (button)
+		row += "<td class=\"gh-item-name\"><button type=\"button\" class=\"btn btn-link\" data-item-index=\"" +
+			i +
+			"\">" +
+			itemArr[i].name +
+			"</button></td>";
+
+		// file size
+		row += "<td class=\"gh-item-size\">" +
+			(itemArr[i].size || "--") +
+			"</td>";
+
+		// end table row
+		row += "</tr>";
+
+		this.controls.listing.append(row);
+
+		row = this.controls.listing.find("tr:last-child");
+		var contentButton = row.find("td>button");
+
+		var that = this;
+		if (itemArr[i].type == "dir") { // directory stuff
+			contentButton.on("click", function(e) {
+				that.push(itemArr[$(e.target).data("itemIndex")]);
+			});
+		} else { // file stuff
+			// file clickablity
+			if ( !this.filenameRegex || this.filenameRegex.test(itemArr[i].name) ) {
+				contentButton.on("click", function(e) {
+					that.loadFile(itemArr[$(e.target).data("itemIndex")]);
+				});
+			} else {
+				row.addClass("text-muted");
+				row.find("td.gh-item-type>i").removeClass(GitHubBrowser.FILE_ICON).addClass(GitHubBrowser.FILE_WRONG_TYPE_ICON);
+				contentButton.prop("disabled", "true");
+			}
+		} // file stuff
+	} // for
+	this.controls.listingTable.append(this.controls.listing);
+
+	/****
+	***** Update the back-navigation button *****
+	****/
+	var backIcon = this.backButton.find("i");
+	var backText = this.backButton.find(".sr-only");
+
+	if ( this.history.length > 1 ) {
+		backIcon.removeClass(GitHubBrowser.GO_TOP_ICON).addClass(GitHubBrowser.GO_UP_ICON);
+		backText.text(GitHubBrowser.GO_UP_TEXT);
+	} else {
+		backIcon.removeClass(GitHubBrowser.GO_UP_ICON).addClass(GitHubBrowser.GO_TOP_ICON);
+		backText.text(GitHubBrowser.GO_TOP_TEXT);
+	}
+
+	if (this.history.length > 0) {
+		this.backButton.prop("disabled", false);
+		var that = this;
+		this.backButton.off("click");
+		this.backButton.on("click", function(e) {
+			that.pop();
+		});
+		this.controls.navPath.text(this.repository.name + ":" + this.branch.name + "/" + this.peek().path);
+	} else { // top level of branch
+		this.backButton.prop("disabled", "disabled"); // Deactivated. Nowhere to go.
+		this.controls.navPath.text(this.repository.name + ":" + this.branch.name);
+	} // top level of branch
+
+} // GitHubBrowser.prototype.refreshListing
+
+/** Load the indicated file from GitHub and send it to the target destination.
+ * ...and it remembers to close the modal dialog on the way out.
+ * @memberof GitHubBrowser
+ * @method
+ * @param {Gh3.File} ghFile - The file to load and send.
+ * @throws GitHubError
+**/
+GitHubBrowser.prototype.loadFile = function(ghFile) {
+	// Callback for Gh3.File.fetchContent
+	var fetchRawContentCb = function(that, file) {
+		return function (err, res) {
+			if(err) {
+				throw new GitHubError("Failed to fetch raw content of file: \"" + file.name + "\".\n" + err);
+			} else {
+				console.log("Got raw file content.");
+//				console.log(file);
+				that.target.display.val(that.repository.name + ":" + that.branch.name + "/" + that.peek().path + "/" + file.name);
+				that.target.content.val(file.rawContent);
+				that.target.content.change();
+			} // else
+		};
+	} // fetchRawContentCb
+
+
+	if (!ghFile.getRawContent()) {
+		ghFile.fetchContent( fetchRawContentCb(this, ghFile) );
+	} else {
+		console.log("Seen this before");
+		//FIXME	this.target.loadGh3File(ghFile);
+	}
+
+	this.modal.modal('hide');
+} // GitHubBrowser.prototype.loadFile
+
+
+
+/** Specialized error object for when a GitHub API call fails.
+ * @constructor
+ * @augments Error
+ * @param {String} [msg]
+**/
+function GitHubError(msg) {
+	this.message = "<strong>Argh!</strong> GitHub\'s octocats are misbehavin\'. " + ( msg && msg.length > 0 ? msg : "outch ..."); // Default nods to k33g's examples
+}
+
+/**
+ * @memberof GitHubError
+ * @static
+**/
+GitHubError.name = "GitHubError";
+GitHubError.prototype = Object.create(Error.prototype);
+GitHubError.prototype.constructor = GitHubError;
+

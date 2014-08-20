@@ -74,10 +74,11 @@
 		<article id="health_data_lume" role="application">
 			<form id="record_form" class="hidden-print">
 				<input type="file" id="xml_file" class="hidden"/>
+				<input type="hidden" id="xml_string" value=""/>
 				<div class="input-group">
 					<div class="input-group-btn">
 						<button type="button" id="open_file" class="btn btn-primary"><i class="fa fa-folder-open fa-lg"></i><span class="hidden-xs"> Open file</span></button>
-						<button type="button" id="samples_button" class="btn btn-primary disabled"><i class="fa fa-flask fa-lg"></i><span class="hidden-xs"> Sample records</span></button>
+						<button type="button" id="samples_button" class="btn btn-info"><i class="fa fa-flask fa-lg"></i><span class="hidden-xs"> Sample records</span></button>
 					</div>
 					<input type="text" id="file_path" readonly="readonly" class="form-control"/>
 					<span class="input-group-btn">
@@ -92,6 +93,48 @@
 			</section>
 		</article><!-- /#health_data_lume -->
 
+
+		<!-- Introductory references on CDA and C-CDA -->
+		<div class="modal fade" id="github_samples" tabindex="-1" role="dialog" aria-labelledby="github_samplesHeading" aria-hidden="true">
+			<div class="modal-dialog">
+				<article class="modal-content" role="document">
+					<header class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i><span class="sr-only">Close dialog</span></button>
+						<h2 id="github_samplesHeading" class="modal-title">Sample health records</h2>
+					</header>
+					<div class="modal-body">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<!-- Repository's full_name and link to html_url go inside #github_repo -->
+								<h4 class="panel-title" id="github_repo"></h4>
+							</div>
+							<div class="panel-body clearfix">
+							</div>
+							<table class="table">
+								<caption>
+									<button type="button" class="btn btn-sm btn-default pull-right" id="github_backnav"><i class="fa fa-fw fa-lg fa-home"></i><span id="github_back_text" class="sr-only">Go to top level</span></button>
+									<strong>Path:</strong>
+									<output id="current_path"></output>
+								</caption>
+								<thead>
+									<tr>
+										<th scope="col" class="gh-item-type">Type</th>
+										<th scope="col" class="gh-item-name">Name</th>
+										<th scope="col" class="gh-item-size">Size</th>
+									</tr>
+								</thead>
+								<!-- Filtered directory listing goes inside #github_dir (XML files & directories only.) -->
+								<tbody id="github_dir">
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<footer class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</footer>
+				</article>
+			</div>
+		</div><!-- /#github_samples -->
 
 
 		<!-- Listing of included components in Bootstrap modal dialog -->
@@ -174,6 +217,9 @@
 	<script src="lib/jquery-1.11.1.min.js"></script>
 	<!-- Bootstrap compiled plugins -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
+
+	<script src="lib/gh3/vendors/underscore-min.js"></script>
+	<script src="lib/gh3/gh3.js"></script>
 
 	<script src="HealthDataLume.js"></script>
 </body>
