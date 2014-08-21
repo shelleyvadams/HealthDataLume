@@ -184,6 +184,34 @@
 		</xsl:attribute>
 	</xsl:template>
 
+	<xsl:template match="hl7:act">
+		<!-- POCD_MT000040.Act -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Act</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="hl7:languageCode"/>
+				<xsl:apply-templates select="./@negationInd"/>
+
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="hl7:addr">
 		<div>
 			<xsl:call-template name="set-classes"/>
@@ -603,6 +631,202 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:entry">
+		<section>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="moreClasses">
+					<xsl:call-template name="build-class-string">
+						<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+					</xsl:call-template>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/><!-- [1] -->
+				</xsl:otherwise>
+			</xsl:choose>
+		</section>
+	</xsl:template>
+
+	<xsl:template match="hl7:entryRelationship">
+		<li>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="moreClasses">
+					<xsl:text>list-group-item </xsl:text>
+					<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
+						<xsl:text>isSeperatable </xsl:text>
+					</xsl:if>
+					<xsl:call-template name="build-class-string">
+						<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+					</xsl:call-template>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<h4 class="list-group-item-heading">
+						<xsl:apply-templates select="./@nullFlavor"/>
+					</h4>
+				</xsl:when>
+				<xsl:otherwise>
+					<h4 class="list-group-item-heading">
+						<!-- ActRelationshipType [2.16.840.1.113883.5.1002] -->
+						<xsl:choose>
+							<!-- both inverted and negated -->
+							<xsl:when test="( ./@inversionInd and ( ./@inversionInd = 'true' ) ) and ( ./@negationInd and ( ./@negationInd = 'true' ) )">
+								<xsl:choose>
+									<xsl:when test="./@typeCode = 'CAUS'">
+										<xsl:text>Does not have an etiology of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'COMP'">
+										<xsl:text>Is not a component of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'GEVL'">
+										<xsl:text>Is not evaluated by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'MFST'">
+										<xsl:text>Is not manifested by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'REFR'">
+										<xsl:text>Is not referred to by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'RSON'">
+										<xsl:text>Is not a reason for </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SAS'">
+										<xsl:text>Does not start before start [of] </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SPRT'">
+										<xsl:text>Does not support </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SUBJ'">
+										<xsl:text>Is not a subject of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'XCRPT'">
+										<xsl:text>Does not have an excerpt </xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<!-- inverted only -->
+							<xsl:when test="./@inversionInd and ( ./@inversionInd = 'true' )">
+								<xsl:choose>
+									<xsl:when test="./@typeCode = 'CAUS'">
+										<xsl:text>Has an etiology of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'COMP'">
+										<xsl:text>Is a component of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'GEVL'">
+										<xsl:text>Is evaluated by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'MFST'">
+										<xsl:text>Is manifested by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'REFR'">
+										<xsl:text>Is referred to by </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'RSON'">
+										<xsl:text>Is a reason for </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SAS'">
+										<xsl:text>Starts before start [of] </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SPRT'">
+										<xsl:text>Supports </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SUBJ'">
+										<xsl:text>Is a subject of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'XCRPT'">
+										<xsl:text>Has an excerpt </xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<!-- negated only -->
+							<xsl:when test="./@negationInd and ( ./@negationInd = 'true' )">
+								<xsl:choose>
+									<xsl:when test="./@typeCode = 'CAUS'">
+										<xsl:text>Is not an etiology for </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'COMP'">
+										<xsl:text>Does not have component </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'GEVL'">
+										<xsl:text>Does not evaluate (goal) </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'MFST'">
+										<xsl:text>Is not a manifestation of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'REFR'">
+										<xsl:text>Does not refers to </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'RSON'">
+										<xsl:text>Does not have reason </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SAS'">
+										<xsl:text>Does not start after start [of] </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SPRT'">
+										<xsl:text>Does not have support </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SUBJ'">
+										<xsl:text>Does not have subject </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'XCRPT'">
+										<xsl:text>Is not an excerpt of </xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<!-- neither inverted nor negated -->
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="./@typeCode = 'CAUS'">
+										<xsl:text>Is etiology for </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'COMP'">
+										<xsl:text>Has component </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'GEVL'">
+										<xsl:text>Evaluates (goal) </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'MFST'">
+										<xsl:text>Is manifestation of </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'REFR'">
+										<xsl:text>Refers to </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'RSON'">
+										<xsl:text>Has reason </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SAS'">
+										<xsl:text>Starts after start [of] </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SPRT'">
+										<xsl:text>Has support </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'SUBJ'">
+										<xsl:text>Has subject </xsl:text>
+									</xsl:when>
+									<xsl:when test="./@typeCode = 'XCRPT'">
+										<xsl:text>Is excerpt of </xsl:text>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>
+					</h4>
+					<div class="list-group-item-text">
+						<xsl:if test="./@contextConductionInd and ( ./@contextConductionInd = 'false' )">
+							<xsl:text>Same document (original context).</xsl:text>
+						</xsl:if>
+						<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
+
 	<xsl:template match="hl7:externalDocument">
 		<section role="document">
 			<xsl:call-template name="set-classes"/>
@@ -901,34 +1125,31 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="hl7:ClinicalDocument/hl7:participant">
+	<xsl:template match="hl7:participant">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
 				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:associatedEntity"/>
+				<xsl:apply-templates select="hl7:associatedEntity|hl7:participantRole"/>
+				<xsl:apply-templates select="hl7:functionCode|hl7:awarenessCode"/>
 				<xsl:apply-templates select="@typeCode"/>
-				<xsl:apply-templates select="hl7:functionCode"/>
 				<xsl:apply-templates select="hl7:time"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:performer">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:assignedEntity"/>
-					<xsl:apply-templates select="hl7:functionCode|hl7:modeCode"/>
-					<xsl:apply-templates select="hl7:time"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:assignedEntity"/>
+				<xsl:apply-templates select="hl7:functionCode|hl7:modeCode"/>
+				<xsl:apply-templates select="hl7:time"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:recordTarget">
@@ -1133,7 +1354,15 @@
 			<xsl:otherwise>
 				<xsl:apply-templates select="hl7:effectiveTime"/>
 				<xsl:apply-templates select="hl7:code"/>
-				<xsl:apply-templates select="hl7:performer"/>
+				<xsl:call-template name="collapsing-panel-list">
+					<xsl:with-param name="listElements" select="$entryActElement/hl7:performer"/>
+					<xsl:with-param name="panelTitle">
+						<xsl:text>Performer</xsl:text>
+					</xsl:with-param>
+					<xsl:with-param name="panelTitleIcon">
+						<xsl:text>fa fa-user-md fa-fw</xsl:text>
+					</xsl:with-param>
+				</xsl:call-template>
 				<xsl:apply-templates select="hl7:id"/>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -1147,6 +1376,21 @@
 			</strong>
 			<xsl:call-template name="II"/>
 		</span>
+	</xsl:template>
+
+	<xsl:template match="hl7:specimen">
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:specimenRole/@nullFlavor">
+				<xsl:apply-templates select="hl7:specimenRole/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:specimenRole/hl7:specimenPlayingEntity"/>
+				<xsl:apply-templates select="hl7:specimenRole/hl7:id"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:structuredBody">
@@ -1249,18 +1493,15 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:subject">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:awarenessCode"/>
-					<xsl:apply-templates select="hl7:relatedSubject"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:awarenessCode"/>
+				<xsl:apply-templates select="hl7:relatedSubject"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:relatedSubject/hl7:subject">
@@ -1277,6 +1518,45 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</header>
+	</xsl:template>
+
+	<xsl:template match="hl7:substanceAdministration">
+		<!-- POCD_MT000040.SubstanceAdministration -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Substance Administration</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:code"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="./@negationInd"/>
+
+				<xsl:apply-templates select="hl7:repeatNumber"/>
+
+				<xsl:apply-templates select="hl7:approachSiteCode"/>
+
+				<xsl:apply-templates select="hl7:consumable"/>
+				<xsl:apply-templates select="hl7:administrationUnitCode"/>
+				<xsl:apply-templates select="hl7:doseQuantity"/>
+				<xsl:apply-templates select="hl7:maxDoseQuantity"/>
+				<xsl:apply-templates select="hl7:rateQuantity"/>
+				<xsl:apply-templates select="hl7:routeCode"/>
+
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:telecom">
@@ -1511,7 +1791,7 @@
 			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<xsl:template name="List">
 		<xsl:param name="fromReference" select="false()"/>
 		<xsl:param name="element" select="current()"/>
@@ -1670,9 +1950,7 @@
 						</xsl:choose>
 					</h2>
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
-					<xsl:apply-templates select="hl7:subject"/>
-					<xsl:apply-templates select="hl7:author"/>
-					<xsl:apply-templates select="hl7:informant"/>
+					<xsl:call-template name="entry-header-entities"/>
 					<xsl:apply-templates select="hl7:id"/>
 				</header>
 				<xsl:if test="hl7:text">
@@ -2718,6 +2996,147 @@
 					<xsl:apply-templates select="hl7:versionNumber"/>
 				</xsl:if>
 			</section>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="entry-header-entities">
+		<xsl:param name="entryActElement" select="current()"/>
+		<aside class="panel-group">
+			<xsl:attribute name="id">
+				<xsl:text>headerEntities-</xsl:text>
+				<xsl:value-of select="generate-id($entryActElement)"/>
+			</xsl:attribute>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="$entryActElement/hl7:subject"/>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Subject</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-user fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="$entryActElement/hl7:author"/>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Author</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-pencil fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="$entryActElement/hl7:performer"/>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Performer</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-user-md fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="hl7:participant"/>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Participant</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-users fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="$entryActElement/hl7:informant"/>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Informant</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-info fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="collapsing-panel-list">
+				<xsl:with-param name="listElements" select="$entryActElement/hl7:specimen"/>
+				<xsl:with-param name="moreClasses">
+					<xsl:call-template name="build-class-string">
+						<xsl:with-param name="toBuildFrom" select="$entryActElement/hl7:specimen/hl7:specimenRole"/>
+					</xsl:call-template>
+				</xsl:with-param>
+				<xsl:with-param name="bsDataParent">
+					<xsl:text>#headerEntities-</xsl:text>
+					<xsl:value-of select="generate-id($entryActElement)"/>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitle">
+					<xsl:text>Specimen</xsl:text>
+				</xsl:with-param>
+				<xsl:with-param name="panelTitleIcon">
+					<xsl:text>fa fa-flask fa-fw</xsl:text>
+				</xsl:with-param>
+			</xsl:call-template>
+		</aside>
+	</xsl:template>
+	
+	<xsl:template name="entry-header-with-code">
+		<xsl:param name="entryActElement" select="current()"/>
+		<xsl:param name="alternateTitle"/>
+		<div>
+			<xsl:choose>
+				<xsl:when test="$entryActElement/hl7:code/@displayName">
+					<strong><xsl:apply-templates select="$entryActElement/hl7:code"/></strong>
+				</xsl:when>
+				<xsl:otherwise>
+					<strong>
+						<xsl:value-of select="$alternateTitle"/>
+					</strong>
+					<xsl:if test="$entryActElement/hl7:code and not($entryActElement/hl7:code/@nullFlavor)">
+						<xsl:text> </xsl:text>
+						<small>
+							<xsl:apply-templates select="$entryActElement/hl7:code"/>
+						</small>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="$entryActElement/hl7:statusCode and not($entryActElement/hl7:statusCode/@nullFlavor)">
+				<xsl:text> </xsl:text>
+				<span>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="setFrom" select="$entryActElement/hl7:statusCode"/>
+					</xsl:call-template>
+					<xsl:value-of select="$entryActElement/hl7:statusCode/@code"/>
+				</span>
+			</xsl:if>
+			<xsl:if test="$entryActElement/hl7:effectiveTime and not($entryActElement/hl7:effectiveTime/@nullFlavor)">
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="$entryActElement/hl7:effectiveTime"/>
+			</xsl:if>
+		</div>
+	</xsl:template>
+
+	<xsl:template name="entry-relationships">
+		<xsl:param name="entryActElement" select="current()"/>
+		<xsl:if test="$entryActElement/hl7:entryRelationship">
+			<ul class="list-group">
+				<xsl:for-each select="$entryActElement/hl7:entryRelationship">
+					<xsl:sort select="hl7:sequenceNumber/@value"/>
+					<xsl:apply-templates select="current()"/>
+				</xsl:for-each>
+			</ul>
 		</xsl:if>
 	</xsl:template>
 
