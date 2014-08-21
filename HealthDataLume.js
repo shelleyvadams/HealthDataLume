@@ -41,6 +41,7 @@ var HealthDataLume = (function(doc) {
 
 	/**
 	 * @member sampleBrowser
+	 * @type {GitHubBrowser}
 	 * @memberof HealthDataLume
 	 * @private
 	**/
@@ -135,7 +136,7 @@ var HealthDataLume = (function(doc) {
 	 * @private
 	 * @param {HTMLInputElement} input - File input element
 	 * @param {HTMLInputElement} display - Read-only text input element to display the name of the selected file
-	 * @param fileContent
+	 * @param {jQuery} fileContent
 	 * @throws {Error} The selected file must have an XML media type within "text/*" or "application/*"
 	 * @description Get the XML file selected by the user.
 	**/
@@ -157,12 +158,10 @@ var HealthDataLume = (function(doc) {
 	 * @function getXMLReader
 	 * @memberof HealthDataLume
 	 * @private
-	 * @param {jQuery} errContainer - Parent element for any error alerts
-	 * @param filename
-	 * @param contentInputElement
+	 * @param {jQuery} contentInputElement
 	 * @returns {FileReader}
-	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
-	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
+	 * @throws {Error} The selected file must be readable.
+	 * @description Setup the FileReader responsible for fetching the user's XML file.
 	**/
 	var getXMLReader = function(contentInputElement) {
 		var readIt = new FileReader();
@@ -185,35 +184,34 @@ var HealthDataLume = (function(doc) {
 	 * @memberof HealthDataLume
 	 * @private
 	 * @param {jQuery} errContainer - Parent element for any error alerts
-	 * @param filename
-	 * @param contentInputElement
-	 * @throws {Error|ParserError} The selected file must be readable and contain well-formed XML.
-	 * @description Setup the FileReader responsible for fetching and, through the callback function, transforming the user's XML file.
+	 * @param {String} filename
+	 * @param {jQuery} contentInputElement
+	 * @param {Document} parentDoc
 	**/
 	var transformXML = function(errContainer, filename, contentInputElement, parentDoc) {
+		try {
+			var xmlDoc = parser.parseFromString(contentInputElement.val(), "application/xml");
+			if (xmlDoc.documentElement.tagName == "parsererror") {
+				throw new ParserError(xmlDoc);
+			} else {
+				var outputSection = $("#output"),
+					result;
+				xsltProcessor.setParameter(null, "sourceFilePath", filename);
+				xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString());
 				try {
-					var xmlDoc = parser.parseFromString(contentInputElement.val(), "application/xml");
-					if (xmlDoc.documentElement.tagName == "parsererror") {
-						throw new ParserError(xmlDoc);
-					} else {
-						var outputSection = $("#output"),
-							result;
-						xsltProcessor.setParameter(null, "sourceFilePath", filename);
-						xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString());
-						try {
-							result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
-						} catch (transformErr) {
-							throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
-						}
-						try {
-							outputSection.removeClass("hidden").html(result);
-						} catch(wtfErr) {
-							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
-						}
-					}
-				} catch (err) {
-					errContainer.append( errorAlert(err) );
+					result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
+				} catch (transformErr) {
+					throw "<strong>Uh oh!</strong> Transformation failed.\n" + transformErr;
 				}
+				try {
+					outputSection.removeClass("hidden").html(result);
+				} catch(wtfErr) {
+					throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
+				}
+			}
+		} catch (err) {
+			errContainer.append( errorAlert(err) );
+		}
 	}
 
 
@@ -359,6 +357,7 @@ var HelpBalloons = (function() {
 	 * @function applyAllBalloons
 	 * @memberof HelpBalloons
 	 * @static
+	 * @public
 	**/
 	applyAllBalloons: function() {
 		for (var key in balloons) {
@@ -370,6 +369,7 @@ var HelpBalloons = (function() {
 	 * @function toggle
 	 * @memberof HelpBalloons
 	 * @static
+	 * @public
 	 * @param {Event} e
 	**/
 	toggle: function(e) {
@@ -384,6 +384,7 @@ var HelpBalloons = (function() {
 
 /** When given an invalid XML document, The {@link DOMParser} [implementation in Mozilla Gecko]{@link https://developer.mozilla.org/en-US/docs/Web/API/DOMParser#Error_handling} does not throw an {@link Error}, but returns an {@link XMLDocument} with `parsererror` as its {@link Document.documentElement}.
  * @constructor
+ * @public
  * @augments Error
  * @param {XMLDocument} xmlDoc - Returned by {@link DOMParser}
  * @see https://bugzilla.mozilla.org/show_bug.cgi?id=45566
@@ -395,7 +396,9 @@ function ParserError(xmlDoc) {
 
 /**
  * @memberof ParserError
+ * @type {String}
  * @static
+ * @public
 **/
 ParserError.name = "ParserError";
 ParserError.prototype = Object.create(Error.prototype);
@@ -405,8 +408,8 @@ ParserError.prototype.constructor = ParserError;
 
 /** Get a sparkling new GitHubBrowser object
  * @constructor
- * @param filenameDisplay
- * @param fileContentElement
+ * @param {jQuery} filenameDisplay
+ * @param {jQuery} fileContentElement
  * @property {Object} target
  * @property {jQuery} target.display
  * @property {jQuery} target.content
@@ -449,60 +452,79 @@ function GitHubBrowser(filenameDisplay, fileContentElement) {
 /** Default value for the {@link HTMLAnchorElement.target} attribute of links to external locations.
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.LINK_TARGET = "_blank";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.MASTER_BRANCH = "master";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.GO_TOP_ICON = "fa-home";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.GO_TOP_TEXT = "Go to top level";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.GO_UP_ICON = "fa-arrow-circle-up";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.GO_UP_TEXT = "Go up one level";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.FILE_ICON = "fa-file-o";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.FILE_WRONG_TYPE_ICON = "fa-file";
 
 /**
  * @memberof GitHubBrowser
  * @constant
+ * @public
+ * @type {String}
 **/
 GitHubBrowser.DIRECTORY_ICON = "fa-folder-o";
 
 /** Check whether this repository branch has been loaded in the browser 
  * @memberof GitHubBrowser
  * @method
+ * @public
  * @returns {Boolean}
 **/
 GitHubBrowser.prototype.isLoaded = function() {
@@ -512,6 +534,7 @@ GitHubBrowser.prototype.isLoaded = function() {
 /** Initial browser load. Fetches information about the repository, its branches, and directory listing for the top level of the specified branch.
  * @memberof GitHubBrowser
  * @method
+ * @public
  * @throws GitHubError
 **/
 GitHubBrowser.prototype.load = function() {
@@ -625,6 +648,7 @@ GitHubBrowser.prototype.load = function() {
 /** Look at the top item without altering {@link GitHubBrowser.history}.
  * @memberof GitHubBrowser
  * @method
+ * @public
  * @returns {Gh3.Dir|Gh3.Branch} The top item on the navigation stack, or -- if the stack is empty -- the branch.
 **/
 GitHubBrowser.prototype.peek = function() {
@@ -634,6 +658,7 @@ GitHubBrowser.prototype.peek = function() {
 /** Browse to a directory: fetch its contents (only if this is our first visit) and add it to the navigation stack.
  * @memberof GitHubBrowser
  * @method
+ * @public
  * @param {Gh3.Dir} ghDir
  * @throws GitHubError
 **/
@@ -663,6 +688,7 @@ GitHubBrowser.prototype.push = function(ghDir) {
 /** Move back one step in the navigation history
  * @memberof GitHubBrowser
  * @method
+ * @public
 **/
 GitHubBrowser.prototype.pop = function() {
 	this.history.pop();
@@ -672,6 +698,7 @@ GitHubBrowser.prototype.pop = function() {
 /** Build a the file list for the active directory.
  * @memberof GitHubBrowser
  * @method
+ * @public
 **/
 GitHubBrowser.prototype.refreshListing = function() {
 
@@ -767,6 +794,7 @@ GitHubBrowser.prototype.refreshListing = function() {
  * ...and it remembers to close the modal dialog on the way out.
  * @memberof GitHubBrowser
  * @method
+ * @public
  * @param {Gh3.File} ghFile - The file to load and send.
  * @throws GitHubError
 **/
@@ -801,6 +829,7 @@ GitHubBrowser.prototype.loadFile = function(ghFile) {
 
 /** Specialized error object for when a GitHub API call fails.
  * @constructor
+ * @public
  * @augments Error
  * @param {String} [msg]
 **/
@@ -811,6 +840,8 @@ function GitHubError(msg) {
 /**
  * @memberof GitHubError
  * @static
+ * @public
+ * @type {String}
 **/
 GitHubError.name = "GitHubError";
 GitHubError.prototype = Object.create(Error.prototype);
