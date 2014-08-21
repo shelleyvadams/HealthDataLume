@@ -1170,6 +1170,45 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="hl7:observationMedia|hl7:regionOfInterest|hl7:section" mode="inReference">
+		<xsl:apply-templates select="current()" mode="fromReference"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:observationMedia|hl7:regionOfInterest|hl7:section" mode="fromReference">
+		<xsl:apply-templates select="current()">
+			<xsl:with-param name="fromReference" select="true()"/>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="hl7:observationMedia">
+		<!-- POCD_MT000040.ObservationMedia -->
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:apply-templates select="hl7:languageCode/@code"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="./@ID and not($fromReference)">
+					<xsl:apply-templates select="./@ID"/>
+				</xsl:if>
+				<header>
+					<div>
+						<strong>
+							<xsl:text>Observation Media</xsl:text>
+						</strong>
+					</div>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:value"/>
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="hl7:order">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
@@ -1405,6 +1444,41 @@
 		</section>
 	</xsl:template>
 
+	<xsl:template match="hl7:regionOfInterest">
+		<!-- POCD_MT000040.RegionOfInterest -->
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:if test="not($fromReference)">
+						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
+					</xsl:if>
+					<div>
+						<xsl:choose>
+							<xsl:when test="hl7:code/@code">
+								<strong><xsl:value-of select="hl7:code/@code"/></strong>
+							</xsl:when>
+							<xsl:otherwise>
+								<strong>
+									<xsl:text>Region of Interest</xsl:text>
+								</strong>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:value"/>
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="hl7:relatedDocument">
 		<section role="document">
 			<xsl:call-template name="set-classes"/>
@@ -1468,16 +1542,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:section" mode="inReference">
-		<xsl:apply-templates select="current()" mode="fromReference"/>
-	</xsl:template>
-
-	<xsl:template match="hl7:section" mode="fromReference">
-		<xsl:apply-templates select="current()">
-			<xsl:with-param name="fromReference" select="true()"/>
-		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="hl7:section">
