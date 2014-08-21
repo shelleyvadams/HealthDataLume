@@ -186,6 +186,7 @@
 
 	<xsl:template match="hl7:act">
 		<!-- POCD_MT000040.Act -->
+		<xsl:apply-templates select="hl7:languageCode/@code"/>
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
 				<xsl:apply-templates select="./@nullFlavor"/>
@@ -197,6 +198,7 @@
 							<xsl:text>Act</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
+					<xsl:apply-templates select="./@negationInd"/>
 					<xsl:call-template name="entry-header-entities"/>
 					<xsl:apply-templates select="hl7:id"/>
 				</header>
@@ -204,9 +206,6 @@
 				<xsl:apply-templates select="hl7:priorityCode"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
-				<xsl:apply-templates select="hl7:languageCode"/>
-				<xsl:apply-templates select="./@negationInd"/>
-
 				<xsl:call-template name="entry-relationships"/>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -612,6 +611,31 @@
 				<xsl:apply-templates select="hl7:responsibleParty"/>
 				<xsl:apply-templates select="hl7:dischargeDispositionCode"/>
 				<xsl:apply-templates select="hl7:encounterParticipant"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="hl7:encounter">
+		<!-- POCD_MT000040.Encounter -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Encounter</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:call-template name="entry-relationships"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1112,6 +1136,40 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="hl7:observation">
+		<!-- POCD_MT000040.Observation -->
+		<xsl:apply-templates select="hl7:languageCode/@code"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Observation</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:apply-templates select="./@negationInd"/>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="hl7:derivationExpr"/>
+				<xsl:apply-templates select="hl7:interpretationCode"/>
+				<xsl:apply-templates select="hl7:methodCode"/>
+				<xsl:apply-templates select="hl7:repeatNumber"/>
+				<xsl:apply-templates select="hl7:targetSiteCode"/>
+				<xsl:apply-templates select="hl7:value"/>
+				<xsl:apply-templates select="hl7:referenceRange"/>
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="hl7:order">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
@@ -1121,6 +1179,56 @@
 				<xsl:apply-templates select="hl7:code"/>
 				<xsl:apply-templates select="hl7:id"/>
 				<xsl:apply-templates select="hl7:priorityCode"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="hl7:organizer">
+		<!-- POCD_MT000040.Organizer -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Organizer</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:if test="hl7:component">
+					<ul class="list-group">
+						<xsl:for-each select="hl7:component"> <!-- Component4 [0..*] -->
+							<xsl:sort select="hl7:sequenceNumber/@value"/>
+							<li>
+								<xsl:call-template name="set-classes">
+									<xsl:with-param name="moreClasses">
+										<xsl:text>list-group-item </xsl:text>
+										<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
+											<xsl:text>isSeperatable </xsl:text>
+										</xsl:if>
+										<xsl:call-template name="build-class-string">
+											<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+										</xsl:call-template>
+									</xsl:with-param>
+								</xsl:call-template>
+								<xsl:choose>
+									<xsl:when test="./@nullFlavor">
+										<xsl:apply-templates select="./@nullFlavor"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</li>
+						</xsl:for-each>
+					</ul>
+				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1148,6 +1256,36 @@
 				<xsl:apply-templates select="hl7:assignedEntity"/>
 				<xsl:apply-templates select="hl7:functionCode|hl7:modeCode"/>
 				<xsl:apply-templates select="hl7:time"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="hl7:procedure">
+		<!-- POCD_MT000040.Procedure -->
+		<xsl:apply-templates select="hl7:languageCode/@code"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Procedure</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:apply-templates select="./@negationInd"/>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="hl7:methodCode"/>
+				<xsl:apply-templates select="hl7:targetSiteCode"/>
+				<xsl:apply-templates select="hl7:approachSiteCode"/>
+				<xsl:call-template name="entry-relationships"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -1533,6 +1671,7 @@
 							<xsl:text>Substance Administration</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
+					<xsl:apply-templates select="./@negationInd"/>
 					<xsl:call-template name="entry-header-entities"/>
 					<xsl:apply-templates select="hl7:id"/>
 				</header>
@@ -1541,19 +1680,50 @@
 				<xsl:apply-templates select="hl7:code"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
-				<xsl:apply-templates select="./@negationInd"/>
-
 				<xsl:apply-templates select="hl7:repeatNumber"/>
-
 				<xsl:apply-templates select="hl7:approachSiteCode"/>
-
 				<xsl:apply-templates select="hl7:consumable"/>
 				<xsl:apply-templates select="hl7:administrationUnitCode"/>
 				<xsl:apply-templates select="hl7:doseQuantity"/>
 				<xsl:apply-templates select="hl7:maxDoseQuantity"/>
 				<xsl:apply-templates select="hl7:rateQuantity"/>
 				<xsl:apply-templates select="hl7:routeCode"/>
+				<xsl:call-template name="entry-relationships"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
+	<xsl:template match="hl7:supply">
+		<!-- POCD_MT000040.Supply -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="entry-header-with-code">
+						<xsl:with-param name="alternateTitle">
+							<xsl:text>Supply</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="hl7:repeatNumber"/>
+				<xsl:apply-templates select="hl7:quantity"/>
+				<xsl:apply-templates select="hl7:product"/>
+				<xsl:if test="hl7:independentInd and (hl7:independentInd = 'false')">
+					<div class="text-info">
+						<xsl:text>Dispensing is dependent on associated </xsl:text>
+						<em><xsl:text>Substance Administration</xsl:text></em>
+						<xsl:text>.</xsl:text>
+					</div>
+				</xsl:if>
+				<xsl:apply-templates select="hl7:expectedUseTime"/>
 				<xsl:call-template name="entry-relationships"/>
 			</xsl:otherwise>
 		</xsl:choose>
