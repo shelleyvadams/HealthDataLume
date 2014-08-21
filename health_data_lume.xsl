@@ -459,6 +459,13 @@
 	<xsl:template match="hl7:section/hl7:component">
 		<!-- Component5 -->
 		<section>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="moreClasses">
+					<xsl:call-template name="build-class-string">
+						<xsl:with-param name="toBuildFrom" select="hl7:section"/>
+					</xsl:call-template>
+				</xsl:with-param>
+			</xsl:call-template>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
@@ -1193,7 +1200,10 @@
 								<section>
 									<xsl:call-template name="set-classes">
 										<xsl:with-param name="moreClasses">
-											<xsl:text>tab-pane fade</xsl:text>
+											<xsl:call-template name="build-class-string">
+												<xsl:with-param name="toBuildFrom" select="hl7:section"/>
+											</xsl:call-template>
+											<xsl:text> tab-pane fade</xsl:text>
 											<xsl:if test="position() = 1">
 												<xsl:text> in active</xsl:text>
 											</xsl:if>
@@ -1221,6 +1231,11 @@
 						<div>
 							<xsl:call-template name="set-classes">
 								<xsl:with-param name="setFor" select="hl7:component"/>
+								<xsl:with-param name="moreClasses">
+									<xsl:call-template name="build-class-string">
+										<xsl:with-param name="toBuildFrom" select="hl7:component/hl7:section"/>
+									</xsl:call-template>
+								</xsl:with-param>
 							</xsl:call-template>
 							<xsl:apply-templates select="hl7:component/hl7:section"/><!-- [1] -->
 						</div>
