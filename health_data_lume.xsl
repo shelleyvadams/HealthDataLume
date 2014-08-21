@@ -36,7 +36,10 @@
 								<xsl:text>#headerEntities</xsl:text>
 							</xsl:with-param>
 							<xsl:with-param name="panelTitle">
-								<xsl:text>Custodian Organization</xsl:text>
+								<xsl:text>Data Holder</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-archive fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
@@ -46,6 +49,9 @@
 							</xsl:with-param>
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Author</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-pencil fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
@@ -68,6 +74,9 @@
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Legal Authenticator</xsl:text>
 							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-legal fa-fw</xsl:text>
+							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
 							<xsl:with-param name="listElements" select="hl7:authenticator"/>
@@ -76,6 +85,9 @@
 							</xsl:with-param>
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Authenticator</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-thumbs-up fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
@@ -86,6 +98,9 @@
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Participant</xsl:text>
 							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-users fa-fw</xsl:text>
+							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
 							<xsl:with-param name="listElements" select="hl7:informant"/>
@@ -95,6 +110,9 @@
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Informant</xsl:text>
 							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-info fa-fw</xsl:text>
+							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
 							<xsl:with-param name="listElements" select="hl7:informationRecipient"/>
@@ -103,6 +121,9 @@
 							</xsl:with-param>
 							<xsl:with-param name="panelTitle">
 								<xsl:text>Information Recipient</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-send-o fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 					</aside>
@@ -1225,7 +1246,10 @@
 					<xsl:apply-templates select="@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="./@use"/>
+					<xsl:call-template name="url-type-icon">
+						<xsl:with-param name="url" select="./@value"/>
+					</xsl:call-template>
+					<xsl:text> </xsl:text>
 					<a>
 						<xsl:attribute name="href">
 							<xsl:value-of select="./@value"/>
@@ -1236,7 +1260,11 @@
 						<xsl:value-of select="./@value"/>
 					</a>
 					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="hl7:useablePeriod"/>
+					<xsl:apply-templates select="./@use"/>
+					<xsl:if test="hl7:useablePeriod">
+						<xsl:text> </xsl:text>
+						<xsl:apply-templates select="hl7:useablePeriod"/>
+					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
@@ -2674,6 +2702,66 @@
 			<xsl:text> cda-</xsl:text>
 			<xsl:value-of select="current()"/>
 		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template name="url-type-icon">
+		<xsl:param name="url"/>
+		<xsl:variable name="protocol" select="substring-before($url, ':')"/>
+		<xsl:choose>
+			<xsl:when test="$protocol = 'tel'">
+				<i class="fa fa-phone fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Telephone</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="$protocol = 'fax'">
+				<i class="fa fa-fax fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Fax</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="($protocol = 'http') or ($protocol = 'https')">
+				<i class="fa fa-link fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Web link</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="$protocol = 'mailto'">
+				<i class="fa fa-envelope-square fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> E-mail</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="($protocol = 'ftp') or ($protocol = 'nfs')">
+				<i class="fa fa-cloud fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Remote file</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="$protocol = 'telnet'">
+				<i class="fa fa-terminal fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Telnet</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="$protocol = 'modem'">
+				<i class="fa fa-exchange fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Modem</xsl:text>
+				</span>
+			</xsl:when>
+			<xsl:when test="$protocol = 'mllp'">
+				<abbr class="initialism" title="Health Level 7 (Minimal Lower Layer Protocol)">
+					<xsl:text>HL7</xsl:text>
+				</abbr>
+			</xsl:when>
+			<xsl:when test="$protocol = 'file'">
+				<i class="fa fa-hdd-o fa-fw"></i>
+				<span class="sr-only">
+					<xsl:text> Local file</xsl:text>
+				</span>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- END:   Utility Templates -->
