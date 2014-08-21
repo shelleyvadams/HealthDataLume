@@ -185,55 +185,58 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:addr">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="./@use"/>
-				<address>
-					<xsl:for-each select="text()|*">
-						<xsl:if test="position() != 1">
-							<xsl:text> </xsl:text>
-						</xsl:if>
-						<xsl:choose>
-							<xsl:when test="local-name() = ''">
-								<xsl:value-of select="current()"/>
-							</xsl:when>
-							<xsl:when test="local-name() = 'delimiter'">
-								<br/>
-							</xsl:when>
-							<xsl:when test="local-name() = 'useablePeriod'">
-								<!-- Handled later. -->
-							</xsl:when>
-							<xsl:otherwise>
-								<!-- ADXP: Address Part -->
-								<span>
-									<xsl:call-template name="set-classes">
-										<xsl:with-param name="moreClasses">
-											<xsl:for-each select="./@partType">
-												<xsl:text> </xsl:text>
+		<div>
+			<xsl:call-template name="set-classes"/>
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="./@use"/>
+					<address>
+						<xsl:for-each select="text()|*">
+							<xsl:if test="position() != 1">
+								<xsl:text> </xsl:text>
+							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="local-name() = ''">
+									<xsl:value-of select="current()"/>
+								</xsl:when>
+								<xsl:when test="local-name() = 'delimiter'">
+									<br/>
+								</xsl:when>
+								<xsl:when test="local-name() = 'useablePeriod'">
+									<!-- Handled later. -->
+								</xsl:when>
+								<xsl:otherwise>
+									<!-- ADXP: Address Part -->
+									<span>
+										<xsl:call-template name="set-classes">
+											<xsl:with-param name="moreClasses">
+												<xsl:for-each select="./@partType">
+													<xsl:text> </xsl:text>
+													<xsl:value-of select="current()"/>
+												</xsl:for-each>
+											</xsl:with-param>
+										</xsl:call-template>
+										<xsl:choose>
+											<xsl:when test="./@nullFlavor">
+												<xsl:apply-templates select="./@nullFlavor"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:apply-templates select="./@language"/>
 												<xsl:value-of select="current()"/>
-											</xsl:for-each>
-										</xsl:with-param>
-									</xsl:call-template>
-									<xsl:choose>
-										<xsl:when test="./@nullFlavor">
-											<xsl:apply-templates select="./@nullFlavor"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="./@language"/>
-											<xsl:value-of select="current()"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</span>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</address>
-				<xsl:apply-templates select="hl7:useablePeriod"/>
-			</xsl:otherwise>
-		</xsl:choose>
+											</xsl:otherwise>
+										</xsl:choose>
+									</span>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</address>
+					<xsl:apply-templates select="hl7:useablePeriod"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode">

@@ -80,8 +80,18 @@ input.form-control[readonly] {
 }
 
 /* Cursor for collapsing panel-headings */
-.panel-heading *[data-toggle=collapse] {
+.panel-heading[data-toggle=collapse] {
 	cursor:pointer;
+}
+
+/* Vertically align address and associated "use" icon */
+.cda-addr address {
+	display:inline-block;
+}
+
+.cda-addr .fa,
+.cda-addr address {
+	vertical-align:top;
 }
 
 /* Sample Browser */
