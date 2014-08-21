@@ -2,6 +2,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:hl7="urn:hl7-org:v3">
 	<xsl:output method="html" indent="yes" version="5" omit-xml-declaration="yes" media-type="text/html"/>
 
+	<xsl:param name="sourceFilePath"/>
+	<xsl:param name="timestamp"/>
+
 	<xsl:template match="hl7:ClinicalDocument">
 		<xsl:apply-templates select="hl7:languageCode/@code"/>
 		<header>
@@ -142,6 +145,26 @@
 		<xsl:apply-templates select="hl7:component"/> <!-- Component2 [1] -->
 
 		<footer>
+			<xsl:if test="$sourceFilePath and $timestamp">
+				<p>
+					<xsl:text>Rendered by </xsl:text>
+					<cite><xsl:text>HealthDataLume</xsl:text></cite>
+					<xsl:text> from </xsl:text>
+					<tt>
+						<xsl:value-of select="$sourceFilePath"/>
+					</tt>
+					<xsl:text> at </xsl:text>
+					<time>
+						<xsl:attribute name="datetime">
+							<xsl:value-of select="$timestamp"/>
+						</xsl:attribute>
+						<xsl:value-of select="substring-after($timestamp, 'T')"/>
+						<xsl:text> on </xsl:text>
+						<xsl:value-of select="substring-before($timestamp, 'T')"/>
+					</time>
+					<xsl:text>.</xsl:text>
+				</p>
+			</xsl:if>
 			<xsl:call-template name="document-info"/>
 		</footer>
 	</xsl:template>

@@ -197,8 +197,9 @@ var HealthDataLume = (function(doc) {
 						throw new ParserError(xmlDoc);
 					} else {
 						var outputSection = $("#output"),
-							result,
-							finishTime;
+							result;
+						xsltProcessor.setParameter(null, "sourceFilePath", filename);
+						xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString());
 						try {
 							result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
 						} catch (transformErr) {
@@ -209,23 +210,10 @@ var HealthDataLume = (function(doc) {
 						} catch(wtfErr) {
 							throw "<strong>Boo!</strong> Something went wrong.<br/>\r" + wtfErr;
 						}
-						finishTime = new Date();
-						outputSection.children("footer").last().append(
-							"<p class=\"text-muted\">Rendered by <cite>HealthDataLume</cite> from <tt>" +
-							filename +
-							"</tt> at <time datetime=\"" +
-							finishTime.toISOString() +
-							"\">" +
-							finishTime.toLocaleTimeString() +
-							" on " +
-							finishTime.toLocaleDateString() +
-							"</time>.</p>"
-						);
 					}
 				} catch (err) {
 					errContainer.append( errorAlert(err) );
 				}
-
 	}
 
 
