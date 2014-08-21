@@ -545,7 +545,6 @@ GitHubBrowser.prototype.load = function() {
 				throw new GitHubError("Failed to fetch contents of branch: \"" + (that.repository.default_branch || GitHubBrowser.MASTER_BRANCH) + "\".\n" + err);
 			} else {
 				console.log("Got that branch contents.");
-//				console.log(that.branch);
 				that.loaded = true;
 				that.refreshListing();
 				that.modal.modal('show');
@@ -608,7 +607,6 @@ GitHubBrowser.prototype.load = function() {
 						"</q></p>"
 					);
 				}
-//				console.log(that.repository);
 
 				// Get the branches
 				that.repository.fetchBranches( fetchBranchesCb(that) );
@@ -638,7 +636,6 @@ GitHubBrowser.prototype.load = function() {
 						"</p>"
 					);
 				}
-//				console.log(that.user);
 			}
 		}
 	})(this) );
@@ -806,7 +803,6 @@ GitHubBrowser.prototype.loadFile = function(ghFile) {
 				throw new GitHubError("Failed to fetch raw content of file: \"" + file.name + "\".\n" + err);
 			} else {
 				console.log("Got raw file content.");
-//				console.log(file);
 				that.target.display.val(that.repository.name + ":" + that.branch.name + "/" + that.peek().path + "/" + file.name);
 				that.target.content.val(file.rawContent);
 				that.target.content.change();
@@ -819,7 +815,6 @@ GitHubBrowser.prototype.loadFile = function(ghFile) {
 		ghFile.fetchContent( fetchRawContentCb(this, ghFile) );
 	} else {
 		console.log("Seen this before");
-		//FIXME	this.target.loadGh3File(ghFile);
 	}
 
 	this.modal.modal('hide');
