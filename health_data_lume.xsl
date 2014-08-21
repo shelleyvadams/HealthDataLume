@@ -1470,18 +1470,55 @@
 		</section>
 	</xsl:template>
 
-	<xsl:template match="hl7:section">
-		<xsl:call-template name="Section"/>
-	</xsl:template>
-
 	<xsl:template match="hl7:section" mode="inReference">
 		<xsl:apply-templates select="current()" mode="fromReference"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:section" mode="fromReference">
-		<xsl:call-template name="Section">
+		<xsl:apply-templates select="current()">
 			<xsl:with-param name="fromReference" select="true()"/>
-		</xsl:call-template>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="hl7:section">
+		<!-- POCD_MT000040.Section -->
+		<xsl:param name="fromReference" select="false()"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:languageCode/@code"/>
+				<header>
+					<xsl:if test="not($fromReference)">
+						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
+					</xsl:if>
+					<h2>
+						<xsl:choose>
+							<xsl:when test="hl7:title">
+								<xsl:apply-templates select="hl7:title"/>
+								<br/>
+								<small><xsl:apply-templates select="hl7:code"/></small>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:apply-templates select="hl7:code"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</h2>
+					<xsl:apply-templates select="hl7:confidentialityCode"/>
+					<xsl:call-template name="entry-header-entities"/>
+					<xsl:apply-templates select="hl7:id"/>
+				</header>
+				<xsl:if test="hl7:text">
+					<!-- StrucDoc.Text [0..1] -->
+					<xsl:call-template name="NarrativeText">
+						<xsl:with-param name="fromReference" select="$fromReference"/>
+						<xsl:with-param name="textElement" select="hl7:text"/>
+					</xsl:call-template>
+				</xsl:if>
+				<xsl:apply-templates select="hl7:entry|hl7:component"/><!-- Entry [0..*] | Component5 [0..*] -->
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:serviceEvent">
@@ -2088,49 +2125,6 @@
 					<xsl:call-template name="document-info"/>
 				</header>
 				<xsl:apply-templates select="hl7:text"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--  *******************************************  -->
-
-	<!-- POCD_MT000040.Section -->
-	<xsl:template name="Section">
-		<xsl:param name="fromReference" select="false()"/>
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:languageCode/@code"/>
-				<header>
-					<xsl:if test="not($fromReference)">
-						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
-					</xsl:if>
-					<h2>
-						<xsl:choose>
-							<xsl:when test="hl7:title">
-								<xsl:apply-templates select="hl7:title"/>
-								<br/>
-								<small><xsl:apply-templates select="hl7:code"/></small>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:apply-templates select="hl7:code"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</h2>
-					<xsl:apply-templates select="hl7:confidentialityCode"/>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
-				</header>
-				<xsl:if test="hl7:text">
-					<!-- StrucDoc.Text [0..1] -->
-					<xsl:call-template name="NarrativeText">
-						<xsl:with-param name="fromReference" select="$fromReference"/>
-						<xsl:with-param name="textElement" select="hl7:text"/>
-					</xsl:call-template>
-				</xsl:if>
-				<xsl:apply-templates select="hl7:entry|hl7:component"/><!-- Entry [0..*] | Component5 [0..*] -->
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
