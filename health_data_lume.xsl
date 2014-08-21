@@ -20,69 +20,92 @@
 						</xsl:choose>
 					</h1>
 					<xsl:apply-templates select="hl7:effectiveTime"/>
+					<xsl:apply-templates select="hl7:recordTarget"/>
 				</div>
 				<div class="col-md-4">
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-6 col-lg-8">
-					<xsl:apply-templates select="hl7:recordTarget"/>
-				</div>
-				<div class="col-md-6 col-lg-4">
-					<section class="panel-group" id="headerEntities">
-						<xsl:apply-templates select="hl7:custodian"/>
-						<xsl:for-each select="hl7:author">
-							<section class="panel panel-default">
-								<header class="panel-heading">
-									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
-										<xsl:attribute name="data-target">
-											<xsl:text>#</xsl:text>
-											<xsl:value-of select="generate-id()"/>
-										</xsl:attribute>
-										<xsl:text>Author </xsl:text>
-										<xsl:value-of select="position()"/>
-									</h2>
-								</header>
-								<div class="panel-collapse collapse">
-									<xsl:attribute name="id">
-										<xsl:value-of select="generate-id()"/>
-									</xsl:attribute>
-									<div class="panel-body">
-										<xsl:apply-templates select="current()"/>
-									</div>
-								</div>
-							</section>
-						</xsl:for-each>
-						<xsl:apply-templates select="hl7:dataEnterer"/>
-						<xsl:apply-templates select="hl7:legalAuthenticator"/>
-						<xsl:apply-templates select="hl7:authenticator"/>
-						<xsl:apply-templates select="hl7:participant"/>
-						<xsl:for-each select="hl7:informant">
-							<section class="panel panel-default">
-								<header class="panel-heading">
-									<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
-										<xsl:attribute name="data-target">
-											<xsl:text>#</xsl:text>
-											<xsl:value-of select="generate-id()"/>
-										</xsl:attribute>
-										<xsl:text>Informant </xsl:text>
-										<xsl:value-of select="position()"/>
-									</h2>
-								</header>
-								<div class="panel-collapse collapse">
-									<xsl:attribute name="id">
-										<xsl:value-of select="generate-id()"/>
-									</xsl:attribute>
-									<div class="panel-body">
-										<xsl:apply-templates select="current()"/>
-									</div>
-								</div>
-							</section>
-						</xsl:for-each>
-						<xsl:apply-templates select="hl7:informationRecipient"/>
-					</section>
+					<aside class="panel-group" id="headerEntities">
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:custodian"/>
+							<xsl:with-param name="moreClasses">
+								<xsl:call-template name="build-class-string">
+									<xsl:with-param name="toBuildFrom" select="hl7:custodian/hl7:assignedCustodian"/>
+								</xsl:call-template>
+							</xsl:with-param>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Custodian Organization</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:author"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Author</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:dataEnterer"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Data Enterer</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitleIcon">
+								<xsl:text>fa fa-keyboard-o fa-fw</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:legalAuthenticator"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Legal Authenticator</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:authenticator"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Authenticator</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:participant"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Participant</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:informant"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Informant</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="collapsing-panel-list">
+							<xsl:with-param name="listElements" select="hl7:informationRecipient"/>
+							<xsl:with-param name="bsDataParent">
+								<xsl:text>#headerEntities</xsl:text>
+							</xsl:with-param>
+							<xsl:with-param name="panelTitle">
+								<xsl:text>Information Recipient</xsl:text>
+							</xsl:with-param>
+						</xsl:call-template>
+					</aside>
 				</div>
 			</div>
 		</header>
@@ -268,47 +291,16 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:authenticator|hl7:legalAuthenticator">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:text>panel panel-default</xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<header class="panel-heading">
-						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
-							<xsl:attribute name="data-target">
-								<xsl:text>#</xsl:text>
-								<xsl:value-of select="generate-id()"/>
-							</xsl:attribute>
-							<xsl:choose>
-								<xsl:when test="local-name() = 'legalAuthenticator'">
-									<xsl:text>Legal Authenticator</xsl:text>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:text>Authenticator </xsl:text>
-									<xsl:value-of select="position()"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</h2>
-					</header>
-					<div class="panel-collapse collapse">
-						<xsl:attribute name="id">
-							<xsl:value-of select="generate-id()"/>
-						</xsl:attribute>
-						<div class="panel-body">
-							<xsl:apply-templates select="hl7:assignedEntity"/>
-							<xsl:apply-templates select="hl7:signatureCode"/>
-							<xsl:apply-templates select="hl7:time" mode="TS"/>
-						</div>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:assignedEntity"/>
+				<xsl:apply-templates select="hl7:signatureCode"/>
+				<xsl:apply-templates select="hl7:time" mode="TS"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:author">
@@ -466,64 +458,29 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:custodian">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:assignedCustodian"/>
-					</xsl:call-template>
-					<xsl:text> panel panel-default</xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:when test="hl7:assignedCustodian/@nullFlavor">
-					<xsl:apply-templates select="hl7:assignedCustodian/@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<header class="panel-heading">
-						<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#custodianDetails">
-							<xsl:text>Custodian Organization</xsl:text>
-						</h2>
-					</header>
-					<div class="panel-collapse collapse" id="custodianDetails">
-						<div class="panel-body">
-							<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization"/>
-						</div>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:assignedCustodian/@nullFlavor">
+				<xsl:apply-templates select="hl7:assignedCustodian/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:assignedCustodian/hl7:representedCustodianOrganization"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:dataEnterer">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:text> panel panel-default</xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<header class="panel-heading">
-				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities" data-target="#dataEntererDetails">
-					<xsl:text>Data Enterer</xsl:text>
-				</h2>
-			</header>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<div class="panel-collapse collapse" id="dataEntererDetails">
-						<div class="panel-body">
-							<xsl:apply-templates select="hl7:assignedEntity"/>
-							<xsl:apply-templates select="hl7:time" mode="TS"/>
-						</div>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:assignedEntity"/>
+				<xsl:apply-templates select="hl7:time" mode="TS"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:desc|hl7:text|hl7:observationMedia/hl7:value">
@@ -682,48 +639,21 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:informationRecipient">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:intendedRecipient"/>
-					</xsl:call-template>
-					<xsl:text> panel panel-default</xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<header class="panel-heading">
-				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
-					<xsl:attribute name="data-target">
-						<xsl:text>#</xsl:text>
-						<xsl:value-of select="generate-id()"/>
-					</xsl:attribute>
-					<xsl:text>Information Recipient </xsl:text>
-					<xsl:value-of select="position()"/>
-				</h2>
-			</header>
-			<div class="panel-collapse collapse">
-				<xsl:attribute name="id">
-					<xsl:value-of select="generate-id()"/>
-				</xsl:attribute>
-				<div class="panel-body">
-					<xsl:choose>
-						<xsl:when test="./@nullFlavor">
-							<xsl:apply-templates select="./@nullFlavor"/>
-						</xsl:when>
-						<xsl:when test="hl7:intendedRecipient/@nullFlavor">
-							<xsl:apply-templates select="hl7:intendedRecipient/@nullFlavor"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="hl7:intendedRecipient/hl7:informationRecipient"/>
-							<xsl:apply-templates select="hl7:intendedRecipient/hl7:receivedOrganization"/>
-							<xsl:apply-templates select="hl7:intendedRecipient/hl7:id"/>
-							<xsl:apply-templates select="hl7:intendedRecipient/hl7:telecom"/>
-							<xsl:apply-templates select="hl7:intendedRecipient/hl7:addr"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</div>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:intendedRecipient/@nullFlavor">
+				<xsl:apply-templates select="hl7:intendedRecipient/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:intendedRecipient/hl7:informationRecipient"/>
+				<xsl:apply-templates select="hl7:intendedRecipient/hl7:receivedOrganization"/>
+				<xsl:apply-templates select="hl7:intendedRecipient/hl7:id"/>
+				<xsl:apply-templates select="hl7:intendedRecipient/hl7:telecom"/>
+				<xsl:apply-templates select="hl7:intendedRecipient/hl7:addr"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:inFulfillmentOf">
@@ -918,41 +848,17 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:participant">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:text>panel panel-default</xsl:text>
-				</xsl:with-param>
-			</xsl:call-template>
-			<header class="panel-heading">
-				<h2 class="panel-title" data-toggle="collapse" data-parent="#headerEntities">
-					<xsl:attribute name="data-target">
-						<xsl:text>#</xsl:text>
-						<xsl:value-of select="generate-id()"/>
-					</xsl:attribute>
-					<xsl:text>Participant </xsl:text>
-					<xsl:value-of select="position()"/>
-				</h2>
-			</header>
-			<div class="panel-collapse collapse">
-				<xsl:attribute name="id">
-					<xsl:value-of select="generate-id()"/>
-				</xsl:attribute>
-				<div class="panel-body">
-					<xsl:choose>
-						<xsl:when test="./@nullFlavor">
-							<xsl:apply-templates select="./@nullFlavor"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="hl7:associatedEntity"/>
-							<xsl:apply-templates select="@typeCode"/>
-							<xsl:apply-templates select="hl7:functionCode"/>
-							<xsl:apply-templates select="hl7:time"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</div>
-		</section>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:associatedEntity"/>
+				<xsl:apply-templates select="@typeCode"/>
+				<xsl:apply-templates select="hl7:functionCode"/>
+				<xsl:apply-templates select="hl7:time"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:performer">
@@ -1363,7 +1269,7 @@
 		<xsl:call-template name="Content"/>
 	</xsl:template>
 
-	<xsl:template match="hl7:table/hl7:caption|hl7:col|hl7:colgroup|hl7:table|hl7:tbody|hl7:td|hl7:tfoot|hl7:th|hl7:thead|hl7:tr">
+	<xsl:template match="hl7:table/hl7:caption|hl7:col|hl7:colgroup|hl7:tbody|hl7:td|hl7:tfoot|hl7:th|hl7:thead|hl7:tr">
 		<xsl:call-template name="ditto-element"/>
 	</xsl:template>
 
@@ -1382,6 +1288,12 @@
 
 	<xsl:template match="hl7:sub|hl7:sup">
 		<xsl:call-template name="ditto-element"/>
+	</xsl:template>
+
+	<xsl:template match="hl7:table">
+		<xsl:call-template name="ditto-element">
+			<xsl:with-param name="classList" select="local-name()"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<!--  *******************************************  -->
@@ -1418,14 +1330,15 @@
 	<xsl:template match="hl7:table" mode="fromReference">
 		<xsl:call-template name="ditto-element">
 			<xsl:with-param name="fromReference" select="true()"/>
+			<xsl:with-param name="classList" select="local-name()"/>
 		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="hl7:tbody|hl7:tfoot|hl7:thead|hl7:tr" mode="fromReference">
-		<table>
-			 <xsl:call-template name="ditto-element">
-				 <xsl:with-param name="fromReference" select="true()"/>
-			 </xsl:call-template>
+		<table class="table">
+			<xsl:call-template name="ditto-element">
+				<xsl:with-param name="fromReference" select="true()"/>
+			</xsl:call-template>
 		</table>
 	</xsl:template>
 
@@ -1507,6 +1420,7 @@
 	<xsl:template name="ditto-element">
 		<xsl:param name="element" select="current()"/>
 		<xsl:param name="fromReference" select="false()"/>
+		<xsl:param name="classList"/>
 		<xsl:element name="{local-name($element)}">
 			<xsl:apply-templates select="$element/@language"/>
 			<xsl:call-template name="narrative-styles">
@@ -1518,6 +1432,11 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="$element/@ID"/>
+					<xsl:if test="$classList and string-length($classList) &gt; 0">
+						<xsl:attribute name="class">
+							<xsl:value-of select="$classList"/>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:apply-templates/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -1753,7 +1672,7 @@
 								<xsl:text>#</xsl:text>
 								<xsl:value-of select="generate-id()"/>
 							</xsl:attribute>
-							<i class="fa fa-caret-square-o-down"></i>
+							<i class="fa fa-caret-square-o-down fa-fw"></i>
 							<span class="sr-only"> toggle list</span>
 						</a>
 						<ul class="collapse"><!-- SET[CD] -->
@@ -2648,6 +2567,77 @@
 	<!--  *******************************************  -->
 
 	<!-- BEGIN: Utility Templates -->
+
+	<xsl:template name="collapsing-panel-list">
+		<xsl:param name="listElements"/>
+		<xsl:param name="moreClasses"/>
+		<xsl:param name="bsDataParent"/>
+		<xsl:param name="panelTitle"/>
+		<xsl:param name="panelTitleIcon"/>
+		<xsl:param name="panelTitlePluralSuffix">
+			<xsl:text>s</xsl:text>
+		</xsl:param>
+		<xsl:if test="$listElements">
+			<section>
+				<xsl:call-template name="set-classes">
+					<xsl:with-param name="setFor" select="$listElements"/>
+					<xsl:with-param name="moreClasses">
+						<xsl:text>panel panel-default</xsl:text>
+						<xsl:if test="$moreClasses">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="$moreClasses"/>
+						</xsl:if>
+					</xsl:with-param>
+				</xsl:call-template>
+				<header class="panel-heading" data-toggle="collapse">
+					<xsl:if test="$bsDataParent">
+						<xsl:attribute name="data-parent">
+							<xsl:value-of select="$bsDataParent"/>
+						</xsl:attribute>
+					</xsl:if>
+					<xsl:attribute name="data-target">
+						<xsl:text>#</xsl:text>
+						<xsl:value-of select="generate-id($listElements)"/>
+					</xsl:attribute>
+					<h2 class="panel-title">
+						<xsl:if test="$panelTitleIcon">
+							<i>
+								<xsl:attribute name="class">
+									<xsl:value-of select="$panelTitleIcon"/>
+								</xsl:attribute>
+							</i>
+							<xsl:text> </xsl:text>
+						</xsl:if>
+						<xsl:value-of select="$panelTitle"/>
+						<xsl:if test="count($listElements) &gt; 1">
+							<xsl:value-of select="$panelTitlePluralSuffix"/>
+						</xsl:if>
+					</h2>
+				</header>
+				<div class="panel-collapse collapse">
+					<xsl:attribute name="id">
+						<xsl:value-of select="generate-id($listElements)"/>
+					</xsl:attribute>
+					<xsl:choose>
+						<xsl:when test="count($listElements) &gt; 1">
+							<ol class="list-group">
+								<xsl:for-each select="$listElements">
+									<li class="list-group-item">
+										<xsl:apply-templates select="current()"/>
+									</li>
+								</xsl:for-each>
+							</ol>
+						</xsl:when>
+						<xsl:when test="count($listElements) = 1">
+							<div class="panel-body">
+								<xsl:apply-templates select="$listElements"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+				</div>
+			</section>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template name="document-info">
 		<xsl:apply-templates select="hl7:id"/>

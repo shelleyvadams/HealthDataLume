@@ -592,9 +592,9 @@ GitHubBrowser.prototype.load = function() {
 
 				if ( that.repository.description && that.repository.description.length > 0 ) {
 					that.controls.repoInfo.prepend(
-						"<p>" +
+						"<p><q>" +
 						that.repository.description +
-						"</p>"
+						"</q></p>"
 					);
 				}
 //				console.log(that.repository);
