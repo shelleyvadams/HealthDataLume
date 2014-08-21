@@ -1480,17 +1480,17 @@
 			<xsl:call-template name="narrative-styles">
 				<xsl:with-param name="element" select="$element"/>
 			</xsl:call-template>
+			<xsl:if test="$classList and string-length($classList) &gt; 0">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$classList"/>
+				</xsl:attribute>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$fromReference">
 					<xsl:apply-templates mode="inReference"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="$element/@ID"/>
-					<xsl:if test="$classList and string-length($classList) &gt; 0">
-						<xsl:attribute name="class">
-							<xsl:value-of select="$classList"/>
-						</xsl:attribute>
-					</xsl:if>
 					<xsl:apply-templates/>
 				</xsl:otherwise>
 			</xsl:choose>
