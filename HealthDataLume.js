@@ -196,6 +196,7 @@ var HealthDataLume = (function(doc) {
 			} else {
 				var outputSection = $("#output"),
 					result;
+				xsltProcessor.clearParameters(); // just in case
 				xsltProcessor.setParameter(null, "sourceFilePath", filename);
 				xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString());
 				try {
