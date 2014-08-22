@@ -851,15 +851,42 @@
 		</li>
 	</xsl:template>
 
-	<xsl:template match="hl7:externalDocument">
+	<xsl:template match="hl7:externalDocument|hl7:relatedDocument">
 		<section role="document">
-			<xsl:call-template name="set-classes"/>
-			<xsl:call-template name="ExternalDocument"/>
+			<xsl:call-template name="set-classes">
+				<xsl:with-param name="moreClasses">
+					<xsl:call-template name="build-class-string">
+						<xsl:with-param name="toBuildFrom" select="hl7:parentDocument"/>
+					</xsl:call-template>
+				</xsl:with-param>
+			</xsl:call-template>
+			<!-- POCD_MT000040.ExternalDocument -->
+			<!-- POCD_MT000040.ParentDocument is an ExternalDocument -->
+			<xsl:choose>
+				<xsl:when test="./@nullFlavor">
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</xsl:when>
+				<xsl:when test="hl7:parentDocument/@nullFlavor">
+					<xsl:apply-templates select="hl7:parentDocument/@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<header>
+						<xsl:apply-templates select="hl7:code|hl7:parentDocument/hl7:code"/>
+						<xsl:choose>
+							<xsl:when test="hl7:parentDocument">
+								<xsl:call-template name="document-info">
+									<xsl:with-param name="document" select="hl7:parentDocument"/>
+								</xsl:call-template>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="document-info"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</header>
+					<xsl:apply-templates select="hl7:text|hl7:parentDocument/hl7:text"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:reference/hl7:externalDocument|hl7:parentDocument">
-		<xsl:call-template name="ExternalDocument"/>
 	</xsl:template>
 
 	<xsl:template match="hl7:guardian">
@@ -1477,20 +1504,6 @@
 				<xsl:call-template name="entry-relationships"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="hl7:relatedDocument">
-		<section role="document">
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:parentDocument"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
 	</xsl:template>
 
 	<xsl:template match="hl7:relatedEntity">
@@ -2134,30 +2147,6 @@
 	</xsl:template>
 
 	<!-- END:   NarrativeBlock Templates -->
-
-	<!--  *******************************************  -->
-	<!--  *******************************************  -->
-
-	<!-- BEGIN: POCD_MT000040 Data Types -->
-
-	<!-- POCD_MT000040.ParentDocument is an ExternalDocument -->
-	<!-- POCD_MT000040.ExternalDocument -->
-	<xsl:template name="ExternalDocument">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<header>
-					<xsl:apply-templates select="hl7:code"/>
-					<xsl:call-template name="document-info"/>
-				</header>
-				<xsl:apply-templates select="hl7:text"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!-- END:   POCD_MT000040 Data Types -->
 
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
@@ -3179,13 +3168,14 @@
 	</xsl:template>
 
 	<xsl:template name="document-info">
-		<xsl:apply-templates select="hl7:id"/>
-		<xsl:if test="hl7:setId">
+		<xsl:param name="document" select="current()"/>
+		<xsl:apply-templates select="$document/hl7:id"/>
+		<xsl:if test="$document/hl7:setId">
 			<section class="cda-set">
-				<xsl:apply-templates select="hl7:setId"/>
-				<xsl:if test="hl7:versionNumber">
+				<xsl:apply-templates select="$document/hl7:setId"/>
+				<xsl:if test="$document/hl7:versionNumber">
 					<xsl:text>, </xsl:text>
-					<xsl:apply-templates select="hl7:versionNumber"/>
+					<xsl:apply-templates select="$document/hl7:versionNumber"/>
 				</xsl:if>
 			</section>
 		</xsl:if>
