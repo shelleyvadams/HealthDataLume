@@ -1019,6 +1019,32 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="hl7:languageCommunication">
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<h5 class="list-group-item-heading">
+					<xsl:value-of select="hl7:languageCode/@code"/>
+					<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
+						<xsl:text> </xsl:text>
+						<span class="text-info">
+							<i class="fa fa-star fa-lg fa-fw"></i>
+							<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
+						</span>
+					</xsl:if>
+				</h5>
+				<xsl:if test="hl7:modeCode or hl7:proficiencyLevelCode">
+					<div class="list-group-item-text">
+						<xsl:apply-templates select="hl7:modeCode"/>
+						<xsl:apply-templates select="hl7:proficiencyLevelCode"/>
+					</div>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="hl7:encompassingEncounter/hl7:location">
 		<section>
 			<xsl:call-template name="set-classes">
@@ -1412,51 +1438,15 @@
 						</xsl:choose>
 					</header>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:birthplace"/>
-					<xsl:if test="hl7:patientRole/hl7:patient/hl7:languageCommunication">
-						<section>
-							<h4>
-								<i class="fa fa-language fa-fw"></i>
-								<xsl:text> Language</xsl:text>
-								<xsl:if test="count(hl7:patientRole/hl7:patient/hl7:languageCommunication) &gt; 1">
-									<xsl:text>s</xsl:text>
-								</xsl:if>
-							</h4>
-							<ul class="list-group">
-								<xsl:for-each select="hl7:patientRole/hl7:patient/hl7:languageCommunication">
-									<li>
-										<xsl:call-template name="set-classes">
-											<xsl:with-param name="moreClasses">
-												<xsl:text>list-group-item</xsl:text>
-											</xsl:with-param>
-										</xsl:call-template>
-										<xsl:choose>
-											<xsl:when test="./@nullFlavor">
-												<xsl:apply-templates select="./@nullFlavor"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<h5 class="list-group-item-heading">
-													<xsl:value-of select="hl7:languageCode/@code"/>
-													<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
-														<xsl:text> </xsl:text>
-														<span class="text-info">
-															<i class="fa fa-star fa-lg fa-fw"></i>
-															<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
-														</span>
-													</xsl:if>
-												</h5>
-												<xsl:if test="hl7:modeCode or hl7:proficiencyLevelCode">
-													<div class="list-group-item-text">
-														<xsl:apply-templates select="hl7:modeCode"/>
-														<xsl:apply-templates select="hl7:proficiencyLevelCode"/>
-													</div>
-												</xsl:if>
-											</xsl:otherwise>
-										</xsl:choose>
-									</li>
-								</xsl:for-each>
-							</ul>
-						</section>
-					</xsl:if>
+					<xsl:call-template name="collapsing-panel-list">
+						<xsl:with-param name="listElements" select="hl7:patientRole/hl7:patient/hl7:languageCommunication"/>
+						<xsl:with-param name="panelTitle">
+							<xsl:text>Language</xsl:text>
+						</xsl:with-param>
+						<xsl:with-param name="panelTitleIcon">
+							<xsl:text>fa fa-language fa-fw</xsl:text>
+						</xsl:with-param>
+					</xsl:call-template>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:maritalStatusCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:ethnicGroupCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:raceCode"/>
