@@ -2175,7 +2175,7 @@
 								<xsl:when test="./@codeSystemName">
 									<xsl:comment><xsl:value-of select="./@codeSystem"/></xsl:comment>
 									<xsl:value-of select="./@codeSystemName"/>
-									<xsl:apply-templates select="./codeSystemVersion"/>
+									<xsl:apply-templates select="./@codeSystemVersion"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="./@codeSystem"/>
@@ -3263,7 +3263,7 @@
 			</xsl:call-template>
 		</aside>
 	</xsl:template>
-	
+
 	<xsl:template name="entry-header-with-code">
 		<xsl:param name="entryActElement" select="current()"/>
 		<xsl:param name="alternateTitle"/>
