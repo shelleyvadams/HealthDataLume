@@ -198,12 +198,7 @@
 							<xsl:text>Act</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:apply-templates select="./@negationInd"/>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
 				<xsl:call-template name="entry-relationships"/>
@@ -628,11 +623,7 @@
 							<xsl:text>Encounter</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
 				<xsl:call-template name="entry-relationships"/>
@@ -1194,12 +1185,7 @@
 							<xsl:text>Observation</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:apply-templates select="./@negationInd"/>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
 				<xsl:apply-templates select="hl7:derivationExpr"/>
@@ -1279,10 +1265,7 @@
 							<xsl:text>Organizer</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:if test="hl7:component">
 					<ul class="list-group">
@@ -1357,12 +1340,7 @@
 							<xsl:text>Procedure</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:apply-templates select="./@negationInd"/>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
 				<xsl:apply-templates select="hl7:methodCode"/>
@@ -1761,13 +1739,7 @@
 							<xsl:text>Substance Administration</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:apply-templates select="./@negationInd"/>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
-				<xsl:apply-templates select="hl7:code"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:text"/>
 				<xsl:apply-templates select="hl7:repeatNumber"/>
@@ -1796,16 +1768,12 @@
 							<xsl:text>Supply</xsl:text>
 						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
-				<xsl:apply-templates select="hl7:reference"/>
-				<xsl:apply-templates select="hl7:text"/>
+				<xsl:apply-templates select="hl7:product"/>
 				<xsl:apply-templates select="hl7:repeatNumber"/>
 				<xsl:apply-templates select="hl7:quantity"/>
-				<xsl:apply-templates select="hl7:product"/>
+				<xsl:apply-templates select="hl7:reference"/>
+				<xsl:apply-templates select="hl7:text"/>
 				<xsl:if test="hl7:independentInd and (hl7:independentInd = 'false')">
 					<div class="text-info">
 						<xsl:text>Dispensing is dependent on associated </xsl:text>
@@ -3257,36 +3225,45 @@
 	<xsl:template name="entry-header-with-code">
 		<xsl:param name="entryActElement" select="current()"/>
 		<xsl:param name="alternateTitle"/>
-		<div>
-			<xsl:choose>
-				<xsl:when test="$entryActElement/hl7:code/@displayName">
-					<strong><xsl:apply-templates select="$entryActElement/hl7:code"/></strong>
-				</xsl:when>
-				<xsl:otherwise>
-					<strong>
-						<xsl:value-of select="$alternateTitle"/>
-					</strong>
-					<xsl:if test="$entryActElement/hl7:code and not($entryActElement/hl7:code/@nullFlavor)">
-						<xsl:text> </xsl:text>
-						<small>
-							<xsl:apply-templates select="$entryActElement/hl7:code"/>
-						</small>
-					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:if test="$entryActElement/hl7:statusCode and not($entryActElement/hl7:statusCode/@nullFlavor)">
-				<xsl:text> </xsl:text>
-				<span>
-					<xsl:call-template name="set-classes">
-						<xsl:with-param name="setFrom" select="$entryActElement/hl7:statusCode"/>
-					</xsl:call-template>
-					<xsl:value-of select="$entryActElement/hl7:statusCode/@code"/>
-				</span>
-			</xsl:if>
-			<xsl:if test="$entryActElement/hl7:effectiveTime and not($entryActElement/hl7:effectiveTime/@nullFlavor)">
-				<xsl:text> </xsl:text>
-				<xsl:apply-templates select="$entryActElement/hl7:effectiveTime"/>
-			</xsl:if>
+		<div class="row">
+			<div class="col-md-6">
+				<xsl:choose>
+					<xsl:when test="$entryActElement/hl7:code/@displayName">
+						<strong><xsl:apply-templates select="$entryActElement/hl7:code"/></strong>
+					</xsl:when>
+					<xsl:otherwise>
+						<strong>
+							<xsl:value-of select="$alternateTitle"/>
+						</strong>
+						<xsl:if test="$entryActElement/hl7:code and not($entryActElement/hl7:code/@nullFlavor)">
+							<xsl:text> </xsl:text>
+							<small>
+								<xsl:apply-templates select="$entryActElement/hl7:code"/>
+							</small>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+				<xsl:if test="$entryActElement/hl7:statusCode and not($entryActElement/hl7:statusCode/@nullFlavor)">
+					<xsl:text> </xsl:text>
+					<span>
+						<xsl:call-template name="set-classes">
+							<xsl:with-param name="setFrom" select="$entryActElement/hl7:statusCode"/>
+						</xsl:call-template>
+						<xsl:value-of select="$entryActElement/hl7:statusCode/@code"/>
+					</span>
+				</xsl:if>
+				<xsl:if test="$entryActElement/hl7:effectiveTime and not($entryActElement/hl7:effectiveTime/@nullFlavor)">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="$entryActElement/hl7:effectiveTime"/>
+				</xsl:if>
+				<xsl:apply-templates select="hl7:id"/>
+				<xsl:apply-templates select="hl7:precondition"/>
+				<xsl:apply-templates select="hl7:priorityCode"/>
+			</div>
+			<div class="col-md-6">
+					<xsl:apply-templates select="./@negationInd"/>
+					<xsl:call-template name="entry-header-entities"/>
+			</div>
 		</div>
 	</xsl:template>
 
