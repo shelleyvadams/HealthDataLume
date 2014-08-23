@@ -1558,7 +1558,7 @@
 				<xsl:apply-templates select="hl7:effectiveTime"/>
 				<xsl:apply-templates select="hl7:code"/>
 				<xsl:call-template name="collapsing-panel-list">
-					<xsl:with-param name="listElements" select="$entryActElement/hl7:performer"/>
+					<xsl:with-param name="listElements" select="hl7:performer"/>
 					<xsl:with-param name="panelTitle">
 						<xsl:text>Performer</xsl:text>
 					</xsl:with-param>
