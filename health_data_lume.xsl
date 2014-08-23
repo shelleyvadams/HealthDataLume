@@ -2007,7 +2007,7 @@
 
 	<xsl:template name="ditto-attribute">
 		<xsl:param name="attribute" select="current()"/>
-		<xsl:attribute name="local-name($attribute)">
+		<xsl:attribute name="{local-name($attribute)}">
 			<xsl:value-of select="$attribute"/>
 		</xsl:attribute>
 	</xsl:template>
