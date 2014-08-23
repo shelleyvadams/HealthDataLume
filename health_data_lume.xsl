@@ -2489,62 +2489,59 @@
 	<xsl:template match="hl7:addr/@use|hl7:telecom/@use">
 		<span class="use_type">
 		<xsl:choose>
-			<xsl:when test="contains(current(), 'BAD')">
+			<xsl:when test="current() = 'BAD'">
 				<i class="fa fa-ban fa-fw"></i>
 				<xsl:text> Bad (do not use)</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'CONF')">
+			<xsl:when test="current() = 'CONF'">
 				<i class="fa fa-lock fa-fw"></i>
 				<xsl:text> Confidential</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'TMP')">
+			<xsl:when test="current() = 'TMP'">
 				<i class="fa fa-clock-o fa-fw"></i>
 				<xsl:text> Temporary</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'WP')">
+			<xsl:when test="current() = 'WP'">
 				<i class="fa fa-briefcase fa-fw"></i>
 				<span class="sr-only"><xsl:text> Work</xsl:text></span>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'H')">
+			<xsl:when test="current() = 'H'">
 				<i class="fa fa-home fa-fw"></i>
 				<span class="sr-only"><xsl:text> Home</xsl:text></span>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'PHYS')">
+			<xsl:when test="current() = 'PHYS'">
 				<i class="fa fa-map-marker fa-fw"></i>
 				<span class="sr-only"><xsl:text> Physical address</xsl:text></span>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'PST')">
+			<xsl:when test="current() = 'PST'">
 				<i class="fa fa-envelope-o fa-fw"></i>
 				<span class="sr-only"><xsl:text> Postal address</xsl:text></span>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'AS')">
+			<xsl:when test="current() = 'AS'">
 				<xsl:text>Answering service</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'EC')">
+			<xsl:when test="current() = 'EC'">
 				<xsl:text>Emergency contact</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'MC')">
+			<xsl:when test="current() = 'MC'">
 				<i class="fa fa-mobile fa-fw"></i>
 				<span class="sr-only"><xsl:text> Mobile</xsl:text></span>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'PG')">
+			<xsl:when test="current() = 'PG'">
 				<xsl:text>Pager</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'HP')">
-				<span class="fa-stack">
-					<i class="fa fa-circle-thin fa-stack-2x"></i>
-					<i class="fa fa-home fa-stack-1x"></i>
-				</span>
+			<xsl:when test="current() = 'HP'">
+				<i class="fa fa-home fa-fw"></i>
 				<xsl:text> Primary home</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'HV')">
+			<xsl:when test="current() = 'HV'">
 				<i class="fa fa-suitcase fa-fw"></i>
 				<xsl:text> Vacation home</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'DIR')">
+			<xsl:when test="current() = 'DIR'">
 				<xsl:text>Direct</xsl:text>
 			</xsl:when>
-			<xsl:when test="contains(current(), 'PUB')">
+			<xsl:when test="current() = 'PUB'">
 				<i class="fa fa-unlock fa-fw"></i>
 				<xsl:text> Public</xsl:text>
 			</xsl:when>

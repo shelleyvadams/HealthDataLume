@@ -106,11 +106,11 @@ blockquote {
 /* Vertically align address and associated "use" icon */
 .cda-addr address {
 	display:inline-block;
+	vertical-align:top;
 }
 
-.cda-addr .fa,
-.cda-addr address {
-	vertical-align:top;
+.cda-addr .fa {
+	vertical-align:baseline;
 }
 
 /* Sample Browser */
