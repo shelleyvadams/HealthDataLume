@@ -140,6 +140,11 @@ td.gh-item-size {
 	text-align:right;
 }
 
+/* Hide nullFlavor values */
+.cda-nullFlavor {
+	display:none;
+}
+
 /* Print formatting */
 
 @media print {

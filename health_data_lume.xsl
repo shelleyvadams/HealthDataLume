@@ -207,13 +207,13 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:addr">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="./@use"/>
 					<address>
 						<xsl:for-each select="text()|*">
@@ -256,9 +256,9 @@
 						</xsl:for-each>
 					</address>
 					<xsl:apply-templates select="hl7:useablePeriod"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode">
@@ -269,31 +269,31 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:asOrganizationPartOf">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:wholeOrganization"/>
 					<xsl:apply-templates select="hl7:code"/>
 					<xsl:apply-templates select="hl7:id"/>
 					<xsl:apply-templates select="hl7:effectiveTime"/>
 					<xsl:apply-templates select="hl7:statusCode"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedAuthoringDevice|hl7:playingDevice">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<header>
 						<p>
 							<i class="fa fa-desktop fa-fw"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
@@ -311,52 +311,52 @@
 						<p><xsl:apply-templates select="hl7:manufacturerModelName"/></p>
 					</xsl:if>
 					<xsl:apply-templates select="hl7:code"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedEntity|hl7:associatedEntity">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:assignedPerson|hl7:associatedPerson"/>
 					<xsl:apply-templates select="hl7:code"/>
 					<xsl:apply-templates select="hl7:id"/>
 					<xsl:apply-templates select="hl7:representedOrganization|hl7:scopingOrganization"/>
 					<xsl:apply-templates select="hl7:telecom"/>
 					<xsl:apply-templates select="hl7:addr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedPerson|hl7:associatedPerson|hl7:guardianPerson|hl7:intendedRecipient/hl7:informationRecipient|hl7:relatedPerson">
-		<p>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:when test="hl7:name/@nullFlavor">
-					<xsl:apply-templates select="hl7:name/@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:name/@nullFlavor">
+				<xsl:apply-templates select="hl7:name/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<p>
+					<xsl:call-template name="set-classes"/>
 					<i class="fa fa-user fa-fw"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
 					<xsl:apply-templates select="hl7:name[1]"/>
 					<xsl:for-each select="hl7:name[position()&gt;1]">
-						<xsl:text> </xsl:text>
+						<br/>
 						<small>
 							<xsl:apply-templates select="current()"/>
 						</small>
 					</xsl:for-each>
-				</xsl:otherwise>
-			</xsl:choose>
-		</p>
+				</p>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:authenticator|hl7:legalAuthenticator">
@@ -373,31 +373,30 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:author">
-		<div>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:assignedAuthor"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<div class="alert alert-warning">
+					<strong><xsl:text>No author.</xsl:text></strong>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./@nullFlavor"/>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:assignedAuthor"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<div class="alert alert-warning">
-						<strong><xsl:text>No author:</xsl:text></strong>
-						<xsl:text> </xsl:text>
-						<xsl:apply-templates select="./@nullFlavor"/>
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="hl7:assignedAuthor/@nullFlavor">
-							<p>
-								<strong><xsl:text>No author assigned</xsl:text></strong>
-								<xsl:text> (</xsl:text>
+							<div class="alert alert-warning">
+								<strong><xsl:text>No author assigned.</xsl:text></strong>
+								<xsl:text> </xsl:text>
 								<xsl:apply-templates select="hl7:assignedAuthor/@nullFlavor"/>
-								<xsl:text>)</xsl:text>
-							</p>
+							</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="hl7:assignedAuthor/hl7:code"/>
@@ -410,44 +409,52 @@
 					</xsl:choose>
 					<xsl:apply-templates select="hl7:functionCode"/>
 					<xsl:apply-templates select="hl7:time" mode="TS"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:authorization">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:consent"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:consent/@nullFlavor">
+				<xsl:apply-templates select="hl7:consent/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:consent"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:consent"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+					<xsl:apply-templates select="hl7:consent/hl7:code"/>
+					<xsl:apply-templates select="hl7:consent/hl7:id"/>
+					<xsl:apply-templates select="hl7:consent/hl7:statusCode"/>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:birthplace">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:place/@nullFlavor">
+				<xsl:apply-templates select="hl7:place/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<strong><xsl:text>Birthplace:</xsl:text></strong>
 					<xsl:apply-templates select="hl7:place"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:birthTime">
@@ -455,80 +462,70 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:code">
-		<div class="code"><xsl:call-template name="CD"/></div>
+		<div>
+			<xsl:call-template name="set-classes"/>
+			<xsl:call-template name="CD"/>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:component">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="more-classes">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:nonXMLBody|hl7:structuredBody"/>
-					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:nonXMLBody|hl7:structuredBody"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:section/hl7:component">
-		<!-- Component5 -->
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:section"/>
-					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:section"/><!-- [1] -->
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:componentOf">
-		<!-- Component1 -->
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:encompassingEncounter"/>
-					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:encompassingEncounter"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
-	</xsl:template>
-
-	<xsl:template match="hl7:consent">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
 				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:code"/>
-				<xsl:apply-templates select="hl7:id"/>
-				<xsl:apply-templates select="hl7:statusCode"/>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="more-classes">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:nonXMLBody|hl7:structuredBody"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:apply-templates select="hl7:nonXMLBody|hl7:structuredBody"/>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="hl7:section/hl7:component">
+		<!-- Component5 -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:section"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:apply-templates select="hl7:section"/><!-- [1] -->
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="hl7:componentOf">
+		<!-- Component1 -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:encompassingEncounter"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:call-template>
+					<xsl:apply-templates select="hl7:encompassingEncounter"/>
+				</section>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -567,23 +564,23 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:documentationOf">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:serviceEvent"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:serviceEvent"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
 					<xsl:apply-templates select="hl7:serviceEvent"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:effectiveTime|hl7:expectedUseTime|hl7:time|hl7:useablePeriod">
@@ -632,233 +629,225 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:encounterParticipant">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:assignedEntity"/>
 					<xsl:apply-templates select="hl7:time"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+			</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:entry">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
 					<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/><!-- [1] -->
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:entryRelationship">
-		<li>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:text>list-group-item </xsl:text>
-					<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
-						<xsl:text>isSeperatable </xsl:text>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
+					<span class="badge">
+						<xsl:text>Seperatable</xsl:text>
+					</span>
+				</xsl:if>
+				<p class="list-group-item-heading">
+					<!-- ActRelationshipType [2.16.840.1.113883.5.1002] -->
+					<xsl:choose>
+						<!-- both inverted and negated -->
+						<xsl:when test="( ./@inversionInd and ( ./@inversionInd = 'true' ) ) and ( ./@negationInd and ( ./@negationInd = 'true' ) )">
+							<xsl:choose>
+								<xsl:when test="./@typeCode = 'CAUS'">
+									<xsl:text>Does not have an etiology of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'COMP'">
+									<xsl:text>Is not a component of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'GEVL'">
+									<xsl:text>Is not evaluated by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'MFST'">
+									<xsl:text>Is not manifested by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'REFR'">
+									<xsl:text>Is not referred to by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'RSON'">
+									<xsl:text>Is not a reason for </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SAS'">
+									<xsl:text>Does not start before start [of] </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SPRT'">
+									<xsl:text>Does not support </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SUBJ'">
+									<xsl:text>Is not a subject of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'XCRPT'">
+									<xsl:text>Does not have an excerpt </xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:when>
+						<!-- inverted only -->
+						<xsl:when test="./@inversionInd and ( ./@inversionInd = 'true' )">
+							<xsl:choose>
+								<xsl:when test="./@typeCode = 'CAUS'">
+									<xsl:text>Has an etiology of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'COMP'">
+									<xsl:text>Is a component of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'GEVL'">
+									<xsl:text>Is evaluated by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'MFST'">
+									<xsl:text>Is manifested by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'REFR'">
+									<xsl:text>Is referred to by </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'RSON'">
+									<xsl:text>Is a reason for </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SAS'">
+									<xsl:text>Starts before start [of] </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SPRT'">
+									<xsl:text>Supports </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SUBJ'">
+									<xsl:text>Is a subject of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'XCRPT'">
+									<xsl:text>Has an excerpt </xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:when>
+						<!-- negated only -->
+						<xsl:when test="./@negationInd and ( ./@negationInd = 'true' )">
+							<xsl:choose>
+								<xsl:when test="./@typeCode = 'CAUS'">
+									<xsl:text>Is not an etiology for </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'COMP'">
+									<xsl:text>Does not have component </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'GEVL'">
+									<xsl:text>Does not evaluate (goal) </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'MFST'">
+									<xsl:text>Is not a manifestation of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'REFR'">
+									<xsl:text>Does not refers to </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'RSON'">
+									<xsl:text>Does not have reason </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SAS'">
+									<xsl:text>Does not start after start [of] </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SPRT'">
+									<xsl:text>Does not have support </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SUBJ'">
+									<xsl:text>Does not have subject </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'XCRPT'">
+									<xsl:text>Is not an excerpt of </xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:when>
+						<!-- neither inverted nor negated -->
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="./@typeCode = 'CAUS'">
+									<xsl:text>Is etiology for </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'COMP'">
+									<xsl:text>Has component </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'GEVL'">
+									<xsl:text>Evaluates (goal) </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'MFST'">
+									<xsl:text>Is manifestation of </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'REFR'">
+									<xsl:text>Refers to </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'RSON'">
+									<xsl:text>Has reason </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SAS'">
+									<xsl:text>Starts after start [of] </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SPRT'">
+									<xsl:text>Has support </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'SUBJ'">
+									<xsl:text>Has subject </xsl:text>
+								</xsl:when>
+								<xsl:when test="./@typeCode = 'XCRPT'">
+									<xsl:text>Is excerpt of </xsl:text>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</p>
+				<div class="list-group-item-text">
+					<xsl:if test="./@contextConductionInd and ( ./@contextConductionInd = 'false' )">
+						<xsl:text>Same document (original context).</xsl:text>
 					</xsl:if>
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
-					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<p class="list-group-item-heading">
-						<!-- ActRelationshipType [2.16.840.1.113883.5.1002] -->
-						<xsl:choose>
-							<!-- both inverted and negated -->
-							<xsl:when test="( ./@inversionInd and ( ./@inversionInd = 'true' ) ) and ( ./@negationInd and ( ./@negationInd = 'true' ) )">
-								<xsl:choose>
-									<xsl:when test="./@typeCode = 'CAUS'">
-										<xsl:text>Does not have an etiology of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'COMP'">
-										<xsl:text>Is not a component of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'GEVL'">
-										<xsl:text>Is not evaluated by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'MFST'">
-										<xsl:text>Is not manifested by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'REFR'">
-										<xsl:text>Is not referred to by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'RSON'">
-										<xsl:text>Is not a reason for </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SAS'">
-										<xsl:text>Does not start before start [of] </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SPRT'">
-										<xsl:text>Does not support </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SUBJ'">
-										<xsl:text>Is not a subject of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'XCRPT'">
-										<xsl:text>Does not have an excerpt </xsl:text>
-									</xsl:when>
-								</xsl:choose>
-							</xsl:when>
-							<!-- inverted only -->
-							<xsl:when test="./@inversionInd and ( ./@inversionInd = 'true' )">
-								<xsl:choose>
-									<xsl:when test="./@typeCode = 'CAUS'">
-										<xsl:text>Has an etiology of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'COMP'">
-										<xsl:text>Is a component of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'GEVL'">
-										<xsl:text>Is evaluated by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'MFST'">
-										<xsl:text>Is manifested by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'REFR'">
-										<xsl:text>Is referred to by </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'RSON'">
-										<xsl:text>Is a reason for </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SAS'">
-										<xsl:text>Starts before start [of] </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SPRT'">
-										<xsl:text>Supports </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SUBJ'">
-										<xsl:text>Is a subject of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'XCRPT'">
-										<xsl:text>Has an excerpt </xsl:text>
-									</xsl:when>
-								</xsl:choose>
-							</xsl:when>
-							<!-- negated only -->
-							<xsl:when test="./@negationInd and ( ./@negationInd = 'true' )">
-								<xsl:choose>
-									<xsl:when test="./@typeCode = 'CAUS'">
-										<xsl:text>Is not an etiology for </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'COMP'">
-										<xsl:text>Does not have component </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'GEVL'">
-										<xsl:text>Does not evaluate (goal) </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'MFST'">
-										<xsl:text>Is not a manifestation of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'REFR'">
-										<xsl:text>Does not refers to </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'RSON'">
-										<xsl:text>Does not have reason </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SAS'">
-										<xsl:text>Does not start after start [of] </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SPRT'">
-										<xsl:text>Does not have support </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SUBJ'">
-										<xsl:text>Does not have subject </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'XCRPT'">
-										<xsl:text>Is not an excerpt of </xsl:text>
-									</xsl:when>
-								</xsl:choose>
-							</xsl:when>
-							<!-- neither inverted nor negated -->
-							<xsl:otherwise>
-								<xsl:choose>
-									<xsl:when test="./@typeCode = 'CAUS'">
-										<xsl:text>Is etiology for </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'COMP'">
-										<xsl:text>Has component </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'GEVL'">
-										<xsl:text>Evaluates (goal) </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'MFST'">
-										<xsl:text>Is manifestation of </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'REFR'">
-										<xsl:text>Refers to </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'RSON'">
-										<xsl:text>Has reason </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SAS'">
-										<xsl:text>Starts after start [of] </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SPRT'">
-										<xsl:text>Has support </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'SUBJ'">
-										<xsl:text>Has subject </xsl:text>
-									</xsl:when>
-									<xsl:when test="./@typeCode = 'XCRPT'">
-										<xsl:text>Is excerpt of </xsl:text>
-									</xsl:when>
-								</xsl:choose>
-							</xsl:otherwise>
-						</xsl:choose>
-					</p>
-					<div class="list-group-item-text">
-						<xsl:if test="./@contextConductionInd and ( ./@contextConductionInd = 'false' )">
-							<xsl:text>Same document (original context).</xsl:text>
-						</xsl:if>
-						<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</li>
+					<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:externalDocument|hl7:relatedDocument">
-		<section role="document">
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:parentDocument"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:parentDocument/@nullFlavor">
+				<xsl:apply-templates select="hl7:parentDocument/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section role="document">
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:parentDocument"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<!-- POCD_MT000040.ExternalDocument -->
-			<!-- POCD_MT000040.ParentDocument is an ExternalDocument -->
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:when test="hl7:parentDocument/@nullFlavor">
-					<xsl:apply-templates select="hl7:parentDocument/@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+					<!-- POCD_MT000040.ExternalDocument -->
+					<!-- POCD_MT000040.ParentDocument is an ExternalDocument -->
 					<header>
 						<xsl:apply-templates select="hl7:code|hl7:parentDocument/hl7:code"/>
 						<xsl:choose>
@@ -873,37 +862,37 @@
 						</xsl:choose>
 					</header>
 					<xsl:apply-templates select="hl7:text|hl7:parentDocument/hl7:text"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:guardian">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:guardianPerson|hl7:guardianOrganization"/>
 					<xsl:apply-templates select="hl7:code"/>
 					<xsl:apply-templates select="hl7:id"/>
 					<xsl:apply-templates select="hl7:telecom"/>
 					<xsl:apply-templates select="hl7:addr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:guardianOrganization|hl7:manufacturerOrganization|hl7:providerOrganization|hl7:receivedOrganization|hl7:representedCustodianOrganization|hl7:representedOrganization|hl7:scopingOrganization|hl7:serviceProviderOrganization|hl7:wholeOrganization">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
 					<p>
 						<xsl:choose>
 							<xsl:when test="not(../../hl7:asOrganizationPartOf)">
@@ -928,32 +917,46 @@
 					<xsl:apply-templates select="hl7:telecom"/>
 					<xsl:apply-templates select="hl7:addr"/>
 					<xsl:apply-templates select="hl7:standardIndustryClassCode"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:id">
-		<div class="id">
-			<strong>
-				<xsl:text>ID: </xsl:text>
-			</strong>
-			<xsl:call-template name="II"/>
-		</div>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
+					<strong>
+						<xsl:text>ID: </xsl:text>
+					</strong>
+					<xsl:call-template name="II"/>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:informant">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:assignedEntity/@nullFlavor">
+				<xsl:apply-templates select="hl7:assignedEntity/@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:relatedEntity/@nullFlavor">
+				<xsl:apply-templates select="hl7:relatedEntity/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:assignedEntity|hl7:relatedEntity"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:ClinicalDocument/hl7:informationRecipient">
@@ -975,37 +978,42 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:inFulfillmentOf">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:order"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:order/@nullFlavor">
+				<xsl:apply-templates select="hl7:order/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:order"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:order"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+					<xsl:apply-templates select="hl7:order/hl7:code"/>
+					<xsl:apply-templates select="hl7:order/hl7:id"/>
+					<xsl:apply-templates select="hl7:order/hl7:priorityCode"/>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:languageCode|hl7:realmCode|hl7:signatureCode|hl7:statusCode">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="@nullFlavor">
-					<xsl:apply-templates select="@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="@nullFlavor">
+				<xsl:apply-templates select="@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
 					<xsl:value-of select="@code"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:languageCommunication">
@@ -1035,41 +1043,41 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:encompassingEncounter/hl7:location">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">	
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:healthCareFacility"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:healthCareFacility/@nullFlavor">
+				<xsl:apply-templates select="hl7:healthCareFacility/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">	
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:healthCareFacility"/>
+							</xsl:call-template>
+						</xsl:with-param>
 					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:when test="hl7:healthCareFacility/@nullFlavor">
-					<xsl:apply-templates select="hl7:healthCareFacility/@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
 					<xsl:apply-templates select="hl7:healthCareFacility/hl7:code"/>
 					<xsl:apply-templates select="hl7:healthCareFacility/hl7:id"/>
 					<xsl:apply-templates select="hl7:healthCareFacility/hl7:location"/>
 					<xsl:apply-templates select="hl7:healthCareFacility/hl7:serviceProviderOrganization"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:healthCareFacility/hl7:location|hl7:place">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:if test="hl7:name">
-						<p>
+						<header>
 							<strong><xsl:apply-templates select="hl7:name[1]"/></strong>
 							<xsl:for-each select="hl7:name[position()&gt;1]">
 								<xsl:text> </xsl:text>
@@ -1077,43 +1085,43 @@
 									<xsl:apply-templates select="current()"/>
 								</small>
 							</xsl:for-each>
-						</p>
+						</header>
 					</xsl:if>
 					<xsl:apply-templates select="hl7:addr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:manufacturerModelName|hl7:softwareName">
-		<span>
-			<xsl:call-template name="set-classes"/>
-			<!-- SC: Character String with Code -->
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates/>
+		<!-- SC: Character String with Code -->
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<xsl:call-template name="set-classes"/>
+					<xsl:apply-templates select="text()"/>
 					<xsl:call-template name="CD"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:name">
-		<span>
-			<xsl:call-template name="set-classes"/>
-			<xsl:if test="@use">
-				<xsl:attribute name="title">
-					<xsl:apply-templates select="@use"/>
-				</xsl:attribute>
-			</xsl:if>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<xsl:call-template name="set-classes"/>
+					<xsl:if test="@use">
+						<xsl:attribute name="title">
+							<xsl:apply-templates select="@use"/>
+						</xsl:attribute>
+					</xsl:if>
 					<xsl:for-each select="text()|*">
 						<xsl:if test="position() != 1">
 							<xsl:text> </xsl:text>
@@ -1153,9 +1161,9 @@
 						</xsl:choose>
 					</xsl:for-each>
 					<xsl:apply-templates select="hl7:validTime"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:nonXMLBody">
@@ -1239,19 +1247,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="hl7:order">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:code"/>
-				<xsl:apply-templates select="hl7:id"/>
-				<xsl:apply-templates select="hl7:priorityCode"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<xsl:template match="hl7:organizer">
 		<!-- POCD_MT000040.Organizer -->
 		<xsl:choose>
@@ -1275,9 +1270,6 @@
 								<xsl:call-template name="set-classes">
 									<xsl:with-param name="moreClasses">
 										<xsl:text>list-group-item </xsl:text>
-										<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
-											<xsl:text>isSeperatable </xsl:text>
-										</xsl:if>
 										<xsl:call-template name="build-class-string">
 											<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
 										</xsl:call-template>
@@ -1288,6 +1280,11 @@
 										<xsl:apply-templates select="./@nullFlavor"/>
 									</xsl:when>
 									<xsl:otherwise>
+										<xsl:if test="hl7:seperatableInd/@value and ( hl7:seperatableInd/@value = 'true' )">
+											<span class="badge">
+												<xsl:text>Seperatable</xsl:text>
+											</span>
+										</xsl:if>
 										<xsl:apply-templates select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -1352,28 +1349,28 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:recordTarget">
-		<section>
-			<xsl:call-template name="set-classes">
-				<xsl:with-param name="moreClasses">
-					<xsl:call-template name="build-class-string">
-						<xsl:with-param name="toBuildFrom" select="hl7:patientRole"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="hl7:patientRole/@nullFlavor">
+				<xsl:apply-templates select="hl7:patientRole/@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes">
+						<xsl:with-param name="moreClasses">
+							<xsl:call-template name="build-class-string">
+								<xsl:with-param name="toBuildFrom" select="hl7:patientRole"/>
+							</xsl:call-template>
+							<xsl:if test="hl7:patientRole/hl7:patient">
+								<xsl:text> </xsl:text>
+								<xsl:call-template name="build-class-string">
+									<xsl:with-param name="toBuildFrom" select="hl7:patientRole/hl7:patient"/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:with-param>
 					</xsl:call-template>
-					<xsl:if test="hl7:patientRole/hl7:patient">
-						<xsl:text> </xsl:text>
-						<xsl:call-template name="build-class-string">
-							<xsl:with-param name="toBuildFrom" select="hl7:patientRole/hl7:patient"/>
-						</xsl:call-template>
-					</xsl:if>
-				</xsl:with-param>
-			</xsl:call-template>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:when test="hl7:patientRole/@nullFlavor">
-					<xsl:apply-templates select="hl7:patientRole/@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
 					<header>
 						<xsl:choose>
 							<xsl:when test="hl7:patientRole/hl7:patient/@nullFlavor">
@@ -1388,11 +1385,11 @@
 											<xsl:apply-templates select="current()"/>
 										</small>
 									</xsl:for-each>
+									<span class="pull-right"><xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/></span>
 								</h2>
-								<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/>
 								<xsl:if test="hl7:patientRole/hl7:patient/hl7:birthTime">
 									<p>
-										<xsl:text>DOB: </xsl:text>
+										<xsl:text>Date of Birth: </xsl:text>
 										<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:birthTime"/>
 									</p>
 								</xsl:if>
@@ -1418,9 +1415,9 @@
 					<xsl:apply-templates select="hl7:patientRole/hl7:telecom"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:addr"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:providerOrganization"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:regionOfInterest">
@@ -1459,13 +1456,13 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:relatedEntity">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<header>
 						<xsl:apply-templates select="hl7:relatedPerson"/>
 						<xsl:apply-templates select="hl7:effectiveTime"/>
@@ -1473,40 +1470,40 @@
 					</header>
 					<xsl:apply-templates select="hl7:telecom"/>
 					<xsl:apply-templates select="hl7:addr"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:relatedSubject">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:subject"/>
 					<xsl:apply-templates select="hl7:telecom"/>
 					<xsl:apply-templates select="hl7:addr"/>
 					<xsl:apply-templates select="hl7:code"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:responsibleParty">
-		<section>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<section>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:assignedEntity"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</section>
+				</section>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:section">
@@ -1711,19 +1708,19 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:relatedSubject/hl7:subject">
-		<header>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="./@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<header>
+					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:name"/>
 					<xsl:apply-templates select="hl7:administrativeGenderCode"/>
 					<xsl:apply-templates select="hl7:birthTime"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</header>
+				</header>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:substanceAdministration">
@@ -1788,13 +1785,13 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:telecom">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:choose>
-				<xsl:when test="./@nullFlavor">
-					<xsl:apply-templates select="@nullFlavor"/>
-				</xsl:when>
-				<xsl:otherwise>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<div>
+					<xsl:call-template name="set-classes"/>
 					<xsl:call-template name="url-type-icon">
 						<xsl:with-param name="url" select="./@value"/>
 					</xsl:call-template>
@@ -1814,9 +1811,9 @@
 						<xsl:text> </xsl:text>
 						<xsl:apply-templates select="hl7:useablePeriod"/>
 					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:time" mode="TS">
@@ -2188,14 +2185,22 @@
 
 	<!-- BEGIN: Concept Role -->
 	<xsl:template name="CR">
-		<xsl:apply-templates select="./@nullFlavor"/>
-		<xsl:apply-templates select="hl7:name" mode="CR"/>
-		<xsl:text> is </xsl:text>
-		<xsl:if test="./@inverted = 'true'">
-			<strong><xsl:text>inverse of</xsl:text></strong>
-			<xsl:text> </xsl:text>
-		</xsl:if>
-		<xsl:apply-templates select="hl7:value" mode="CR"/>
+		<xsl:choose>
+			<xsl:when test="./@nullFlavor">
+				<xsl:apply-templates select="./@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="hl7:name" mode="CR"/>
+				<xsl:if test="hl7:name and (./@inverted = 'true' or hl7:value)">
+					<xsl:text> is </xsl:text>
+				</xsl:if>
+				<xsl:if test="./@inverted = 'true'">
+					<strong><xsl:text>inverse of</xsl:text></strong>
+					<xsl:text> </xsl:text>
+				</xsl:if>
+				<xsl:apply-templates select="hl7:value" mode="CR"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- CR.Name -->
@@ -2394,7 +2399,7 @@
 							<xsl:with-param name="element" select="$element/hl7:high"/>
 						</xsl:call-template>
 					</xsl:when>
-					<xsl:when test="$element/hl7:low and $element/hl7:high">
+					<xsl:when test="$element/hl7:low and not($element/hl7:low/@nullFlavor) and $element/hl7:high and not($element/hl7:high/@nullFlavor)">
 						<xsl:call-template name="TS">
 							<xsl:with-param name="element" select="$element/hl7:low"/>
 						</xsl:call-template>
@@ -2403,7 +2408,7 @@
 							<xsl:with-param name="element" select="$element/hl7:high"/>
 						</xsl:call-template>
 					</xsl:when>
-					<xsl:when test="( $element/hl7:low/@nullFlavor or not($element/hl7:low) ) and $element/hl7:high">
+					<xsl:when test="$element/hl7:center and not($element/hl7:center/@nullFlavor)">
 						<xsl:text>centered at </xsl:text>
 						<xsl:call-template name="TS">
 							<xsl:with-param name="element" select="$element/hl7:center"/>
@@ -2422,12 +2427,7 @@
 		<xsl:param name="element" select="current()"/>
 		<xsl:choose>
 			<xsl:when test="$element/@nullFlavor">
-				<span>
-					<xsl:attribute name="class">
-						 <xsl:value-of select="local-name($element)"/>
-					</xsl:attribute>
-					<xsl:apply-templates select="$element/@nullFlavor"/>
-				</span>
+				<xsl:apply-templates select="$element/@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<time>
@@ -2575,7 +2575,7 @@
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@nullFlavor">
-				<span class="administrativeGender"><xsl:apply-templates select="./@nullFlavor"/></span>
+				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<span class="administrativeGender"><xsl:call-template name="CD"/></span>
@@ -2959,82 +2959,61 @@
 
 	<!-- NullFlavor [2.16.840.1.113883.5.1008] -->
 	<xsl:template match="@nullFlavor">
-		<xsl:choose>
-			<xsl:when test="current() = 'NI'">
-				<span class="NullFlavor">
+		<span class="cda-nullFlavor">
+			<xsl:attribute name="title">
+				<xsl:value-of select="local-name(..)"/>
+			</xsl:attribute>
+			<xsl:choose>
+				<xsl:when test="current() = 'NI'">
 					<xsl:text>No Information</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'INV'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'INV'">
 					<xsl:text>Invalid</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'DER'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'DER'">
 					<xsl:text>Derived</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'OTH'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'OTH'">
 					<xsl:text>Other</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'NINF'">
-				<abbr class="NullFlavor" title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
-			</xsl:when>
-			<xsl:when test="current() = 'PINF'">
-				<abbr class="NullFlavor" title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
-			</xsl:when>
-			<xsl:when test="current() = 'UNC'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'NINF'">
+					<abbr title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
+				</xsl:when>
+				<xsl:when test="current() = 'PINF'">
+					<abbr title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
+				</xsl:when>
+				<xsl:when test="current() = 'UNC'">
 					<xsl:text>Un-encoded</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'MSK'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'MSK'">
 					<xsl:text>Masked</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'NA'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'NA'">
 					<xsl:text>Not Applicable</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'UNK'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'UNK'">
 					<xsl:text>Unknown</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'ASKU'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'ASKU'">
 					<xsl:text>Asked but Unknown</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'NAV'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'NAV'">
 					<xsl:text>Temporarily Unavailable</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'NASK'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'NASK'">
 					<xsl:text>Not Asked</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'QS'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'QS'">
 					<xsl:text>Sufficient Quantity</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:when test="current() = 'TRC'">
-				<span class="NullFlavor">
+				</xsl:when>
+				<xsl:when test="current() = 'TRC'">
 					<xsl:text>Trace</xsl:text>
-				</span>
-			</xsl:when>
-			<xsl:otherwise>
-				<code class="NullFlavor"><xsl:value-of select="current()"/></code>
-			</xsl:otherwise>
-		</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<code><xsl:value-of select="current()"/></code>
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<!-- END:   Code Systems -->
@@ -3273,7 +3252,17 @@
 			<ul class="list-group">
 				<xsl:for-each select="$entryActElement/hl7:entryRelationship">
 					<xsl:sort select="hl7:sequenceNumber/@value"/>
-					<xsl:apply-templates select="current()"/>
+					<li>
+						<xsl:call-template name="set-classes">
+							<xsl:with-param name="moreClasses">
+								<xsl:text>list-group-item </xsl:text>
+								<xsl:call-template name="build-class-string">
+									<xsl:with-param name="toBuildFrom" select="hl7:act|hl7:encounter|hl7:observation|hl7:observationMedia|hl7:organizer|hl7:procedure|hl7:regionOfInterest|hl7:substanceAdministration|hl7:supply"/>
+								</xsl:call-template>
+							</xsl:with-param>
+						</xsl:call-template>
+						<xsl:apply-templates select="current()"/>
+					</li>
 				</xsl:for-each>
 			</ul>
 		</xsl:if>
