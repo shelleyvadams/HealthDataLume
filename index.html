@@ -42,8 +42,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-info-circle fa-lg"></i> <span>About</span> <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
-							<li role="presentation" class="dropdown-header">Licenses</li>
-							<li role="presentation"><a role="menuitem" tabindex="-1" rel="license" href="LICENSE" type="text/plain">HealthDataLume source</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" rel="license" href="#license" data-target="#license">License</a></li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#components" data-target="#components">Third-party components</a></li>
 							<li role="presentation" class="divider"></li>
 							<li role="presentation" class="dropdown-header">More information</li>
@@ -136,6 +135,30 @@
 			</div>
 		</div><!-- /#github_samples -->
 
+
+		<!-- License for HealthDataLume -->
+		<div class="modal fade" id="license" tabindex="-1" role="dialog" aria-labelledby="licenseHeading" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<article class="modal-content" role="document">
+					<header class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i><span class="sr-only">Close dialog</span></button>
+						<h1 id="licenseHeading" class="modal-title">License</h1>
+					</header>
+					<div class="modal-body">
+						<p><cite>HealthDataLume</cite> is free software, licensed under the <cite>MIT License</cite>.</p>
+						<p>Copyright &copy; 2014 Shelley V. Adams.</p>
+						<h2>The MIT License (<abbr title="Massachusetts Institute of Technology">MIT</abbr>)</h2>
+						<blockquote>
+							<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+							<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+							<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+						</blockquote>
+						<h2>Third-party components</h2>
+						<p><cite>HealthDataLume</cite> depends on the following third-party components, which are included in the <tt>lib/</tt> directory. All third-party components are provided under their own respective licenses. License details from each project are provided in the <tt><a href="lib/licenses/" target="_blank">lib/licenses/</a></tt> directory.</p>
+					</div>
+				</article>
+			</div>
+		</div><!-- /#CDA_info -->
 
 		<!-- Listing of included components in Bootstrap modal dialog -->
 		<div class="modal fade" id="components" tabindex="-1" role="dialog" aria-labelledby="componentsHeading" aria-hidden="true">

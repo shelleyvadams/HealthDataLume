@@ -79,6 +79,11 @@ input.form-control[readonly] {
 	cursor:text;
 }
 
+/* Fix monster font-size in blockquotes */
+blockquote {
+	font-size:inherit;
+}
+
 /* Cursor for collapsing panel-headings */
 .panel-heading[data-toggle=collapse] {
 	cursor:pointer;
