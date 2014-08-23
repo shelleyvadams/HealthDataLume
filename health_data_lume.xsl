@@ -1231,15 +1231,22 @@
 					<xsl:apply-templates select="./@ID"/>
 				</xsl:if>
 				<header>
-					<div>
-						<strong>
-							<xsl:text>Observation Media</xsl:text>
-						</strong>
+					<div class="row">
+						<div class="col-md-6">
+							<p>
+								<strong>
+									<xsl:text>Observation Media</xsl:text>
+								</strong>
+							</p>
+							<xsl:apply-templates select="hl7:id"/>
+							<xsl:apply-templates select="hl7:precondition"/>
+						</div>
+						<div class="col-md-6">
+							<xsl:apply-templates select="./@moodCode"/>
+							<xsl:call-template name="entry-header-entities"/>
+						</div>
 					</div>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:value"/>
 				<xsl:call-template name="entry-relationships"/>
@@ -1432,22 +1439,28 @@
 					<xsl:if test="not($fromReference)">
 						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
 					</xsl:if>
-					<div>
-						<xsl:choose>
-							<xsl:when test="hl7:code/@code">
-								<strong><xsl:value-of select="hl7:code/@code"/></strong>
-							</xsl:when>
-							<xsl:otherwise>
+					<div class="row">
+						<div class="col-md-6">
+							<p>
 								<strong>
-									<xsl:text>Region of Interest</xsl:text>
+									<xsl:choose>
+										<xsl:when test="hl7:code/@code">
+											<xsl:value-of select="hl7:code/@code"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text>Region of Interest</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
 								</strong>
-							</xsl:otherwise>
-						</xsl:choose>
+							</p>
+							<xsl:apply-templates select="hl7:id"/>
+							<xsl:apply-templates select="hl7:precondition"/>
+						</div>
+						<div class="col-md-6">
+							<xsl:call-template name="entry-header-entities"/>
+						</div>
 					</div>
-					<xsl:call-template name="entry-header-entities"/>
-					<xsl:apply-templates select="hl7:id"/>
 				</header>
-				<xsl:apply-templates select="hl7:precondition"/>
 				<xsl:apply-templates select="hl7:reference"/>
 				<xsl:apply-templates select="hl7:value"/>
 				<xsl:call-template name="entry-relationships"/>
@@ -2925,6 +2938,66 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- ActMood [2.16.840.1.113883.5.1001] -->
+	<xsl:template match="@moodCode">
+		<xsl:choose>
+			<xsl:when test="current() = 'APT'">
+				<xsl:text>Appointment</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'ARQ'">
+				<xsl:text>Appointment request</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'CRT'">
+				<xsl:text>Criterion</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'DEF'">
+				<xsl:text>Definition</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EVN'">
+				<xsl:text>Event (Occurrence)</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EVN.CRT'">
+				<xsl:text>Event criterion</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'EXPEC'">
+				<xsl:text>Expectation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'GOL'">
+				<xsl:text>Goal</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'INT'">
+				<xsl:text>Intent</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'OPT'">
+				<xsl:text>Option</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PERM'">
+				<xsl:text>Permission</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PERMRQ'">
+				<xsl:text>Permission request</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PRMS'">
+				<xsl:text>Promise</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'PRP'">
+				<xsl:text>Proposal</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RMD'">
+				<xsl:text>Recommendation</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RQO'">
+				<xsl:text>Request</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'RSK'">
+				<xsl:text>Risk</xsl:text>
+			</xsl:when>
+			<xsl:when test="current() = 'SLOT'">
+				<xsl:text>Resource slot</xsl:text>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
 	<!-- SetOperator [2.16.840.1.113883.5.1069] -->
 	<xsl:template match="@operator">
 		<xsl:choose>
@@ -3272,6 +3345,7 @@
 			</div>
 			<div class="col-md-6">
 					<xsl:apply-templates select="./@negationInd"/>
+					<xsl:apply-templates select="./@moodCode"/>
 					<xsl:call-template name="entry-header-entities"/>
 			</div>
 		</div>
