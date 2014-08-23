@@ -1521,14 +1521,32 @@
 					</xsl:if>
 					<div>
 						<xsl:choose>
-							<xsl:when test="hl7:title and ../../../hl7:structuredBody">
-								<h2>
-									<xsl:apply-templates select="hl7:title"/>
-								</h2>
-								<small><xsl:apply-templates select="hl7:code"/></small>
-							</xsl:when>
 							<xsl:when test="hl7:title">
-								<strong><xsl:apply-templates select="hl7:title"/></strong>
+								<xsl:variable name="headingElement">
+									<xsl:choose>
+										<xsl:when test="../../../hl7:structuredBody">
+											<xsl:text>h2</xsl:text>
+										</xsl:when>
+										<xsl:when test="../../../../../hl7:structuredBody">
+											<xsl:text>h3</xsl:text>
+										</xsl:when>
+										<xsl:when test="../../../../../../../hl7:structuredBody">
+											<xsl:text>h4</xsl:text>
+										</xsl:when>
+										<xsl:when test="../../../../../../../../../hl7:structuredBody">
+											<xsl:text>h5</xsl:text>
+										</xsl:when>
+										<xsl:when test="../../../../../../../../../../../hl7:structuredBody">
+											<xsl:text>h6</xsl:text>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:text>strong</xsl:text>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:variable>
+								<xsl:element name="{$headingElement}">
+									<xsl:apply-templates select="hl7:title"/>
+								</xsl:element>
 								<br/>
 								<small><xsl:apply-templates select="hl7:code"/></small>
 							</xsl:when>
@@ -3029,6 +3047,19 @@
 		<xsl:param name="panelTitlePluralSuffix">
 			<xsl:text>s</xsl:text>
 		</xsl:param>
+		<xsl:variable name="headingElement">
+			<xsl:choose>
+				<xsl:when test="$listElements/../../hl7:ClinicalDocument">
+					<xsl:text>h2</xsl:text>
+				</xsl:when>
+				<xsl:when test="$listElements/../../../hl7:patientRole">
+					<xsl:text>h3</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>p</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:if test="$listElements">
 			<section>
 				<xsl:call-template name="set-classes">
@@ -3051,7 +3082,10 @@
 						<xsl:text>#</xsl:text>
 						<xsl:value-of select="generate-id($listElements)"/>
 					</xsl:attribute>
-					<p class="panel-title">
+					<xsl:element name="{$headingElement}">
+						<xsl:attribute name="class">
+							<xsl:text>panel-title</xsl:text>
+						</xsl:attribute>
 						<xsl:if test="$panelTitleIcon">
 							<i>
 								<xsl:attribute name="class">
@@ -3064,7 +3098,7 @@
 						<xsl:if test="count($listElements) &gt; 1">
 							<xsl:value-of select="$panelTitlePluralSuffix"/>
 						</xsl:if>
-					</p>
+					</xsl:element>
 				</header>
 				<div class="panel-collapse collapse">
 					<xsl:attribute name="id">
