@@ -262,6 +262,7 @@ var HealthDataLume = (function(doc) {
 
 		recordContent.change(function(e) {
 			xmlStatus.empty();
+			$("#output").empty();
 			try {
 				transformXML(xmlStatus, fileDisplay.val(), recordContent, doc);
 			} catch (err) {
