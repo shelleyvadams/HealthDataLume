@@ -300,7 +300,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<header>
-						<h3>
+						<p>
 							<i class="fa fa-desktop fa-fw"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
 							<xsl:choose>
 								<xsl:when test="hl7:softwareName">
@@ -310,7 +310,7 @@
 									<xsl:apply-templates select="hl7:manufacturerModelName"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</h3>
+						</p>
 					</header>
 					<xsl:if test="hl7:softwareName and not(hl7:softwareName = hl7:manufacturerModelName)">
 						<p><xsl:apply-templates select="hl7:manufacturerModelName"/></p>
@@ -341,14 +341,17 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:assignedPerson|hl7:associatedPerson|hl7:guardianPerson|hl7:intendedRecipient/hl7:informationRecipient|hl7:relatedPerson">
-		<h3>
+		<p>
 			<xsl:call-template name="set-classes"/>
-			<i class="fa fa-user fa-fw"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
-				<xsl:when test="count(hl7:name) &gt; 1">
+				<xsl:when test="hl7:name/@nullFlavor">
+					<xsl:apply-templates select="hl7:name/@nullFlavor"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<i class="fa fa-user fa-fw"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
 					<xsl:apply-templates select="hl7:name[1]"/>
 					<xsl:for-each select="hl7:name[position()&gt;1]">
 						<xsl:text> </xsl:text>
@@ -356,12 +359,9 @@
 							<xsl:apply-templates select="current()"/>
 						</small>
 					</xsl:for-each>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="hl7:name"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</h3>
+		</p>
 	</xsl:template>
 
 	<xsl:template match="hl7:authenticator|hl7:legalAuthenticator">
@@ -448,7 +448,7 @@
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<h1><xsl:text>Birthplace:</xsl:text></h1>
+					<strong><xsl:text>Birthplace:</xsl:text></strong>
 					<xsl:apply-templates select="hl7:place"/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -690,12 +690,10 @@
 			</xsl:call-template>
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
-					<h4 class="list-group-item-heading">
-						<xsl:apply-templates select="./@nullFlavor"/>
-					</h4>
+					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<h4 class="list-group-item-heading">
+					<p class="list-group-item-heading">
 						<!-- ActRelationshipType [2.16.840.1.113883.5.1002] -->
 						<xsl:choose>
 							<!-- both inverted and negated -->
@@ -839,7 +837,7 @@
 								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
-					</h4>
+					</p>
 					<div class="list-group-item-text">
 						<xsl:if test="./@contextConductionInd and ( ./@contextConductionInd = 'false' )">
 							<xsl:text>Same document (original context).</xsl:text>
@@ -915,25 +913,25 @@
 					<xsl:apply-templates select="./@nullFlavor"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<h3>
-						<i class="fa fa-institution fa-fw"></i>
-						<span class="sr-only"><xsl:text> Organization</xsl:text></span>
-						<xsl:text> </xsl:text>
+					<p>
 						<xsl:choose>
-							<xsl:when test="count(hl7:name) &gt; 1">
-								<xsl:apply-templates select="hl7:name[1]"/>
-								<xsl:for-each select="hl7:name[position()&gt;1]">
-									<xsl:text> </xsl:text>
-									<small>
-										<xsl:apply-templates select="current()"/>
-									</small>
-								</xsl:for-each>
+							<xsl:when test="not(../../hl7:asOrganizationPartOf)">
+								<i class="fa fa-institution fa-fw"></i>
+								<span class="sr-only"><xsl:text> Organization</xsl:text></span>
+								<xsl:text> </xsl:text>
+								<strong><xsl:apply-templates select="hl7:name[1]"/></strong>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:apply-templates select="hl7:name"/>
+								<xsl:apply-templates select="hl7:name[1]"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</h3>
+						<xsl:for-each select="hl7:name[position()&gt;1]">
+							<xsl:text> </xsl:text>
+							<small>
+								<xsl:apply-templates select="current()"/>
+							</small>
+						</xsl:for-each>
+					</p>
 					<xsl:apply-templates select="hl7:asOrganizationPartOf"/>
 					<xsl:apply-templates select="hl7:id"/>
 					<xsl:apply-templates select="hl7:telecom"/>
@@ -1025,7 +1023,7 @@
 				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<h5 class="list-group-item-heading">
+				<p class="list-group-item-heading">
 					<xsl:value-of select="hl7:languageCode/@code"/>
 					<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
 						<xsl:text> </xsl:text>
@@ -1034,7 +1032,7 @@
 							<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
 						</span>
 					</xsl:if>
-				</h5>
+				</p>
 				<xsl:if test="hl7:modeCode or hl7:proficiencyLevelCode">
 					<div class="list-group-item-text">
 						<xsl:apply-templates select="hl7:modeCode"/>
@@ -1080,22 +1078,15 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="hl7:name">
-						<h4>
-							<xsl:choose>
-								<xsl:when test="count(hl7:name) &gt; 1">
-									<xsl:apply-templates select="hl7:name[1]"/>
-									<xsl:for-each select="hl7:name[position()&gt;1]">
-										<xsl:text> </xsl:text>
-										<small>
-											<xsl:apply-templates select="current()"/>
-										</small>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="hl7:name"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</h4>
+						<p>
+							<strong><xsl:apply-templates select="hl7:name[1]"/></strong>
+							<xsl:for-each select="hl7:name[position()&gt;1]">
+								<xsl:text> </xsl:text>
+								<small>
+									<xsl:apply-templates select="current()"/>
+								</small>
+							</xsl:for-each>
+						</p>
 					</xsl:if>
 					<xsl:apply-templates select="hl7:addr"/>
 				</xsl:otherwise>
@@ -1412,20 +1403,13 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<h2>
-									<xsl:choose>
-										<xsl:when test="count(hl7:patientRole/hl7:patient/hl7:name) &gt; 1">
-											<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name[1]"/>
-											<xsl:for-each select="hl7:patientRole/hl7:patient/hl7:name[position()&gt;1]">
-												<xsl:text> </xsl:text>
-												<small>
-													<xsl:apply-templates select="current()"/>
-												</small>
-											</xsl:for-each>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name"/>
-										</xsl:otherwise>
-									</xsl:choose>
+									<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:name[1]"/>
+									<xsl:for-each select="hl7:patientRole/hl7:patient/hl7:name[position()&gt;1]">
+										<xsl:text> </xsl:text>
+										<small>
+											<xsl:apply-templates select="current()"/>
+										</small>
+									</xsl:for-each>
 								</h2>
 								<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/>
 								<xsl:if test="hl7:patientRole/hl7:patient/hl7:birthTime">
@@ -1560,10 +1544,16 @@
 					<xsl:if test="not($fromReference)">
 						<xsl:apply-templates select="./@ID"/> <!-- id attribute -->
 					</xsl:if>
-					<h2>
+					<div>
 						<xsl:choose>
+							<xsl:when test="hl7:title and ../../../hl7:structuredBody">
+								<h2>
+									<xsl:apply-templates select="hl7:title"/>
+								</h2>
+								<small><xsl:apply-templates select="hl7:code"/></small>
+							</xsl:when>
 							<xsl:when test="hl7:title">
-								<xsl:apply-templates select="hl7:title"/>
+								<strong><xsl:apply-templates select="hl7:title"/></strong>
 								<br/>
 								<small><xsl:apply-templates select="hl7:code"/></small>
 							</xsl:when>
@@ -1571,7 +1561,7 @@
 								<xsl:apply-templates select="hl7:code"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</h2>
+					</div>
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
 					<xsl:call-template name="entry-header-entities"/>
 					<xsl:apply-templates select="hl7:id"/>
@@ -3117,7 +3107,7 @@
 						<xsl:text>#</xsl:text>
 						<xsl:value-of select="generate-id($listElements)"/>
 					</xsl:attribute>
-					<h2 class="panel-title">
+					<p class="panel-title">
 						<xsl:if test="$panelTitleIcon">
 							<i>
 								<xsl:attribute name="class">
@@ -3130,7 +3120,7 @@
 						<xsl:if test="count($listElements) &gt; 1">
 							<xsl:value-of select="$panelTitlePluralSuffix"/>
 						</xsl:if>
-					</h2>
+					</p>
 				</header>
 				<div class="panel-collapse collapse">
 					<xsl:attribute name="id">
