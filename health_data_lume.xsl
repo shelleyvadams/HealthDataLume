@@ -144,7 +144,9 @@
 
 		<xsl:apply-templates select="hl7:component"/> <!-- Component2 [1] -->
 
+		<hr/>
 		<footer>
+			<xsl:call-template name="document-info"/>
 			<xsl:if test="$sourceFilePath and $timestamp">
 				<p>
 					<xsl:text>Rendered by </xsl:text>
@@ -165,7 +167,6 @@
 					<xsl:text>.</xsl:text>
 				</p>
 			</xsl:if>
-			<xsl:call-template name="document-info"/>
 		</footer>
 	</xsl:template>
 
@@ -1615,13 +1616,20 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:setId">
-		<span>
-			<xsl:call-template name="set-classes"/>
-			<strong>
-				<xsl:text>Set: </xsl:text>
-			</strong>
-			<xsl:call-template name="II"/>
-		</span>
+		<xsl:choose>
+			<xsl:when test="@nullFlavor">
+				<xsl:apply-templates select="@nullFlavor"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<span>
+					<xsl:call-template name="set-classes"/>
+					<strong>
+						<xsl:text>Set: </xsl:text>
+					</strong>
+					<xsl:call-template name="II"/>
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="hl7:specimen">
@@ -1864,11 +1872,20 @@
 	</xsl:template>
 
 	<xsl:template match="hl7:versionNumber">
-		<span>
-			<xsl:call-template name="set-classes"/>
-			<xsl:text>version </xsl:text>
-			<xsl:value-of select="@value"/><!-- INT -->
-		</span>
+		<xsl:choose>
+			<xsl:when test="@nullFlavor">
+				<xsl:apply-templates select="@nullFlavor"/>
+			</xsl:when>
+			<xsl:when test="@value and (string-length(@value) &gt; 1)">
+				<span>
+					<xsl:call-template name="set-classes"/>
+					<xsl:text> </xsl:text>
+					<strong><xsl:text>Version:</xsl:text></strong>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="@value"/><!-- INT -->
+				</span>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!--  *******************************************  -->
@@ -3318,14 +3335,11 @@
 	<xsl:template name="document-info">
 		<xsl:param name="document" select="current()"/>
 		<xsl:apply-templates select="$document/hl7:id"/>
-		<xsl:if test="$document/hl7:setId">
-			<section class="cda-set">
+		<xsl:if test="$document/hl7:setId or $document/hl7:versionNumber">
+			<p class="cda-set">
 				<xsl:apply-templates select="$document/hl7:setId"/>
-				<xsl:if test="$document/hl7:versionNumber">
-					<xsl:text>, </xsl:text>
-					<xsl:apply-templates select="$document/hl7:versionNumber"/>
-				</xsl:if>
-			</section>
+				<xsl:apply-templates select="$document/hl7:versionNumber"/>
+			</p>
 		</xsl:if>
 	</xsl:template>
 
