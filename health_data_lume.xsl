@@ -185,6 +185,13 @@
 		</xsl:attribute>
 	</xsl:template>
 
+	<xsl:template match="@negationInd">
+		<xsl:if test="current() = 'true'">
+			<strong class="cda-negationInd text-danger"><xsl:text>No</xsl:text></strong>
+			<xsl:text> </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:template match="hl7:act">
 		<!-- POCD_MT000040.Act -->
 		<xsl:apply-templates select="hl7:languageCode/@code"/>
@@ -3427,6 +3434,7 @@
 		<xsl:param name="alternateTitle"/>
 		<div class="row">
 			<div class="col-md-6">
+				<xsl:apply-templates select="$entryActElement/@negationInd"/>
 				<xsl:choose>
 					<xsl:when test="$entryActElement/hl7:code/@displayName">
 						<strong><xsl:apply-templates select="$entryActElement/hl7:code"/></strong>
@@ -3461,9 +3469,10 @@
 				<xsl:apply-templates select="hl7:priorityCode"/>
 			</div>
 			<div class="col-md-6">
-					<xsl:apply-templates select="./@negationInd"/>
-					<xsl:apply-templates select="./@moodCode"/>
-					<xsl:call-template name="entry-header-entities"/>
+				<xsl:apply-templates select="$entryActElement/@moodCode"/>
+				<xsl:call-template name="entry-header-entities">
+					<xsl:with-param name="entryActElement" select="$entryActElement"/>
+				</xsl:call-template>
 			</div>
 		</div>
 	</xsl:template>

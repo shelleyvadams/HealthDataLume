@@ -113,6 +113,14 @@ blockquote {
 	vertical-align:baseline;
 }
 
+/* negationInd attribute */
+
+strong.cda-negationInd {
+	display:inline-block;
+	vertical-align:baseline;
+	font-size:150%;
+}
+
 /* Sample Browser */
 
 caption {
