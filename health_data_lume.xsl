@@ -1315,28 +1315,14 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="hl7:participant">
+	<xsl:template match="hl7:participant|hl7:performer">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
 				<xsl:apply-templates select="./@nullFlavor"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:associatedEntity|hl7:participantRole"/>
-				<xsl:apply-templates select="hl7:functionCode|hl7:awarenessCode"/>
-				<xsl:apply-templates select="@typeCode"/>
-				<xsl:apply-templates select="hl7:time"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template match="hl7:performer">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:assignedEntity"/>
-				<xsl:apply-templates select="hl7:functionCode|hl7:modeCode"/>
+				<xsl:apply-templates select="hl7:assignedEntity|hl7:associatedEntity|hl7:participantRole"/>
+				<xsl:apply-templates select="hl7:awarenessCode|hl7:functionCode|hl7:modeCode"/>
 				<xsl:apply-templates select="@typeCode"/>
 				<xsl:apply-templates select="hl7:time"/>
 			</xsl:otherwise>
