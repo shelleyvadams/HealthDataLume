@@ -269,13 +269,6 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode">
-		<div>
-			<xsl:call-template name="set-classes"/>
-			<xsl:call-template name="CD"/>
-		</div>
-	</xsl:template>
-
 	<xsl:template match="hl7:asOrganizationPartOf">
 		<xsl:choose>
 			<xsl:when test="./@nullFlavor">
@@ -478,7 +471,7 @@
 		<xsl:call-template name="TS"/>
 	</xsl:template>
 
-	<xsl:template match="hl7:code">
+	<xsl:template match="hl7:code|hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode">
 		<div>
 			<xsl:call-template name="set-classes"/>
 			<xsl:call-template name="CD"/>
@@ -2256,13 +2249,8 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<!-- CR.Name -->
-	<xsl:template match="hl7:name" mode="CR">
-		<xsl:call-template name="CD"/>
-	</xsl:template>
-
-	<!-- CR.Value -->
-	<xsl:template match="hl7:value" mode="CR">
+	<!-- CR.Name and CR.Value -->
+	<xsl:template match="hl7:name|hl7:value" mode="CR">
 		<xsl:call-template name="CD"/>
 	</xsl:template>
 	<!-- END: Concept Role -->
