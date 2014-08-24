@@ -296,7 +296,16 @@
 					<xsl:call-template name="set-classes"/>
 					<header>
 						<p>
-							<i class="fa fa-desktop fa-fw"></i><span class="sr-only"><xsl:text> Device</xsl:text></span><xsl:text> </xsl:text>
+							<xsl:choose>
+								<xsl:when test="@classCode">
+									<xsl:apply-templates select="@classCode"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<i class="fa fa-desktop fa-fw"></i>
+									<span class="sr-only"><xsl:text> Device</xsl:text></span>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:text> </xsl:text>
 							<xsl:choose>
 								<xsl:when test="hl7:softwareName">
 									<xsl:apply-templates select="hl7:softwareName"/>
@@ -637,6 +646,7 @@
 				<section>
 					<xsl:call-template name="set-classes"/>
 					<xsl:apply-templates select="hl7:assignedEntity"/>
+					<xsl:apply-templates select="@typeCode"/>
 					<xsl:apply-templates select="hl7:time"/>
 			</section>
 			</xsl:otherwise>
@@ -970,6 +980,7 @@
 			<xsl:otherwise>
 				<xsl:apply-templates select="hl7:intendedRecipient/hl7:informationRecipient"/>
 				<xsl:apply-templates select="hl7:intendedRecipient/hl7:receivedOrganization"/>
+				<xsl:apply-templates select="@typeCode"/>
 				<xsl:apply-templates select="hl7:intendedRecipient/hl7:id"/>
 				<xsl:apply-templates select="hl7:intendedRecipient/hl7:telecom"/>
 				<xsl:apply-templates select="hl7:intendedRecipient/hl7:addr"/>
@@ -1325,6 +1336,7 @@
 			<xsl:otherwise>
 				<xsl:apply-templates select="hl7:assignedEntity"/>
 				<xsl:apply-templates select="hl7:functionCode|hl7:modeCode"/>
+				<xsl:apply-templates select="@typeCode"/>
 				<xsl:apply-templates select="hl7:time"/>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -2670,6 +2682,111 @@
 		</aside>
 	</xsl:template>
 
+	<!-- EntityClass [2.16.840.1.113883.5.41] -->
+	<xsl:template match="hl7:playingDevice/@classCode|hl7:playingEntity/@classCode|hl7:scopingEntity/@classCode|hl7:specimenPlayingEntity/@classCode">
+		<span class="cda-classCode cda-EntityClass">
+			<xsl:choose>
+				<xsl:when test="current() = 'ENT'">
+					<xsl:text>Entity</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'HCE'">
+					<span class="fa-stack">
+						<i class="fa fa-file-o fa-stack-2x"></i>
+						<i class="fa fa-plus fa-stack-1x text-danger"></i>
+					</span>
+					<xsl:text>Health Chart Entity</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'LIV'">
+					<xsl:text>Living Subject</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'NLIV'">
+					<xsl:text>Non-person Living Subject</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'ANM'">
+					<i class="fa fa-bug fa-fw fa-2x"></i>
+					<xsl:text>Animal</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'MIC'">
+					<xsl:text>Microorganism</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PLNT'">
+					<i class="fa fa-tree fa-fw fa-2x"></i>
+					<xsl:text>Plant</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PSN'">
+					<i class="fa fa-user fa-fw fa-2x"></i>
+					<xsl:text>Person</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'MAT'">
+					<xsl:text>Material</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'CHEM'">
+					<xsl:text>Chemical Substance</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'FOOD'">
+					<i class="fa fa-cutlery fa-fw fa-2x"></i>
+					<xsl:text>Food</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'MMAT'">
+					<xsl:text>Manufactured Material</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'CONT'">
+					<i class="fa fa-archive fa-fw fa-2x"></i>
+					<xsl:text>Container</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'HOLD'">
+					<xsl:text>Holder</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'DEV'">
+					<i class="fa fa-desktop fa-fw fa-2x"></i>
+					<xsl:text>Device</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'CER'">
+					<i class="fa fa-certificate fa-fw fa-2x"></i>
+					<xsl:text>Certificate Representation</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'MODDV'">
+					<i class="fa fa-camera fa-fw fa-2x"></i>
+					<xsl:text>Imaging Modality</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'ORG'">
+					<i class="fa fa-institution fa-fw fa-2x"></i>
+					<xsl:text>Organization</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PUB'">
+					<i class="fa fa-institution fa-fw fa-2x text-success"></i>
+					<xsl:text>Public Institution</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'STATE'">
+					<xsl:text>State</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'NAT'">
+					<xsl:text>Nation</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PLC'">
+					<i class="fa fa-map-marker fa-fw fa-2x"></i>
+					<xsl:text>Place</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'CITY'">
+					<xsl:text>City or Town</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'COUNTRY'">
+					<xsl:text>Country</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'COUNTY'">
+					<xsl:text>County or Parish</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PROVINCE'">
+					<xsl:text>State or Province</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'RGRP'">
+					<i class="fa fa-group fa-fw fa-2x"></i>
+					<xsl:text>Group</xsl:text>
+				</xsl:when>
+			</xsl:choose>
+		</span>
+	</xsl:template>
+
 	<!-- EntityNameUse [2.16.840.1.113883.5.45] and EntityNameUseR2 [2.16.840.1.113883.5.1120] -->
 	<xsl:template match="hl7:name/@use">
 		<xsl:choose>
@@ -2743,7 +2860,7 @@
 	</xsl:template>
 
 	<!-- ParticipationType [2.16.840.1.113883.5.90] -->
-	<xsl:template match="hl7:participant/@typeCode">
+	<xsl:template match="hl7:encounterParticipant/@typeCode|hl7:informationRecipient/@typeCode|hl7:participant/@typeCode|hl7:performer/@typeCode">
 		<xsl:choose>
 			<!-- Participation: -->
 			<xsl:when test="current() = 'PART'">
