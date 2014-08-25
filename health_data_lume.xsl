@@ -286,8 +286,8 @@
 					<xsl:apply-templates select="hl7:wholeOrganization"/>
 					<xsl:apply-templates select="hl7:code"/>
 					<xsl:apply-templates select="hl7:id"/>
+					<xsl:apply-templates select="hl7:statusCode/@code"/>
 					<xsl:apply-templates select="hl7:effectiveTime"/>
-					<xsl:apply-templates select="hl7:statusCode"/>
 				</section>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -447,9 +447,9 @@
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:call-template>
+					<xsl:apply-templates select="hl7:consent/hl7:statusCode/@code"/>
 					<xsl:apply-templates select="hl7:consent/hl7:code"/>
 					<xsl:apply-templates select="hl7:consent/hl7:id"/>
-					<xsl:apply-templates select="hl7:consent/hl7:statusCode"/>
 				</section>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -1020,7 +1020,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="hl7:languageCode|hl7:realmCode|hl7:signatureCode|hl7:statusCode">
+	<xsl:template match="hl7:languageCode|hl7:realmCode|hl7:signatureCode">
 		<xsl:choose>
 			<xsl:when test="@nullFlavor">
 				<xsl:apply-templates select="@nullFlavor"/>
@@ -2160,7 +2160,6 @@
 	<!-- Concept Descriptor (also: Coded Ordinal, Coded Value, and Coded with Equivalents) -->
 	<xsl:template name="CD">
 		<xsl:param name="codeElement" select="current()"/>
-		<xsl:apply-templates select="$codeElement/hl7:originalText"/>
 		<xsl:choose>
 			<xsl:when test="$codeElement/@displayName and (string-length($codeElement/@displayName) &gt; 0)">
 				<xsl:value-of select="$codeElement/@displayName"/>
@@ -2169,7 +2168,7 @@
 					<span class="cda-code">
 						<xsl:text>(</xsl:text>
 						<xsl:value-of select="$codeElement/@code"/>
-						<xsl:text>)</xsl:text>
+						<xsl:text>) </xsl:text>
 					</span>
 				</xsl:if>
 			</xsl:when>
@@ -2219,6 +2218,14 @@
 					<li><xsl:call-template name="CR"/></li>
 				</xsl:for-each>
 			</ol>
+		</xsl:if>
+		<xsl:if test="$codeElement/hl7:originalText">
+			<div>
+				<xsl:call-template name="set-classes">
+					<xsl:with-param name="setFrom" select="$codeElement/hl7:originalText"/>
+				</xsl:call-template>
+				<xsl:apply-templates select="$codeElement/hl7:originalText"/>
+			</div>
 		</xsl:if>
 	</xsl:template>
 
@@ -2616,6 +2623,60 @@
 			<xsl:otherwise>
 				<span class="administrativeGender"><xsl:call-template name="CD"/></span>
 			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<!--ActStatus [2.16.840.1.113883.5.14] and RoleStatus [2.16.840.1.113883.5.1068]-->
+	<xsl:template match="hl7:statusCode/@code">
+		<xsl:choose>
+			<xsl:when test="current() = 'normal'">
+				<i class="fa fa-fw fa-circle-o text-success"></i>
+				<span class="sr-only"> normal</span>
+			</xsl:when>
+			<xsl:when test="current() = 'aborted'">
+				<i class="fa fa-fw fa-exclamation-circle text-warning"></i>
+				<span class="sr-only"> aborted</span>
+			</xsl:when>
+			<xsl:when test="current() = 'active'">
+				<i class="fa fa-fw fa-play-circle-o text-success"></i>
+				<span class="sr-only"> active</span>
+			</xsl:when>
+			<xsl:when test="current() = 'cancelled'">
+				<i class="fa fa-fw fa-times-circle text-danger"></i>
+				<span class="sr-only"> cancelled</span>
+			</xsl:when>
+			<xsl:when test="current() = 'completed'">
+				<i class="fa fa-fw fa-check-circle-o text-success"></i>
+				<span class="sr-only"> completed</span>
+			</xsl:when>
+			<xsl:when test="current() = 'held'">
+				<i class="fa fa-fw fa-question-circle text-warning"></i>
+				<span class="sr-only"> held</span>
+			</xsl:when>
+			<xsl:when test="current() = 'new'">
+				<i class="fa fa-fw fa-plus text-success"></i>
+				<span class="sr-only"> new</span>
+			</xsl:when>
+			<xsl:when test="current() = 'suspended'">
+				<i class="fa fa-fw fa-question-circle-o text-warning"></i>
+				<span class="sr-only"> suspended</span>
+			</xsl:when>
+			<!--
+				nullified
+				DO NOT DISPLAY
+			-->
+			<xsl:when test="current() = 'obsolete'">
+				<i class="fa fa-fw fa-minus-circle text-danger"></i>
+				<span class="sr-only"> obsolete</span>
+			</xsl:when>
+			<xsl:when test="current() = 'pending'">
+				<i class="fa fa-fw fa-clock text-warning"></i>
+				<span class="sr-only"> pending</span>
+			</xsl:when>
+			<xsl:when test="current() = 'terminated'">
+				<i class="fa fa-fw fa-times-circle text-danger"></i>
+				<span class="sr-only"> terminated</span>
+			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
@@ -3420,10 +3481,26 @@
 		<xsl:param name="alternateTitle"/>
 		<div class="row">
 			<div class="col-md-6">
+				<xsl:if test="$entryActElement/hl7:statusCode/@code">
+					<span>
+						<xsl:call-template name="set-classes">
+							<xsl:with-param name="setFrom" select="$entryActElement/hl7:statusCode"/>
+						</xsl:call-template>
+						<xsl:apply-templates select="$entryActElement/hl7:statusCode/@code"/>
+					</span>
+					<xsl:text> </xsl:text>
+				</xsl:if>
 				<xsl:apply-templates select="$entryActElement/@negationInd"/>
 				<xsl:choose>
 					<xsl:when test="$entryActElement/hl7:code/@displayName">
-						<strong><xsl:apply-templates select="$entryActElement/hl7:code"/></strong>
+						<strong>
+							<xsl:call-template name="set-classes">
+								<xsl:with-param name="setFrom" select="$entryActElement/hl7:code"/>
+							</xsl:call-template>
+							<xsl:call-template name="CD">
+								<xsl:with-param name="codeElement" select="$entryActElement/hl7:code"/>
+							</xsl:call-template>
+						</strong>
 					</xsl:when>
 					<xsl:otherwise>
 						<strong>
@@ -3432,20 +3509,16 @@
 						<xsl:if test="$entryActElement/hl7:code and not($entryActElement/hl7:code/@nullFlavor)">
 							<xsl:text> </xsl:text>
 							<small>
-								<xsl:apply-templates select="$entryActElement/hl7:code"/>
+								<xsl:call-template name="set-classes">
+									<xsl:with-param name="setFrom" select="$entryActElement/hl7:code"/>
+								</xsl:call-template>
+								<xsl:call-template name="CD">
+									<xsl:with-param name="codeElement" select="$entryActElement/hl7:code"/>
+								</xsl:call-template>
 							</small>
 						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
-				<xsl:if test="$entryActElement/hl7:statusCode and not($entryActElement/hl7:statusCode/@nullFlavor)">
-					<xsl:text> </xsl:text>
-					<span>
-						<xsl:call-template name="set-classes">
-							<xsl:with-param name="setFrom" select="$entryActElement/hl7:statusCode"/>
-						</xsl:call-template>
-						<xsl:value-of select="$entryActElement/hl7:statusCode/@code"/>
-					</span>
-				</xsl:if>
 				<xsl:if test="$entryActElement/hl7:effectiveTime and not($entryActElement/hl7:effectiveTime/@nullFlavor)">
 					<xsl:text> </xsl:text>
 					<xsl:apply-templates select="$entryActElement/hl7:effectiveTime"/>
