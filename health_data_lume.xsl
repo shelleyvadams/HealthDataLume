@@ -173,6 +173,12 @@
 	<!--  *******************************************  -->
 	<!--  *******************************************  -->
 
+	<xsl:template match="@codeSystemVersion">
+		<!-- CD.CodeSystemVersion -->
+		<xsl:text>, version </xsl:text>
+		<xsl:value-of select="current()"/>
+	</xsl:template>
+
 	<xsl:template match="@ID">
 		<xsl:attribute name="id">
 			<xsl:value-of select="current()"/>
@@ -1266,6 +1272,11 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template match="hl7:originalText|hl7:thumbnail">
+		<!-- ED.Thumbnail and CD.OriginalText -->
+		<xsl:call-template name="ED"/>
+	</xsl:template>
+
 	<xsl:template match="hl7:organizer">
 		<!-- POCD_MT000040.Organizer -->
 		<xsl:choose>
@@ -2146,118 +2157,111 @@
 
 	<!--  *******************************************  -->
 
-	<!-- Coded Value ~ CD -->
-	<!-- Coded Ordinal ~ CD -->
-	<!-- Coded with Equivalents ~ CD -->
-	<!-- BEGIN: Concept Descriptor -->
+	<!-- Concept Descriptor (also: Coded Ordinal, Coded Value, and Coded with Equivalents) -->
 	<xsl:template name="CD">
+		<xsl:param name="codeElement" select="current()"/>
+		<xsl:apply-templates select="$codeElement/hl7:originalText"/>
 		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:originalText"/>
-				<div>
-					<xsl:choose>
-						<xsl:when test="./@displayName">
-							<xsl:value-of select="./@displayName"/>
-							<xsl:text> (</xsl:text>
-							<xsl:value-of select="./@code"/>
-							<xsl:text>)</xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="./@code"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="./@codeSystem or ./@codeSystemName">
-						<xsl:text> in </xsl:text>
-						<cite>
-							<xsl:choose>
-								<xsl:when test="./@codeSystemName">
-									<xsl:comment><xsl:value-of select="./@codeSystem"/></xsl:comment>
-									<xsl:value-of select="./@codeSystemName"/>
-									<xsl:apply-templates select="./@codeSystemVersion"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="./@codeSystem"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</cite>
-					</xsl:if>
-					<xsl:if test="hl7:translation">
-						<xsl:text> </xsl:text>
-						<a data-toggle="collapse">
-							<xsl:attribute name="href">
-								<xsl:text>#</xsl:text>
-								<xsl:value-of select="generate-id()"/>
-							</xsl:attribute>
-							<i class="fa fa-caret-square-o-down fa-fw"></i>
-							<span class="sr-only"> toggle list</span>
-						</a>
-						<ul class="collapse"><!-- SET[CD] -->
-							<xsl:attribute name="id">
-								<xsl:value-of select="generate-id()"/>
-							</xsl:attribute>
-							<xsl:for-each select="hl7:translation">
-								<li><xsl:call-template name="CD"/></li>
-							</xsl:for-each>
-						</ul>
-					</xsl:if>
-				</div>
-				<xsl:if test="hl7:qualifer"><!-- LIST[CR] -->
-					<ol>
-						<xsl:for-each select="hl7:qualifer">
-							<li><xsl:call-template name="CR"/></li>
-						</xsl:for-each>
-					</ol>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!-- Code System Version -->
-	<xsl:template match="@codeSystemVersion">
-		<xsl:text>, version </xsl:text>
-		<xsl:value-of select="current()"/>
-	</xsl:template>
-
-	<xsl:template match="hl7:originalText">
-		<xsl:call-template name="ED"/>
-	</xsl:template>
-
-	<!-- END: Concept Descriptor -->
-
-	<!--  *******************************************  -->
-
-	<!-- BEGIN: Concept Role -->
-	<xsl:template name="CR">
-		<xsl:choose>
-			<xsl:when test="./@nullFlavor">
-				<xsl:apply-templates select="./@nullFlavor"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="hl7:name" mode="CR"/>
-				<xsl:if test="hl7:name and (./@inverted = 'true' or hl7:value)">
-					<xsl:text> is </xsl:text>
-				</xsl:if>
-				<xsl:if test="./@inverted = 'true'">
-					<strong><xsl:text>inverse of</xsl:text></strong>
+			<xsl:when test="$codeElement/@displayName and (string-length($codeElement/@displayName) &gt; 0)">
+				<xsl:value-of select="$codeElement/@displayName"/>
+				<xsl:if test="$codeElement/@code and (string-length($codeElement/@code) &gt; 0)">
 					<xsl:text> </xsl:text>
+					<span class="cda-code">
+						<xsl:text>(</xsl:text>
+						<xsl:value-of select="$codeElement/@code"/>
+						<xsl:text>)</xsl:text>
+					</span>
 				</xsl:if>
-				<xsl:apply-templates select="hl7:value" mode="CR"/>
-			</xsl:otherwise>
+			</xsl:when>
+			<xsl:when test="$codeElement/@code and (string-length($codeElement/@code) &gt; 0)">
+				<xsl:value-of select="$codeElement/@code"/>
+			</xsl:when>
+			<xsl:when test="$codeElement/@nullFlavor">
+				<xsl:apply-templates select="$codeElement/@nullFlavor"/>
+			</xsl:when>
 		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="($codeElement/@code and (string-length($codeElement/@code) &gt; 0)) and $codeElement/@codeSystemName and (string-length($codeElement/@codeSystemName) &gt; 0)">
+				<xsl:comment><xsl:value-of select="$codeElement/@codeSystem"/></xsl:comment>
+				<cite>
+					<xsl:value-of select="$codeElement/@codeSystemName"/>
+					<xsl:apply-templates select="$codeElement/@codeSystemVersion"/>
+				</cite>
+			</xsl:when>
+			<xsl:when test="($codeElement/@code and (string-length($codeElement/@code) &gt; 0)) and $codeElement/@codeSystem and (string-length($codeElement/@codeSystem) &gt; 0)">
+				<xsl:value-of select="$codeElement/@codeSystem"/>
+			</xsl:when>
+		</xsl:choose>
+		<xsl:if test="$codeElement/hl7:translation and ($codeElement/hl7:translation/@code or $codeElement/hl7:translation/@displayName) and ((string-length($codeElement/hl7:translation/@code) &gt; 0) or (string-length($codeElement/hl7:translation/@displayName) &gt; 0))">
+			<xsl:text> </xsl:text>
+			<a data-toggle="collapse">
+				<xsl:attribute name="href">
+					<xsl:text>#</xsl:text>
+					<xsl:value-of select="generate-id($codeElement/hl7:translation)"/>
+				</xsl:attribute>
+				<i class="fa fa-caret-right fa-fw"></i>
+				<span class="sr-only"> toggle list</span>
+			</a>
+			<ul class="collapse"><!-- SET[CD] -->
+				<xsl:attribute name="id">
+					<xsl:value-of select="generate-id($codeElement/hl7:translation)"/>
+				</xsl:attribute>
+				<xsl:for-each select="$codeElement/hl7:translation">
+					<xsl:if test="(@code or @displayName) and ((string-length(@code) &gt; 0) or (string-length(@displayName) &gt; 0))">
+						<li><xsl:call-template name="CD"/></li>
+					</xsl:if>
+				</xsl:for-each>
+			</ul>
+		</xsl:if>
+		<xsl:if test="$codeElement/hl7:qualifer"><!-- LIST[CR] -->
+			<ol>
+				<xsl:for-each select="hl7:qualifer">
+					<li><xsl:call-template name="CR"/></li>
+				</xsl:for-each>
+			</ol>
+		</xsl:if>
 	</xsl:template>
-
-	<!-- CR.Name and CR.Value -->
-	<xsl:template match="hl7:name|hl7:value" mode="CR">
-		<xsl:call-template name="CD"/>
-	</xsl:template>
-	<!-- END: Concept Role -->
 
 	<!--  *******************************************  -->
 
-	<!-- BEGIN: Encapsulated Data -->
+	<!-- Concept Role -->
+	<xsl:template name="CR">
+		<div class="row">
+			<xsl:choose>
+				<xsl:when test="hl7:name and hl7:value and (@inverted = 'true')">
+					<div class="col-xs-6">
+						<xsl:call-template name="CD">
+							<xsl:with-param name="codeElement" select="hl7:value"/>
+						</xsl:call-template>
+					</div>
+					<div class="col-xs-6">
+						<xsl:call-template name="CD">
+							<xsl:with-param name="codeElement" select="hl7:name"/>
+						</xsl:call-template>
+					</div>
+				</xsl:when>
+				<xsl:when test="hl7:name and hl7:value">
+					<div class="col-xs-6">
+						<xsl:call-template name="CD">
+							<xsl:with-param name="codeElement" select="hl7:name"/>
+						</xsl:call-template>
+					</div>
+					<div class="col-xs-6">
+						<xsl:call-template name="CD">
+							<xsl:with-param name="codeElement" select="hl7:value"/>
+						</xsl:call-template>
+					</div>
+				</xsl:when>
+				<xsl:when test="@nullFlavor">
+					<xsl:apply-templates select="@nullFlavor"/>
+				</xsl:when>
+			</xsl:choose>
+		</div>
+	</xsl:template>
+
+	<!--  *******************************************  -->
+
+	<!-- Encapsulated Data -->
 	<xsl:template name="ED">
 			<xsl:choose>
 				<xsl:when test="./@nullFlavor">
@@ -2369,12 +2373,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 	</xsl:template>
-
-	<!-- ED.Thumbnail : ED -->
-	<xsl:template match="hl7:thumbnail">
-		<xsl:call-template name="ED"/>
-	</xsl:template>
-	<!-- END: Encapsulated Data -->
 
 	<!--  *******************************************  -->
 
