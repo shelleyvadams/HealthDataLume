@@ -98,34 +98,6 @@ blockquote {
 	font-size:inherit;
 }
 
-/* Cursor for collapsing panel-headings */
-.panel-heading[data-toggle=collapse] {
-	cursor:pointer;
-}
-
-/* Vertically align address and associated "use" icon */
-.cda-addr address {
-	display:inline-block;
-	vertical-align:top;
-}
-
-.cda-addr .fa {
-	vertical-align:baseline;
-}
-
-/* negationInd attribute */
-
-strong.cda-negationInd {
-	display:inline-block;
-	vertical-align:baseline;
-	font-size:150%;
-}
-
-/* Hide nullFlavor values */
-.cda-nullFlavor {
-	display:none;
-}
-
 /* Print formatting */
 
 @media print {
