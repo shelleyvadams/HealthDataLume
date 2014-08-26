@@ -1654,7 +1654,7 @@
 				<header>
 					<xsl:apply-templates select="hl7:confidentialityCode"/>
 					<xsl:if test="count(hl7:component) &gt; 1">
-						<nav>
+						<nav class="hidden-print">
 							<ul class="nav nav-pills">
 								<xsl:for-each select="hl7:component">
 									<li>
@@ -2193,7 +2193,7 @@
 		</xsl:choose>
 		<xsl:if test="$codeElement/hl7:translation and ($codeElement/hl7:translation/@code or $codeElement/hl7:translation/@displayName) and ((string-length($codeElement/hl7:translation/@code) &gt; 0) or (string-length($codeElement/hl7:translation/@displayName) &gt; 0))">
 			<xsl:text> </xsl:text>
-			<a data-toggle="collapse">
+			<a data-toggle="collapse" class="hidden-print">
 				<xsl:attribute name="href">
 					<xsl:text>#</xsl:text>
 					<xsl:value-of select="generate-id($codeElement/hl7:translation)"/>
