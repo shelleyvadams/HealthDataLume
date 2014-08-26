@@ -3,51 +3,35 @@ body {
 	height:99.9%;
 	min-height:99.9%;
 }
+
 body {
-	position:relative;
+	display:flex; display:-webkit-flex; display:-ms-flex;
+	flex-direction:column; -webkit-flex-direction:column; -ms-flex-direction:column;
+	justify-content:flex-start; -webkit-justify-content:flex-start; -ms-justify-content:flex-start;
+	align-content:flex-start; -webkit-align-content:flex-start; -ms-align-content:flex-start;
+	align-items:stretch; -webkit-align-items:stretch; -ms-align-items:stretch;
+}
+
+body>header {
+	order:1; -webkit-order:1; -ms-order:1;
+	flex-grow:0; -webkit-flex-grow:0; -ms-flex-grow:0;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
+	min-height:50px; /* This creates space for the 50px-high, fixed-position navbar. */
+	margin:0 auto 20px;
 }
 
 #main {
-	position:absolute;
-	top:70px; /* Move down content for fixed navbar 50px tall. */
-	right:0;
-	bottom:3em; /* Move up content for fixed footer 2em tall. */
-	left:0;
-	padding:0 1.5em;
-	overflow:auto;
-}
-
-/* Flexboxen for application interface */
-
-#health_data_lume {
-	height:100%;
-	display:flex;
-	flex-direction:column;
-	justify-content:flex-start;
-	align-content:flex-start;
-	align-items:stretch;
-}
-
-#record_form {
-	order:1;
-	flex-grow:0;
-	flex-shrink:0;
-}
-
-#output {
-	order:2;
-	flex-grow:1;
-	flex-shrink:0;
-	height:100%;
+	order:2; -webkit-order:2; -ms-order:2;
+	flex-grow:1; -webkit-flex-grow:1; -ms-flex-grow:1;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
 }
 
 #footer {
-	position:absolute;
-	right:1.5em;
-	bottom:0;
-	left:1.5em;
-	height:2em;
-	margin:auto;
+	order:3; -webkit-order:3; -ms-order:3;
+	flex-grow:0; -webkit-flex-grow:0; -ms-flex-grow:0;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
+	min-height:2em;
+	margin:1em 1.5em auto;
 	padding:0 1em;
 	border-top:thin solid #ccc;
 }
@@ -66,7 +50,7 @@ body {
 .navbar-inverse .navbar-brand {
 	color:#fff;
 	text-shadow:0 0 0.15em #000,0 0 0.5em #eee, 0 0 1em #eee;
-	position:relative
+	position:relative; /* So .status can have an absolute position */
 }
 
 .navbar-inverse .navbar-brand>.status {
