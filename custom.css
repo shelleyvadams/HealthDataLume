@@ -82,6 +82,11 @@ blockquote {
 	font-size:inherit;
 }
 
+/* Don't dotted-underline abbreviations containing icons. */
+abbr.icon {
+	border-bottom-style:none;
+}
+
 /* Print formatting */
 
 @media print {

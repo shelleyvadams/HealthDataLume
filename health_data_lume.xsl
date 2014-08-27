@@ -308,8 +308,9 @@
 									<xsl:apply-templates select="@classCode"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<i class="fa fa-desktop fa-fw"></i>
-									<span class="sr-only"><xsl:text> Device</xsl:text></span>
+									<abbr class="icon" title="Device">
+										<i class="fa fa-desktop fa-fw"></i>
+									</abbr>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:text> </xsl:text>
@@ -362,7 +363,10 @@
 			<xsl:otherwise>
 				<p>
 					<xsl:call-template name="set-classes"/>
-					<i class="fa fa-user fa-fw"></i><span class="sr-only"><xsl:text> Person</xsl:text></span><xsl:text> </xsl:text>
+					<abbr class="icon" title="Person">
+						<i class="fa fa-user fa-fw"></i>
+					</abbr>
+					<xsl:text> </xsl:text>
 					<xsl:apply-templates select="hl7:name[1]"/>
 					<xsl:for-each select="hl7:name[position()&gt;1]">
 						<br/>
@@ -913,8 +917,9 @@
 					<p>
 						<xsl:choose>
 							<xsl:when test="not(../../hl7:asOrganizationPartOf)">
-								<i class="fa fa-institution fa-fw"></i>
-								<span class="sr-only"><xsl:text> Organization</xsl:text></span>
+								<abbr class="icon" title="Organization">
+									<i class="fa fa-institution fa-fw"></i>
+								</abbr>
 								<xsl:text> </xsl:text>
 								<strong><xsl:apply-templates select="hl7:name[1]"/></strong>
 							</xsl:when>
@@ -1044,10 +1049,9 @@
 					<xsl:value-of select="hl7:languageCode/@code"/>
 					<xsl:if test="hl7:preferenceInd and ( hl7:preferenceInd/@value = 'true' )">
 						<xsl:text> </xsl:text>
-						<span class="text-info">
+						<abbr class="icon text-info" title="Preferred">
 							<i class="fa fa-star fa-lg fa-fw"></i>
-							<span class="sr-only"><xsl:text> Preferred</xsl:text></span>
-						</span>
+						</abbr>
 					</xsl:if>
 				</p>
 				<xsl:if test="hl7:modeCode or hl7:proficiencyLevelCode">
@@ -2138,13 +2142,11 @@
 				<xsl:value-of select="$element/@valign"/>
 				<xsl:text>;</xsl:text>
 			</xsl:if>
-<!--
 			<xsl:if test="$element/@align">
 				<xsl:text>text-align:</xsl:text>
 				<xsl:value-of select="$element/@align"/>
 				<xsl:text>;</xsl:text>
 			</xsl:if>
--->
 		</xsl:attribute>
 	</xsl:template>
 
@@ -2168,7 +2170,7 @@
 					<span class="cda-code">
 						<xsl:text>(</xsl:text>
 						<xsl:value-of select="$codeElement/@code"/>
-						<xsl:text>) </xsl:text>
+						<xsl:text>)</xsl:text>
 					</span>
 				</xsl:if>
 			</xsl:when>
@@ -2181,13 +2183,14 @@
 		</xsl:choose>
 		<xsl:choose>
 			<xsl:when test="($codeElement/@code and (string-length($codeElement/@code) &gt; 0)) and $codeElement/@codeSystemName and (string-length($codeElement/@codeSystemName) &gt; 0)">
-				<xsl:comment><xsl:value-of select="$codeElement/@codeSystem"/></xsl:comment>
+				<xsl:text> </xsl:text>
 				<cite>
 					<xsl:value-of select="$codeElement/@codeSystemName"/>
 					<xsl:apply-templates select="$codeElement/@codeSystemVersion"/>
 				</cite>
 			</xsl:when>
 			<xsl:when test="($codeElement/@code and (string-length($codeElement/@code) &gt; 0)) and $codeElement/@codeSystem and (string-length($codeElement/@codeSystem) &gt; 0)">
+				<xsl:text> </xsl:text>
 				<xsl:value-of select="$codeElement/@codeSystem"/>
 			</xsl:when>
 		</xsl:choose>
@@ -2536,32 +2539,39 @@
 		<span class="use_type">
 		<xsl:choose>
 			<xsl:when test="current() = 'BAD'">
-				<i class="fa fa-ban fa-fw"></i>
-				<xsl:text> Bad (do not use)</xsl:text>
+				<abbr class="icon" title="Bad (do not use)">
+					<i class="fa fa-ban fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'CONF'">
-				<i class="fa fa-lock fa-fw"></i>
-				<xsl:text> Confidential</xsl:text>
+				<abbr class="icon" title="Confidential">
+					<i class="fa fa-key fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'TMP'">
-				<i class="fa fa-clock-o fa-fw"></i>
-				<xsl:text> Temporary</xsl:text>
+				<abbr class="icon" title="Temporary">
+					<i class="fa fa-clock-o fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'WP'">
-				<i class="fa fa-briefcase fa-fw"></i>
-				<span class="sr-only"><xsl:text> Work</xsl:text></span>
+				<abbr class="icon" title="Work">
+					<i class="fa fa-briefcase fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'H'">
-				<i class="fa fa-home fa-fw"></i>
-				<span class="sr-only"><xsl:text> Home</xsl:text></span>
+				<abbr class="icon" title="Home">
+					<i class="fa fa-home fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'PHYS'">
-				<i class="fa fa-map-marker fa-fw"></i>
-				<span class="sr-only"><xsl:text> Physical address</xsl:text></span>
+				<abbr class="icon" title="Physical address">
+					<i class="fa fa-map-marker fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'PST'">
-				<i class="fa fa-envelope-o fa-fw"></i>
-				<span class="sr-only"><xsl:text> Postal address</xsl:text></span>
+				<abbr class="icon" title="Postal address">
+					<i class="fa fa-envelope-o fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'AS'">
 				<xsl:text>Answering service</xsl:text>
@@ -2570,26 +2580,30 @@
 				<xsl:text>Emergency contact</xsl:text>
 			</xsl:when>
 			<xsl:when test="current() = 'MC'">
-				<i class="fa fa-mobile fa-fw"></i>
-				<span class="sr-only"><xsl:text> Mobile</xsl:text></span>
+				<abbr class="icon" title="Mobile">
+					<i class="fa fa-mobile fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'PG'">
 				<xsl:text>Pager</xsl:text>
 			</xsl:when>
 			<xsl:when test="current() = 'HP'">
-				<i class="fa fa-home fa-fw"></i>
-				<xsl:text> Primary home</xsl:text>
+				<abbr class="icon" title="Primary home">
+					<i class="fa fa-home fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'HV'">
-				<i class="fa fa-suitcase fa-fw"></i>
-				<xsl:text> Vacation home</xsl:text>
+				<abbr class="icon" title="Vacation home">
+					<i class="fa fa-suitcase fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'DIR'">
 				<xsl:text>Direct</xsl:text>
 			</xsl:when>
 			<xsl:when test="current() = 'PUB'">
-				<i class="fa fa-unlock fa-fw"></i>
-				<xsl:text> Public</xsl:text>
+				<abbr class="icon" title="Public">
+					<i class="fa fa-globe fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="current()"/>
@@ -2603,17 +2617,17 @@
 	<xsl:template match="hl7:administrativeGenderCode">
 		<xsl:choose>
 			<xsl:when test="./@code = 'F'">
-				<abbr class="administrativeGender" title="Female">
+				<abbr class="icon administrativeGender" title="Female">
 					<xsl:text>&#9792;</xsl:text><!-- Female symbol (U+2640 Venus) -->
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@code = 'M'">
-				<abbr class="administrativeGender" title="Male">
+				<abbr class="icon administrativeGender" title="Male">
 					<xsl:text>&#9794;</xsl:text><!-- Male symbol (U+2642 Mars) -->
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@code = 'UN'">
-				<abbr class="administrativeGender" title="Undifferentiated">
+				<abbr class="icon administrativeGender" title="Undifferentiated">
 					<xsl:text>&#9900;</xsl:text><!-- Genderless/Sexless/Asexuality symbol (U+26AA Medium white circle) -->
 				</abbr>
 			</xsl:when>
@@ -2630,52 +2644,63 @@
 	<xsl:template match="hl7:statusCode/@code">
 		<xsl:choose>
 			<xsl:when test="current() = 'normal'">
-				<i class="fa fa-fw fa-circle-o text-success"></i>
-				<span class="sr-only"> normal</span>
+				<abbr class="icon" title="normal">
+					<i class="fa fa-fw fa-circle-o text-success"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'aborted'">
-				<i class="fa fa-fw fa-exclamation-circle text-warning"></i>
-				<span class="sr-only"> aborted</span>
+				<abbr class="icon" title="aborted">
+					<i class="fa fa-fw fa-exclamation-circle text-warning"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'active'">
-				<i class="fa fa-fw fa-play-circle-o text-success"></i>
-				<span class="sr-only"> active</span>
+				<abbr class="icon" title="active">
+					<i class="fa fa-fw fa-play-circle-o text-success"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'cancelled'">
-				<i class="fa fa-fw fa-times-circle text-danger"></i>
-				<span class="sr-only"> cancelled</span>
+				<abbr class="icon" title="cancelled">
+					<i class="fa fa-fw fa-times-circle text-danger"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'completed'">
-				<i class="fa fa-fw fa-check-circle-o text-success"></i>
-				<span class="sr-only"> completed</span>
+				<abbr class="icon" title="completed">
+					<i class="fa fa-fw fa-check-circle-o text-success"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'held'">
-				<i class="fa fa-fw fa-question-circle text-warning"></i>
-				<span class="sr-only"> held</span>
+				<abbr class="icon" title="held">
+					<i class="fa fa-fw fa-question-circle text-warning"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'new'">
-				<i class="fa fa-fw fa-plus text-success"></i>
-				<span class="sr-only"> new</span>
+				<abbr class="icon" title="new">
+					<i class="fa fa-fw fa-plus text-success"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'suspended'">
-				<i class="fa fa-fw fa-question-circle-o text-warning"></i>
-				<span class="sr-only"> suspended</span>
+				<abbr class="icon" title="suspended">
+					<i class="fa fa-fw fa-question-circle-o text-warning"></i>
+				</abbr>
 			</xsl:when>
 			<!--
 				nullified
 				DO NOT DISPLAY
 			-->
 			<xsl:when test="current() = 'obsolete'">
-				<i class="fa fa-fw fa-minus-circle text-danger"></i>
-				<span class="sr-only"> obsolete</span>
+				<abbr class="icon" title="obsolete">
+					<i class="fa fa-fw fa-minus-circle text-danger"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'pending'">
-				<i class="fa fa-fw fa-clock text-warning"></i>
-				<span class="sr-only"> pending</span>
+				<abbr class="icon" title="pending">
+					<i class="fa fa-fw fa-clock text-warning"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'terminated'">
-				<i class="fa fa-fw fa-times-circle text-danger"></i>
-				<span class="sr-only"> terminated</span>
+				<abbr class="icon" title="terminated">
+					<i class="fa fa-fw fa-times-circle text-danger"></i>
+				</abbr>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -2747,11 +2772,10 @@
 					<xsl:text>Entity</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'HCE'">
-					<span class="fa-stack">
+					<abbr class="icon fa-stack" title="Health Chart Entity">
 						<i class="fa fa-file-o fa-stack-2x"></i>
 						<i class="fa fa-plus fa-stack-1x text-danger"></i>
-					</span>
-					<xsl:text>Health Chart Entity</xsl:text>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'LIV'">
 					<xsl:text>Living Subject</xsl:text>
@@ -2760,19 +2784,22 @@
 					<xsl:text>Non-person Living Subject</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'ANM'">
-					<i class="fa fa-bug fa-fw fa-2x"></i>
-					<xsl:text>Animal</xsl:text>
+					<abbr class="icon" title="Animal">
+						<i class="fa fa-bug fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'MIC'">
 					<xsl:text>Microorganism</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'PLNT'">
-					<i class="fa fa-tree fa-fw fa-2x"></i>
-					<xsl:text>Plant</xsl:text>
+					<abbr class="icon" title="Plant">
+						<i class="fa fa-tree fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'PSN'">
-					<i class="fa fa-user fa-fw fa-2x"></i>
-					<xsl:text>Person</xsl:text>
+					<abbr class="icon" title="Person">
+						<i class="fa fa-user fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'MAT'">
 					<xsl:text>Material</xsl:text>
@@ -2781,38 +2808,45 @@
 					<xsl:text>Chemical Substance</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'FOOD'">
-					<i class="fa fa-cutlery fa-fw fa-2x"></i>
-					<xsl:text>Food</xsl:text>
+					<abbr class="icon" title="Food">
+						<i class="fa fa-cutlery fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'MMAT'">
 					<xsl:text>Manufactured Material</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'CONT'">
-					<i class="fa fa-archive fa-fw fa-2x"></i>
-					<xsl:text>Container</xsl:text>
+					<abbr class="icon" title="Container">
+						<i class="fa fa-archive fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'HOLD'">
 					<xsl:text>Holder</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'DEV'">
-					<i class="fa fa-desktop fa-fw fa-2x"></i>
-					<xsl:text>Device</xsl:text>
+					<abbr class="icon" title="Device">
+						<i class="fa fa-desktop fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'CER'">
-					<i class="fa fa-certificate fa-fw fa-2x"></i>
-					<xsl:text>Certificate Representation</xsl:text>
+					<abbr class="icon" title="Certificate Representation">
+						<i class="fa fa-certificate fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'MODDV'">
-					<i class="fa fa-camera fa-fw fa-2x"></i>
-					<xsl:text>Imaging Modality</xsl:text>
+					<abbr class="icon" title="Imaging Modality">
+						<i class="fa fa-camera fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'ORG'">
-					<i class="fa fa-institution fa-fw fa-2x"></i>
-					<xsl:text>Organization</xsl:text>
+					<abbr class="icon" title="Organization">
+						<i class="fa fa-institution fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'PUB'">
-					<i class="fa fa-institution fa-fw fa-2x text-success"></i>
-					<xsl:text>Public Institution</xsl:text>
+					<abbr class="icon" title="Public Institution">
+						<i class="fa fa-institution fa-fw fa-2x text-success"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'STATE'">
 					<xsl:text>State</xsl:text>
@@ -2821,8 +2855,9 @@
 					<xsl:text>Nation</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'PLC'">
-					<i class="fa fa-map-marker fa-fw fa-2x"></i>
-					<xsl:text>Place</xsl:text>
+					<abbr class="icon" title="Place">
+						<i class="fa fa-map-marker fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'CITY'">
 					<xsl:text>City or Town</xsl:text>
@@ -2837,8 +2872,9 @@
 					<xsl:text>State or Province</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'RGRP'">
-					<i class="fa fa-group fa-fw fa-2x"></i>
-					<xsl:text>Group</xsl:text>
+					<abbr class="icon" title="Group">
+						<i class="fa fa-group fa-fw fa-2x"></i>
+					</abbr>
 				</xsl:when>
 			</xsl:choose>
 		</span>
@@ -3114,69 +3150,71 @@
 
 	<!-- ActMood [2.16.840.1.113883.5.1001] -->
 	<xsl:template match="@moodCode">
-		<xsl:choose>
-			<xsl:when test="current() = 'APT'">
-				<xsl:text>Appointment</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'ARQ'">
-				<xsl:text>Appointment request</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'CRT'">
-				<xsl:text>Criterion</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'DEF'">
-				<xsl:text>Definition</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'EVN'">
-				<xsl:text>Event (Occurrence)</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'EVN.CRT'">
-				<xsl:text>Event criterion</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'EXPEC'">
-				<xsl:text>Expectation</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'GOL'">
-				<xsl:text>Goal</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'INT'">
-				<xsl:text>Intent</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'OPT'">
-				<xsl:text>Option</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'PERM'">
-				<xsl:text>Permission</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'PERMRQ'">
-				<xsl:text>Permission request</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'PRMS'">
-				<xsl:text>Promise</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'PRP'">
-				<xsl:text>Proposal</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'RMD'">
-				<xsl:text>Recommendation</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'RQO'">
-				<xsl:text>Request</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'RSK'">
-				<xsl:text>Risk</xsl:text>
-			</xsl:when>
-			<xsl:when test="current() = 'SLOT'">
-				<xsl:text>Resource slot</xsl:text>
-			</xsl:when>
-		</xsl:choose>
+		<span class="cda-ActMood text-muted">
+			<xsl:choose>
+				<xsl:when test="current() = 'APT'">
+					<xsl:text>Appointment</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'ARQ'">
+					<xsl:text>Appointment request</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'CRT'">
+					<xsl:text>Criterion</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'DEF'">
+					<xsl:text>Definition</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'EVN'">
+					<xsl:text>Event occurrence</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'EVN.CRT'">
+					<xsl:text>Event criterion</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'EXPEC'">
+					<xsl:text>Expectation</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'GOL'">
+					<xsl:text>Goal</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'INT'">
+					<xsl:text>Intent</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'OPT'">
+					<xsl:text>Option</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PERM'">
+					<xsl:text>Permission</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PERMRQ'">
+					<xsl:text>Permission request</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PRMS'">
+					<xsl:text>Promise</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'PRP'">
+					<xsl:text>Proposal</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'RMD'">
+					<xsl:text>Recommendation</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'RQO'">
+					<xsl:text>Request</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'RSK'">
+					<xsl:text>Risk</xsl:text>
+				</xsl:when>
+				<xsl:when test="current() = 'SLOT'">
+					<xsl:text>Resource slot</xsl:text>
+				</xsl:when>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<!-- SetOperator [2.16.840.1.113883.5.1069] -->
 	<xsl:template match="@operator">
 		<xsl:choose>
 			<xsl:when test="current() = 'A'">
-				<abbr class="SetOperator">
+				<abbr class="icon cda-SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Intersect: Form the intersection with the value.</xsl:text>
 					</xsl:attribute>
@@ -3184,7 +3222,7 @@
 				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'E'">
-				<abbr class="SetOperator">
+				<abbr class="icon cda-SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Exclude: Form the set-difference with this value, i.e., exclude this element or set from the resulting set.</xsl:text>
 					</xsl:attribute>
@@ -3192,7 +3230,7 @@
 				</abbr>
 			</xsl:when>
 			<xsl:when test="current() = 'H'">
-				<span class="SetOperator">
+				<span class="cda-SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Form the convex hull with the value. The convex hull is defined over ordered domains and is the smallest contiguous superset (interval) that of all the operand sets.</xsl:text>
 					</xsl:attribute>
@@ -3200,7 +3238,7 @@
 				</span>
 			</xsl:when>
 			<xsl:when test="current() = 'P'">
-				<span class="SetOperator">
+				<span class="cda-SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Form the periodic hull with the value. The periodic hull is defined over ordered domains and is the periodic set that contains all contiguous supersets of pairs of intervals generated by the operand periodic intervals.</xsl:text>
 					</xsl:attribute>
@@ -3209,7 +3247,7 @@
 			</xsl:when>
 			<!-- default = I -->
 			<xsl:otherwise>
-				<abbr class="SetOperator">
+				<abbr class="icon cda-SetOperator">
 					<xsl:attribute name="title">
 						<xsl:text>Include: Form the union with this value, i.e., include this element or set in the resulting set.</xsl:text>
 					</xsl:attribute>
@@ -3239,10 +3277,10 @@
 					<xsl:text>Other</xsl:text>
 				</xsl:when>
 				<xsl:when test="current() = 'NINF'">
-					<abbr title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
+					<abbr class="icon" title="negative infinity"><xsl:text>&#8722;&#8734;</xsl:text></abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'PINF'">
-					<abbr title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
+					<abbr class="icon" title="positive infinity"><xsl:text>+&#8734;</xsl:text></abbr>
 				</xsl:when>
 				<xsl:when test="current() = 'UNC'">
 					<xsl:text>Un-encoded</xsl:text>
@@ -3587,46 +3625,39 @@
 		<xsl:variable name="protocol" select="substring-before($url, ':')"/>
 		<xsl:choose>
 			<xsl:when test="$protocol = 'tel'">
-				<i class="fa fa-phone fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Telephone</xsl:text>
-				</span>
+				<abbr class="icon" title="Telephone">
+					<i class="fa fa-phone fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'fax'">
-				<i class="fa fa-fax fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Fax</xsl:text>
-				</span>
+				<abbr class="icon" title="Fax">
+					<i class="fa fa-fax fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="($protocol = 'http') or ($protocol = 'https')">
-				<i class="fa fa-link fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Web link</xsl:text>
-				</span>
+				<abbr class="icon" title="Web link">
+					<i class="fa fa-link fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'mailto'">
-				<i class="fa fa-envelope-square fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> E-mail</xsl:text>
-				</span>
+				<abbr class="icon" title="E-mail">
+					<i class="fa fa-envelope-square fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="($protocol = 'ftp') or ($protocol = 'nfs')">
-				<i class="fa fa-cloud fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Remote file</xsl:text>
-				</span>
+				<abbr class="icon" title="Remote file">
+					<i class="fa fa-cloud fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'telnet'">
-				<i class="fa fa-terminal fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Telnet</xsl:text>
-				</span>
+				<abbr class="icon" title="Telnet">
+					<i class="fa fa-terminal fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'modem'">
-				<i class="fa fa-exchange fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Modem</xsl:text>
-				</span>
+				<abbr class="icon" title="Modem">
+					<i class="fa fa-exchange fa-fw"></i>
+				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'mllp'">
 				<abbr class="initialism" title="Health Level 7 (Minimal Lower Layer Protocol)">
@@ -3634,10 +3665,9 @@
 				</abbr>
 			</xsl:when>
 			<xsl:when test="$protocol = 'file'">
-				<i class="fa fa-hdd-o fa-fw"></i>
-				<span class="sr-only">
-					<xsl:text> Local file</xsl:text>
-				</span>
+				<abbr class="icon" title="Local file">
+					<i class="fa fa-hdd-o fa-fw"></i>
+				</abbr>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
