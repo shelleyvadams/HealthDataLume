@@ -160,7 +160,7 @@
 						<xsl:attribute name="datetime">
 							<xsl:value-of select="$timestamp"/>
 						</xsl:attribute>
-						<xsl:value-of select="substring-after($timestamp, 'T')"/>
+						<xsl:value-of select="substring($timestamp, 12, 8)"/>
 						<xsl:text> on </xsl:text>
 						<xsl:value-of select="substring-before($timestamp, 'T')"/>
 					</time>
