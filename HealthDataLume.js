@@ -827,7 +827,7 @@ GitHubBrowser.prototype.loadFile = function(ghFile) {
 				throw new GitHubError("Failed to fetch raw content of file: \"" + file.name + "\".\n" + err);
 			} else {
 				console.log("Got raw file content.");
-				that.target.display.val(that.repository.name + ":" + that.branch.name + "/" + that.peek().path + "/" + file.name);
+				that.target.display.val(file.html_url);
 				that.target.content.val(file.rawContent);
 				that.target.content.change();
 			} // else
