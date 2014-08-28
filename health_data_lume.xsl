@@ -1410,8 +1410,16 @@
 								</h2>
 								<xsl:if test="hl7:patientRole/hl7:patient/hl7:birthTime">
 									<p>
-										<xsl:text>Date of Birth: </xsl:text>
+										<abbr class="icon" title="Date of Birth">
+											<i class="fa fa-birthday-cake fa-fw"></i>
+										</abbr>
 										<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:birthTime"/>
+										<xsl:if test="$timestamp and ( translate(substring($timestamp, 6, 5), '-', '') = substring(hl7:patientRole/hl7:patient/hl7:birthTime/@value, 5, 4) )">
+											<xsl:text> </xsl:text>
+											<strong class="text-primary">
+												<xsl:text>Happy Birthday!!!</xsl:text>
+											</strong>
+										</xsl:if>
 									</p>
 								</xsl:if>
 							</xsl:otherwise>
