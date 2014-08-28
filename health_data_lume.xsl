@@ -1408,7 +1408,20 @@
 											<xsl:apply-templates select="current()"/>
 										</small>
 									</xsl:for-each>
-									<span class="pull-right"><xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/></span>
+									<span class="pull-right">
+										<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:administrativeGenderCode"/>
+										<xsl:if test="$timestamp and hl7:patientRole/hl7:patient/hl7:birthTime/@value and (string-length(hl7:patientRole/hl7:patient/hl7:birthTime/@value) &gt;= 8 )">
+											<xsl:text> Age </xsl:text>
+											<xsl:choose>
+												<xsl:when test="number(translate(substring($timestamp, 6, 5), '-', '')) &lt; number(substring(hl7:patientRole/hl7:patient/hl7:birthTime/@value, 5, 4))">
+													<xsl:value-of select="number(substring($timestamp, 1, 4)) - number(substring(hl7:patientRole/hl7:patient/hl7:birthTime/@value, 1, 4)) - 1"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="number(substring($timestamp, 1, 4)) - number(substring(hl7:patientRole/hl7:patient/hl7:birthTime/@value, 1, 4))"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:if>
+									</span>
 								</h2>
 								<xsl:if test="hl7:patientRole/hl7:patient/hl7:birthTime">
 									<p>
