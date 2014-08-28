@@ -147,14 +147,16 @@
 		<hr/>
 		<footer>
 			<xsl:call-template name="document-info"/>
-			<xsl:if test="$sourceFilePath and $timestamp">
-				<p>
-					<xsl:text>Rendered by </xsl:text>
-					<cite><xsl:text>HealthDataLume</xsl:text></cite>
+			<p>
+				<xsl:text>Rendered by </xsl:text>
+				<cite><xsl:text>HealthDataLume</xsl:text></cite>
+				<xsl:if test="$sourceFilePath">
 					<xsl:text> from </xsl:text>
 					<tt>
 						<xsl:value-of select="$sourceFilePath"/>
 					</tt>
+				</xsl:if>
+				<xsl:if test="$timestamp">
 					<xsl:text> at </xsl:text>
 					<time>
 						<xsl:attribute name="datetime">
@@ -164,9 +166,9 @@
 						<xsl:text> on </xsl:text>
 						<xsl:value-of select="substring-before($timestamp, 'T')"/>
 					</time>
-					<xsl:text>.</xsl:text>
-				</p>
-			</xsl:if>
+				</xsl:if>
+				<xsl:text>.</xsl:text>
+			</p>
 		</footer>
 	</xsl:template>
 
