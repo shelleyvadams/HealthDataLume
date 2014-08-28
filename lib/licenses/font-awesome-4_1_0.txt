@@ -1,52 +1,6 @@
-Toggle navigation // // Font Awesome <../>
-
-  * Home <../>
-  * What's New <../whats-new/>
-  * New <../whats-new/>
-  * Get Started <../get-started/>
-  * Icons <../icons/>
-  * // <#>
-      o //  Icons <../icons/>
-      o
-      o //  New Icons in 4.1 <../icons/#new>
-      o //  Web Application Icons <../icons/#web-application>
-      o //  File Type Icons <../icons/#file-type>
-      o //  Spinner Icons <../icons/#spinner>
-      o //  Form Control Icons <../icons/#form-control>
-      o //  Currency Icons <../icons/#currency>
-      o //  Text Editor Icons <../icons/#text-editor>
-      o //  Directional Icons <../icons/#directional>
-      o //  Video Player Icons <../icons/#video-player>
-      o //  Brand Icons <../icons/#brand>
-      o //  Medical Icons <../icons/#medical>
-  * Examples <../examples/>
-  * // <#>
-      o Examples <../examples/>
-      o
-      o Basic Icons <../examples/#basic>
-      o Larger Icons <../examples/#larger>
-      o Fixed Width Icons <../examples/#fixed-width>
-      o List Icons <../examples/#list>
-      o Bordered & Pulled Icons <../examples/#bordered-pulled>
-      o Spinning Icons <../examples/#spinning>
-      o Rotated & Flipped Icons <../examples/#rotated-flipped>
-      o Stacked Icons <../examples/#stacked>
-      o Bootstrap 3 Examples <../examples/#bootstrap>
-      o Custom CSS <../examples/#custom>
-  * Community <../community/>
-  * License <../license/>
-
-  * Blog <http://blog.fontawesome.io>
-
-
   //  License
 
 The full details of how Font Awesome is licensed
-
-  *
-  *
-  *
-  *
 
 Font Awesome is fully open source and is GPL friendly. You can use it
 for commercial projects, open source projects, or really just about
@@ -85,18 +39,3 @@ whatever you want.
   * All brand icons are trademarks of their respective owners.
   * The use of these trademarks does not indicate endorsement of the
     trademark holder by Font Awesome, nor vice versa.
-
-// Font Awesome 4.1.0 ·
-Created by Dave Gandy <http://twitter.com/davegandy>
-Font Awesome licensed under SIL OFL 1.1 <http://scripts.sil.org/OFL> ·
-Code licensed under MIT License
-<http://opensource.org/licenses/mit-license.html> ·
-Documentation licensed under CC BY 3.0
-<http://creativecommons.org/licenses/by/3.0/>
-Thanks to // MaxCDN <http://maxcdn.com> for providing the excellent
-BootstrapCDN for Font Awesome
-<http://www.bootstrapcdn.com/#fontawesome_tab>
-GitHub Project <https://github.com/FortAwesome/Font-Awesome> · Issues
-<https://github.com/FortAwesome/Font-Awesome/issues> · Old 3.2.1 Docs
-<../3.2.1>
-
