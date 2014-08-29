@@ -1441,15 +1441,25 @@
 						</xsl:choose>
 					</header>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:birthplace"/>
-					<xsl:call-template name="collapsing-panel-list">
-						<xsl:with-param name="listElements" select="hl7:patientRole/hl7:patient/hl7:languageCommunication"/>
-						<xsl:with-param name="panelTitle">
-							<xsl:text>Language</xsl:text>
-						</xsl:with-param>
-						<xsl:with-param name="panelTitleIcon">
-							<xsl:text>fa fa-language fa-fw</xsl:text>
-						</xsl:with-param>
-					</xsl:call-template>
+					<xsl:choose>
+						<xsl:when test="count(hl7:patientRole/hl7:patient/hl7:languageCommunication) &gt; 1">
+							<xsl:call-template name="collapsing-panel-list">
+								<xsl:with-param name="listElements" select="hl7:patientRole/hl7:patient/hl7:languageCommunication"/>
+								<xsl:with-param name="panelTitle">
+									<xsl:text>Language</xsl:text>
+								</xsl:with-param>
+								<xsl:with-param name="panelTitleIcon">
+									<xsl:text>fa fa-language fa-fw</xsl:text>
+								</xsl:with-param>
+							</xsl:call-template>
+						</xsl:when>
+						<xsl:when test="hl7:patientRole/hl7:patient/hl7:languageCommunication/hl7:languageCode/@code">
+							<p class="cda-languageCommunication">
+								<abbr title="Language"><i class="fa fa-language fa-fw"></i></abbr>
+								<xsl:value-of select="hl7:patientRole/hl7:patient/hl7:languageCommunication/hl7:languageCode/@code"/>
+							</p>
+						</xsl:when>
+					</xsl:choose>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:maritalStatusCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:ethnicGroupCode"/>
 					<xsl:apply-templates select="hl7:patientRole/hl7:patient/hl7:raceCode"/>
