@@ -52,7 +52,7 @@
 							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#components" data-target="#components">Third-party components</a></li>
 							<li role="presentation" class="divider"></li>
 							<li role="presentation" class="dropdown-header">More information</li>
-							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#privacy_note" data-target="#privacy_note">Privacy</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#privacy_note" data-target="#privacy_note">User privacy</a></li>
 							<li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#CDA_info" data-target="#CDA_info"><abbr title="Clinical Document Architecture">CDA</abbr> data formats</a></li>
 							<li role="presentation"><a role="menuitem" tabindex="-1" data-toggle="modal" href="#useful" data-target="#useful">Useful tools &amp; documentation</a></li>
 						</ul>
@@ -156,7 +156,7 @@
 							<header>
 								<h2>In-the-browser processing</h2>
 							</header>
-							<p>All of HealthDataLume's data processing code runs <em>in the browser</em> (often called “client-side scripting”). This means that when a user opens a health record file, HealthDataLume <strong>never</strong> sends data from that health record over the Internet.</p>
+							<p>All of HealthDataLume's data processing code runs <em>in the browser</em> (often called “client-side scripting”). This means that when a user opens a health record file, HealthDataLume <strong>never</strong> sends data from user health record files over the Internet.</p>
 							<p>As a result, HealthDataLume is very portable! It's safe to use without an encrypted (https) connection. You can even <a href="https://github.com/shelleyvadams/HealthDataLume" target="_blank">download HealthDataLume</a> and use it to view health record files without an Internet connection.<abbr title="Attempts to use HealthDataLume's “Sample records” feature without an Internet connection will produce an error message.">*</abbr></p>
 						</section>
 						<section>
@@ -228,11 +228,11 @@
 							</li>
 							<li class="list-group-item">
 								<h4 class="list-group-item-heading"><a href="http://jquery.com/" target="_blank">jQuery</a> <small>by the jQuery Foundation. <a href="https://github.com/jquery/jquery/blob/master/LICENSE.txt" target="_blank">MIT license</a></small></h4>
-								<p class="list-group-item-text">Required by Bootstrap and used in HealthDataLume source.</p>
+								<p class="list-group-item-text">Used in HealthDataLume's interface; required for Bootstrap and gh3.</p>
 							</li>
 							<li class="list-group-item">
 								<h4 class="list-group-item-heading"><a href="http://underscorejs.org/" target="_blank">UnderscoreJS</a> <small>By Jeremy Ashkenas, DocumentCloud, et al. <a href="https://github.com/jashkenas/underscore/blob/master/LICENSE" target="_blank">MIT license</a></small></h4>
-								<p class="list-group-item-text">Required for Gh3.</p>
+								<p class="list-group-item-text">Required for gh3.</p>
 							</li>
 						</ul>
 					</div>
@@ -259,7 +259,6 @@
 			</div>
 		</div><!-- /#CDA_info -->
 
-
 		<!-- Introductory references on CDA and C-CDA -->
 		<div class="modal fade" id="CDA_info" tabindex="-1" role="dialog" aria-labelledby="CDA_infoHeading" aria-hidden="true">
 			<div class="modal-dialog">
@@ -282,7 +281,7 @@
 		<p class="pull-right text-muted">Copyright &copy;&nbsp;2014 <a id="author_link" rel="author" href="https://github.com/shelleyvadams" target="_blank">Shelley V. Adams</a>.</p>
 	</footer>
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins and gh3) -->
 	<script src="lib/jquery-1.11.1.min.js"></script>
 	<!-- Bootstrap compiled plugins -->
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script>
