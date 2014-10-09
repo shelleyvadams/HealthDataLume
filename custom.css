@@ -1,0 +1,112 @@
+html,
+body {
+	height:99.9%;
+	min-height:99.9%;
+}
+
+body {
+	display:flex; display:-webkit-flex; display:-ms-flex;
+	flex-direction:column; -webkit-flex-direction:column; -ms-flex-direction:column;
+	justify-content:flex-start; -webkit-justify-content:flex-start; -ms-justify-content:flex-start;
+	align-content:flex-start; -webkit-align-content:flex-start; -ms-align-content:flex-start;
+	align-items:stretch; -webkit-align-items:stretch; -ms-align-items:stretch;
+}
+
+body>header {
+	order:1; -webkit-order:1; -ms-order:1;
+	flex-grow:0; -webkit-flex-grow:0; -ms-flex-grow:0;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
+	min-height:50px; /* This creates space for the 50px-high, fixed-position navbar. */
+	margin:0 auto 20px;
+}
+
+#main {
+	order:2; -webkit-order:2; -ms-order:2;
+	flex-grow:1; -webkit-flex-grow:1; -ms-flex-grow:1;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
+}
+
+#footer {
+	order:3; -webkit-order:3; -ms-order:3;
+	flex-grow:0; -webkit-flex-grow:0; -ms-flex-grow:0;
+	flex-shrink:0; -webkit-flex-shrink:0; -ms-flex-shrink:0;
+	min-height:2em;
+	margin:1em 1.5em auto;
+	padding:0 1em;
+	border-top:thin solid #ccc;
+}
+
+#footer>p {
+	line-height:1.4em;
+	margin:0.2em auto auto;
+}
+
+#xml_status {
+	margin:1em;
+	clear:both;
+}
+
+/* High visibility text and subtle glow effect */
+.navbar-inverse .navbar-brand {
+	color:#fff;
+	text-shadow:0 0 0.15em #000,0 0 0.5em #eee, 0 0 1em #eee;
+	position:relative; /* So .status can have an absolute position */
+}
+
+.navbar-inverse .navbar-brand>.status {
+	display:block;
+	font-size:80%;
+	line-height:1em;
+	position:absolute;
+	right:0.125em;
+	bottom:0.365em;
+	text-shadow:none;
+	transform-origin:50% 50%; -moz-transform-origin:50% 50%; -webkit-transform-origin:50% 50%; -ms-transform-origin:50% 50%; -o-transform-origin:50% 50%;
+	transform:rotate(-15deg); -moz-transform:rotate(-15deg); -webkit-transform:rotate(-15deg); -ms-transform:rotate(-15deg); -o-transform:rotate(-15deg);
+}
+
+
+.navbar a>* {
+	display:inline-block;
+	vertical-align:middle;
+}
+
+/* Seriously?! If I meant "disabled" I would _say_ "disabled"!  */
+input.form-control[readonly] {
+	background-color:#fff;
+	cursor:text;
+}
+
+/* Fix monster font-size in blockquotes */
+blockquote {
+	font-size:inherit;
+}
+
+/* Don't dotted-underline abbreviations containing icons. */
+abbr.icon {
+	border-bottom-style:none;
+}
+
+/* Print formatting */
+
+@media print {
+
+	body>header>h1 {
+		margin-top:0;
+		font-size:50px;
+	}
+
+	#footer {
+		right:0;
+		left:0;
+		padding-right:0;
+		padding-left:0;
+	}
+
+	.collapse, .tab-content>.tab-pane {
+		display:block;
+		opacity:1;
+		transition-property:none;
+	}
+
+}

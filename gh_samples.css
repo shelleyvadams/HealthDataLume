@@ -1,0 +1,46 @@
+/* Sample Browser */
+
+caption {
+	text-align:left;
+	padding:4px 8px;
+	border-width:medium thin thin;
+	border-color:#ddd;
+	border-style:double none solid;
+}
+
+caption>output, caption>strong {
+	display:inline-block;
+	vertical-align:top;
+	padding:6px 0 0;
+}
+
+.modal-body .panel table>tbody td {
+	vertical-align:top;
+}
+
+td.gh-item-type, th.gh-item-type {
+	width:3.35em;
+	max-width:3.35em;
+}
+
+td.gh-item-name, th.gh-item-name {
+	width:auto;
+}
+
+td.gh-item-size, th.gh-item-size {
+	width:7em;
+	min-width:7em;
+}
+
+td.gh-item-name .btn {
+	padding:0;
+	text-align:left;
+	word-wrap:break-word;
+	word-break:break-all;
+	white-space:normal;
+}
+
+td.gh-item-size {
+	text-align:right;
+}
+
