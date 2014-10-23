@@ -102,7 +102,7 @@
 								<xsl:text>Participant</xsl:text>
 							</xsl:with-param>
 							<xsl:with-param name="panelTitleIcon">
-								<xsl:text>fa fa-users fa-fw</xsl:text>
+								<xsl:text>fa fa-puzzle-piece fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
@@ -3518,7 +3518,7 @@
 					<xsl:text>Participant</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="panelTitleIcon">
-					<xsl:text>fa fa-users fa-fw</xsl:text>
+					<xsl:text>fa fa-puzzle-piece fa-fw</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:call-template name="collapsing-panel-list">
