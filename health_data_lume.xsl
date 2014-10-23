@@ -2172,18 +2172,20 @@
 				<xsl:value-of select="$element/@styleCode"/>
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:attribute name="style">
-			<xsl:if test="$element/@valign">
-				<xsl:text>vertical-align:</xsl:text>
-				<xsl:value-of select="$element/@valign"/>
-				<xsl:text>;</xsl:text>
-			</xsl:if>
-			<xsl:if test="$element/@align">
-				<xsl:text>text-align:</xsl:text>
-				<xsl:value-of select="$element/@align"/>
-				<xsl:text>;</xsl:text>
-			</xsl:if>
-		</xsl:attribute>
+		<xsl:if test="$element/@valign or $element/@align">
+			<xsl:attribute name="style">
+				<xsl:if test="$element/@valign">
+					<xsl:text>vertical-align:</xsl:text>
+					<xsl:value-of select="$element/@valign"/>
+					<xsl:text>;</xsl:text>
+				</xsl:if>
+				<xsl:if test="$element/@align">
+					<xsl:text>text-align:</xsl:text>
+					<xsl:value-of select="$element/@align"/>
+					<xsl:text>;</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- END:   NarrativeBlock Templates -->
