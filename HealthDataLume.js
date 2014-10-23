@@ -75,28 +75,6 @@ var HealthDataLume = (function(doc) {
 	}
 
 	/**
-	 * function localISODate
-	 * @memberof HealthDataLume
-	 * @private
-	 * @description There's gotta be an easier way, but I haven't found it yet.
-	 **/
-	var localISODate = function() {
-
-		var tsDate = new Date();
-		var dateNumFormat = new Intl.NumberFormat("en", {minimumIntegerDigits: 2});
-
-		var tzHrs = parseInt(tsDate.getHours(),10) - parseInt(tsDate.getUTCHours(),10);
-
-		return (
-			tsDate.getFullYear() + "-" +
-			dateNumFormat.format(parseInt(tsDate.getMonth(),10)+1) + "-"
-			+ dateNumFormat.format(parseInt(tsDate.getDate(),10)) + "T" +
-			tsDate.toLocaleTimeString("en", {hour12: false}) +
-			(tzHrs < 0 ? "" : "+" ) + dateNumFormat.format(tzHrs) + ":00"
-		);
-	};
-
-	/**
 	 * @function getXSL
 	 * @memberof HealthDataLume
 	 * @private
@@ -220,7 +198,7 @@ var HealthDataLume = (function(doc) {
 					result;
 				xsltProcessor.clearParameters(); // just in case
 				xsltProcessor.setParameter(null, "sourceFilePath", filename);
-				xsltProcessor.setParameter(null, "timestamp", localISODate());
+				xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString() );
 				try {
 					result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
 				} catch (transformErr) {
@@ -345,7 +323,6 @@ var HelpBalloons = (function() {
 			container: "body",
 			html: true,
 			placement: "right",
-			title: "Under construction.",
 			content: "Browse <a href='https://github.com/chb/sample_ccdas' target='_blank'>sample <abbr title='Consolidated Clinical Document Architecture'>C-CDA</abbr> files on GitHub</a> and select one to view with HealthDataLume.",
 			trigger: "manual"
 		},
@@ -353,12 +330,6 @@ var HelpBalloons = (function() {
 			container: "body",
 			placement: "left",
 			content: "Start over. Clear file selection and any output.",
-			trigger: "manual"
-		},
-		"#output": {
-			container: "section",
-			placement: "bottom",
-			content: "HealthDataLume's output from the selected file.",
 			trigger: "manual"
 		}
 	};

@@ -102,7 +102,7 @@
 								<xsl:text>Participant</xsl:text>
 							</xsl:with-param>
 							<xsl:with-param name="panelTitleIcon">
-								<xsl:text>fa fa-users fa-fw</xsl:text>
+								<xsl:text>fa fa-puzzle-piece fa-fw</xsl:text>
 							</xsl:with-param>
 						</xsl:call-template>
 						<xsl:call-template name="collapsing-panel-list">
@@ -148,24 +148,27 @@
 		<footer>
 			<xsl:call-template name="document-info"/>
 			<p>
-				<xsl:text>Rendered by </xsl:text>
+				<xsl:text>Rendered</xsl:text>
+				<xsl:if test="$timestamp">
+					<xsl:text> </xsl:text>
+					<time>
+						<xsl:attribute name="datetime">
+							<xsl:value-of select="$timestamp"/>
+						</xsl:attribute>
+						<xsl:value-of select="substring-before($timestamp, 'T')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="substring($timestamp, 12, 8)"/>
+						<xsl:text> </xsl:text>
+						<abbr title="Universal Time, Coordinated"><xsl:text>UTC</xsl:text></abbr>
+					</time>
+				</xsl:if>
+				<xsl:text> by </xsl:text>
 				<cite><xsl:text>HealthDataLume</xsl:text></cite>
 				<xsl:if test="$sourceFilePath">
 					<xsl:text> from </xsl:text>
 					<tt>
 						<xsl:value-of select="$sourceFilePath"/>
 					</tt>
-				</xsl:if>
-				<xsl:if test="$timestamp">
-					<xsl:text> at </xsl:text>
-					<time>
-						<xsl:attribute name="datetime">
-							<xsl:value-of select="$timestamp"/>
-						</xsl:attribute>
-						<xsl:value-of select="substring($timestamp, 12, 8)"/>
-						<xsl:text> on </xsl:text>
-						<xsl:value-of select="substring-before($timestamp, 'T')"/>
-					</time>
 				</xsl:if>
 				<xsl:text>.</xsl:text>
 			</p>
@@ -2122,11 +2125,12 @@
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$fromReference">
-					<xsl:apply-templates mode="inReference"/>
+					<xsl:apply-templates select="$element/@colspan|$element/@rowspan|$element/@headers|$element/@scope|$element/@span"/>
+					<xsl:apply-templates select="$element/node()" mode="inReference"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="$element/@ID"/>
-					<xsl:apply-templates/>
+					<xsl:apply-templates select="$element/@ID|$element/@colspan|$element/@rowspan|$element/@headers|$element/@scope|$element/@span"/>
+					<xsl:apply-templates select="$element/node()"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
@@ -2169,18 +2173,20 @@
 				<xsl:value-of select="$element/@styleCode"/>
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:attribute name="style">
-			<xsl:if test="$element/@valign">
-				<xsl:text>vertical-align:</xsl:text>
-				<xsl:value-of select="$element/@valign"/>
-				<xsl:text>;</xsl:text>
-			</xsl:if>
-			<xsl:if test="$element/@align">
-				<xsl:text>text-align:</xsl:text>
-				<xsl:value-of select="$element/@align"/>
-				<xsl:text>;</xsl:text>
-			</xsl:if>
-		</xsl:attribute>
+		<xsl:if test="$element/@valign or $element/@align">
+			<xsl:attribute name="style">
+				<xsl:if test="$element/@valign">
+					<xsl:text>vertical-align:</xsl:text>
+					<xsl:value-of select="$element/@valign"/>
+					<xsl:text>;</xsl:text>
+				</xsl:if>
+				<xsl:if test="$element/@align">
+					<xsl:text>text-align:</xsl:text>
+					<xsl:value-of select="$element/@align"/>
+					<xsl:text>;</xsl:text>
+				</xsl:if>
+			</xsl:attribute>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- END:   NarrativeBlock Templates -->
@@ -3512,7 +3518,7 @@
 					<xsl:text>Participant</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="panelTitleIcon">
-					<xsl:text>fa fa-users fa-fw</xsl:text>
+					<xsl:text>fa fa-puzzle-piece fa-fw</xsl:text>
 				</xsl:with-param>
 			</xsl:call-template>
 			<xsl:call-template name="collapsing-panel-list">
