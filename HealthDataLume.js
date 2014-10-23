@@ -323,7 +323,6 @@ var HelpBalloons = (function() {
 			container: "body",
 			html: true,
 			placement: "right",
-			title: "Under construction.",
 			content: "Browse <a href='https://github.com/chb/sample_ccdas' target='_blank'>sample <abbr title='Consolidated Clinical Document Architecture'>C-CDA</abbr> files on GitHub</a> and select one to view with HealthDataLume.",
 			trigger: "manual"
 		},
@@ -331,12 +330,6 @@ var HelpBalloons = (function() {
 			container: "body",
 			placement: "left",
 			content: "Start over. Clear file selection and any output.",
-			trigger: "manual"
-		},
-		"#output": {
-			container: "section",
-			placement: "bottom",
-			content: "HealthDataLume's output from the selected file.",
 			trigger: "manual"
 		}
 	};
