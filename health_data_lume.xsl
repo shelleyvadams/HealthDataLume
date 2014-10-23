@@ -2125,11 +2125,12 @@
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$fromReference">
-					<xsl:apply-templates mode="inReference"/>
+					<xsl:apply-templates select="$element/@colspan|$element/@rowspan|$element/@headers|$element/@scope|$element/@span"/>
+					<xsl:apply-templates select="$element/node()" mode="inReference"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="$element/@ID"/>
-					<xsl:apply-templates/>
+					<xsl:apply-templates select="$element/@ID|$element/@colspan|$element/@rowspan|$element/@headers|$element/@scope|$element/@span"/>
+					<xsl:apply-templates select="$element/node()"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:element>
