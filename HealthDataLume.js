@@ -75,28 +75,6 @@ var HealthDataLume = (function(doc) {
 	}
 
 	/**
-	 * function localISODate
-	 * @memberof HealthDataLume
-	 * @private
-	 * @description There's gotta be an easier way, but I haven't found it yet.
-	 **/
-	var localISODate = function() {
-
-		var tsDate = new Date();
-		var dateNumFormat = new Intl.NumberFormat("en", {minimumIntegerDigits: 2});
-
-		var tzHrs = parseInt(tsDate.getHours(),10) - parseInt(tsDate.getUTCHours(),10);
-
-		return (
-			tsDate.getFullYear() + "-" +
-			dateNumFormat.format(parseInt(tsDate.getMonth(),10)+1) + "-"
-			+ dateNumFormat.format(parseInt(tsDate.getDate(),10)) + "T" +
-			tsDate.toLocaleTimeString("en", {hour12: false}) +
-			(tzHrs < 0 ? "" : "+" ) + dateNumFormat.format(tzHrs) + ":00"
-		);
-	};
-
-	/**
 	 * @function getXSL
 	 * @memberof HealthDataLume
 	 * @private
@@ -220,7 +198,7 @@ var HealthDataLume = (function(doc) {
 					result;
 				xsltProcessor.clearParameters(); // just in case
 				xsltProcessor.setParameter(null, "sourceFilePath", filename);
-				xsltProcessor.setParameter(null, "timestamp", localISODate());
+				xsltProcessor.setParameter(null, "timestamp", (new Date()).toISOString() );
 				try {
 					result = xsltProcessor.transformToFragment(xmlDoc, parentDoc);
 				} catch (transformErr) {

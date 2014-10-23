@@ -148,24 +148,27 @@
 		<footer>
 			<xsl:call-template name="document-info"/>
 			<p>
-				<xsl:text>Rendered by </xsl:text>
+				<xsl:text>Rendered</xsl:text>
+				<xsl:if test="$timestamp">
+					<xsl:text> </xsl:text>
+					<time>
+						<xsl:attribute name="datetime">
+							<xsl:value-of select="$timestamp"/>
+						</xsl:attribute>
+						<xsl:value-of select="substring-before($timestamp, 'T')"/>
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="substring($timestamp, 12, 8)"/>
+						<xsl:text> </xsl:text>
+						<abbr title="Universal Time, Coordinated"><xsl:text>UTC</xsl:text></abbr>
+					</time>
+				</xsl:if>
+				<xsl:text> by </xsl:text>
 				<cite><xsl:text>HealthDataLume</xsl:text></cite>
 				<xsl:if test="$sourceFilePath">
 					<xsl:text> from </xsl:text>
 					<tt>
 						<xsl:value-of select="$sourceFilePath"/>
 					</tt>
-				</xsl:if>
-				<xsl:if test="$timestamp">
-					<xsl:text> at </xsl:text>
-					<time>
-						<xsl:attribute name="datetime">
-							<xsl:value-of select="$timestamp"/>
-						</xsl:attribute>
-						<xsl:value-of select="substring($timestamp, 12, 8)"/>
-						<xsl:text> on </xsl:text>
-						<xsl:value-of select="substring-before($timestamp, 'T')"/>
-					</time>
 				</xsl:if>
 				<xsl:text>.</xsl:text>
 			</p>
