@@ -3370,6 +3370,7 @@
 		<xsl:param name="bsDataParent"/>
 		<xsl:param name="panelTitle"/>
 		<xsl:param name="panelTitleIcon"/>
+		<xsl:param name="expandSingle" select="false()"/>
 		<xsl:param name="panelTitlePluralSuffix">
 			<xsl:text>s</xsl:text>
 		</xsl:param>
@@ -3426,7 +3427,13 @@
 						</xsl:if>
 					</xsl:element>
 				</header>
-				<div class="panel-collapse collapse">
+				<div>
+					<xsl:attribute name="class">
+							<xsl:text>panel-collapse collapse</xsl:text>
+						<xsl:if test="$expandSingle">
+							<xsl:text> in</xsl:text>
+						</xsl:if>
+					</xsl:attribute>
 					<xsl:attribute name="id">
 						<xsl:value-of select="generate-id($listElements)"/>
 					</xsl:attribute>
@@ -3514,6 +3521,7 @@
 					<xsl:text>#headerEntities-</xsl:text>
 					<xsl:value-of select="generate-id($entryActElement)"/>
 				</xsl:with-param>
+				<xsl:with-param name="expandSingle" select="true()"/>
 				<xsl:with-param name="panelTitle">
 					<xsl:text>Participant</xsl:text>
 				</xsl:with-param>
