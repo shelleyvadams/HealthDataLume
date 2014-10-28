@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:hl7="urn:hl7-org:v3">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:hl7="urn:hl7-org:v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<xsl:output method="html" indent="yes" version="5" omit-xml-declaration="yes" media-type="text/html"/>
 
 	<xsl:param name="sourceFilePath"/>
@@ -486,7 +486,7 @@
 		<xsl:call-template name="TS"/>
 	</xsl:template>
 
-	<xsl:template match="hl7:code|hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode">
+	<xsl:template match="hl7:code|hl7:administrationUnitCode|hl7:awarenessCode|hl7:dischargeDispositionCode|hl7:ethnicGroupCode|hl7:functionCode|hl7:interpretationCode|hl7:maritalStatusCode|hl7:methodCode|hl7:modeCode|hl7:priorityCode|hl7:proficiencyLevelCode|hl7:raceCode|hl7:religiousAffiliationCode|hl7:routeCode|hl7:standardIndustryClassCode|*[@xsi:type='CD']|*[@xsi:type='CE']|*[@xsi:type='CV']|*[@xsi:type='CO']">
 		<div>
 			<xsl:call-template name="set-classes"/>
 			<xsl:call-template name="CD"/>
