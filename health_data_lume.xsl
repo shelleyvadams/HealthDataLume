@@ -2657,17 +2657,17 @@
 		<xsl:choose>
 			<xsl:when test="./@code = 'F'">
 				<abbr class="icon administrativeGender" title="Female">
-					<xsl:text>&#9792;</xsl:text><!-- Female symbol (U+2640 Venus) -->
+					<i class="fa fa-venus fa-fw"></i>
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@code = 'M'">
 				<abbr class="icon administrativeGender" title="Male">
-					<xsl:text>&#9794;</xsl:text><!-- Male symbol (U+2642 Mars) -->
+					<i class="fa fa-mars fa-fw"></i>
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@code = 'UN'">
 				<abbr class="icon administrativeGender" title="Undifferentiated">
-					<xsl:text>&#9900;</xsl:text><!-- Genderless/Sexless/Asexuality symbol (U+26AA Medium white circle) -->
+					<i class="fa fa-generless fa-fw"></i>
 				</abbr>
 			</xsl:when>
 			<xsl:when test="./@nullFlavor">
